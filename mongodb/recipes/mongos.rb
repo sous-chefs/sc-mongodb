@@ -29,7 +29,7 @@ configsrv = search(
   :node,
   "role:#{node['mongodb']['cluster_role_prefix']}* AND \
    recipes:mongodb\\:\\:configserver AND \
-   environment:#{node['environment']}"
+   chef_environment:#{node.chef_environment}"
 )
 
 if configsrv.length != 1 and configsrv.length != 3

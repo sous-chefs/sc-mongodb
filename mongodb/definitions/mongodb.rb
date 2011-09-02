@@ -137,7 +137,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
       "role:#{replicaset['mongodb']['cluster_role_prefix']}* AND \
        recipes:mongodb\\:\\:replicaset AND \
        mongodb_shard_name:#{replicaset['mongodb']['shard_name']} AND \
-       environment:#{replicaset['environment']}"
+       chef_environment:#{replicaset.chef_environment}"
     )
   
     ruby_block "config_replicaset" do
@@ -159,7 +159,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
       :node,
       "role:#{node['mongodb']['cluster_role_prefix']}* AND \
        recipes:mongodb\\:\\:shard AND \
-       environment:#{node['environment']}"
+       chef_environment:#{node.chef_environment}"
     )
     
     ruby_block "config_sharding" do

@@ -47,7 +47,7 @@ end
 #    source_nodes = []
 #
 #    node['mongodb']['client_roles'].each do |client_role|
-#      source_nodes += search(:node, "role:#{client_role} AND environment:#{node['environment']}")
+#      source_nodes += search(:node, "role:#{client_role} AND chef_environment:#{node.chef_environment}")
 #    end
 #
 #    if !node['mongodb']['cluster_role_prefix'].nil?
@@ -55,7 +55,7 @@ end
 #        :node,
 #        "role:#{node['mongodb']['cluster_role_prefix']}* AND \
 #         (NOT ipaddress:#{node['ipaddress']}) AND \
-#         environment:#{node['environment']}"
+#         chef_environment:#{node.chef_environment}"
 #      )
 #    end
 ##
