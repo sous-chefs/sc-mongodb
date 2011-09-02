@@ -11,7 +11,8 @@ clean:
 	-rm metadata.json
 	-rm $(DIST)
 
-metadata.json: clean
+metadata.json:
+	-rm $@
 	knife cookbook metadata -o .. $(COOKBOOK)
 	
 dist: clean metadata.json
