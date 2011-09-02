@@ -1,14 +1,14 @@
-= DESCRIPTION:
+# DESCRIPTION:
 
 Installs and configures various kind of MongoDB setups, including sharding and replication.
 
-= REQUIREMENTS:
+# REQUIREMENTS:
 
-== Platform:
+## Platform:
 
 The cookbook aims to be platform independant, but is best tested on debian squeze systems.
 
-= DEFINITIONS:
+# DEFINITIONS:
 
 This cookbook contains a definition *mongodb_instance* which can be used to configure
 a certain type of mongodb instance, like the default mongodb or various components
@@ -16,7 +16,7 @@ of a sharded setup.
 
 For examples see the USAGE section below.
 
-= ATTRIBUTES: 
+# ATTRIBUTES: 
 
 * *mongodb[:dbpath]* - Location for mongodb data directory, defaults to "/var/lib/mongodb"
 * *mongodb[:logpath]* - Path for the logfiles, default is "/var/log/mongodb"
@@ -27,7 +27,7 @@ For examples see the USAGE section below.
 * *mongodb[:shard_name]* - Name of a shard, default is "default"
 * *mongodb[:sharded_collections]* - Define which collections are sharded
 
-= USAGE:
+# USAGE:
 
 To install and run a single mongodb instance, simply add
 
@@ -102,7 +102,7 @@ different to the one described above. all you have to do is adding the
 *mongodb::replicaset* recipe to all shard nodes, and make sure that all shard
 nodes which should be in the same replicaset have the same shard name.
 
-= LICENSE and AUTHOR:
+# LICENSE and AUTHOR:
 
 Author:: Markus Korn <markus.korn@edelight.de>
 
