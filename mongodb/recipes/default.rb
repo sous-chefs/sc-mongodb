@@ -19,16 +19,7 @@
 # limitations under the License.
 #
 
-# Add the upstream package repository and install the latest stable package
-add_repo "mongodb" do
-  url       "http://downloads-distro.mongodb.org/repo/debian-sysvinit"
-  distro    "dist"
-  repo_area "10gen"
-  key_url    "keyserver.ubuntu.com"
-  key_string "7F0CEB10"
-end
-
-package "mongodb-10gen" do
+package "mongodb" do
   action :install
 end
 
@@ -49,3 +40,22 @@ mongodb_instance "mongodb" do
   dbpath       node['mongodb']['dbpath']
 end
 
+## Firewall configuration ##
+#
+# in order to find all member nodes of a mongodb cluster you have to run queries
+# like:
+#    source_nodes = []
+#
+#    node['mongodb']['client_roles'].each do |client_role|
+#      source_nodes += search(:node, "role:#{client_role} AND environment:#{node['environment']}")
+#    end
+#
+#    if !node['mongodb']['cluster_role_prefix'].nil?
+#      source_nodes += search(
+#        :node,
+#        "role:#{node['mongodb']['cluster_role_prefix']}* AND \
+#         (NOT ipaddress:#{node['ipaddress']}) AND \
+#         environment:#{node['environment']}"
+#      )
+#    end
+##
