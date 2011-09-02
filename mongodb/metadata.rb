@@ -2,7 +2,7 @@ maintainer        "edelight GmbH"
 maintainer_email  "markus.korn@edelight.de"
 license           "Apache 2.0"
 description       "Installs and configures mongodb"
-version           "1.1"
+version           "0.9"
 
 recipe "mongodb", "Installs and configures a single node mongodb instance"
 recipe "mongodb::mongos", "Installs and configures a mongos which can be used in a sharded setup"
