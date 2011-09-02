@@ -1,3 +1,24 @@
+#
+# Cookbook Name:: mongodb
+# Definition:: mongodb
+#
+# Copyright 2011, edelight GmbH
+# Authors:
+#       Markus Korn <markus.korn@edelight.de>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 require 'json'
 
 class Chef::ResourceDefinitionList::MongoDB
@@ -151,7 +172,18 @@ class Chef::ResourceDefinitionList::MongoDB
       rescue Mongo::OperationTimeout
         result = "enable sharding for '#{db_name}' timed out, run the recipe again to check the result"
       end
-      Chef::Log.info(result.inspect)
+      if result['ok'] == 0
+        # some error
+        errmsg = result.fetch("errmsg")
+        if errmsg == "already enabled"
+          Chef::Log.info("Sharding is already enabled for database '#{db_name}', doing nothing")
+        else
+          Chef::Log.error("Failed to enable sharding for database #{db_name}, result was: #{result.inspect}")
+        end
+      else
+        # success
+        Chef::Log.info("Enabled sharding for database '#{db_name}'")
+      end
     end
     
     sharded_collections.each do |name, key|
@@ -161,9 +193,20 @@ class Chef::ResourceDefinitionList::MongoDB
       begin
         result = admin.command(cmd, :check_response => false)
       rescue Mongo::OperationTimeout
-        result = "sharding '#{db_name}' on key '#{key}' timed out, run the recipe again to check the result"
+        result = "sharding '#{name}' on key '#{key}' timed out, run the recipe again to check the result"
       end
-      Chef::Log.info(result.inspect)
+      if result['ok'] == 0
+        # some error
+        errmsg = result.fetch("errmsg")
+        if errmsg == "already sharded"
+          Chef::Log.info("Sharding is already configured for collection '#{name}', doing nothing")
+        else
+          Chef::Log.error("Failed to shard collection #{name}, result was: #{result.inspect}")
+        end
+      else
+        # success
+        Chef::Log.info("Sharding for collection '#{result['collectionsharded']}' enabled")
+      end
     end
   
   end
