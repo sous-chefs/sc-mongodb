@@ -83,9 +83,25 @@ class Chef::ResourceDefinitionList::MongoDB
     require 'rubygems'
     require 'mongo'
     
-    shard_members = shard_nodes.collect do |n|
-      # the docs are not exact enough, do sgards which are replicasets need special handling?
-      "#{n['ipaddress']}:#{n['mongodb']['port']}"
+    shard_groups = Hash.new{|h,k| h[k] = []}
+    
+    shard_nodes.each do |n|
+      if n['recipes'].include?('mongodb::replicaset')
+        key = "rs_#{n['mongodb']['shard_name']}"
+      else
+        key = '_single'
+      end
+      shard_groups[key] << "#{n['ipaddress']}:#{n['mongodb']['port']}"
+    end
+    Chef::Log.info(shard_groups.inspect)
+    
+    shard_members = []
+    shard_groups.each do |name, members|
+      if name == "_single"
+        shard_members += members
+      else
+        shard_members << "#{name}/#{members.join(',')}"
+      end
     end
     Chef::Log.info(shard_members.inspect)
     
