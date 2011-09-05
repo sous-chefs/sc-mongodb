@@ -72,17 +72,17 @@ The result is a new system service with
 
 Add `mongodb::replicaset` to the node's run_list and make sure to add
 one or more roles with the same prefix to all members of the replicaset. This
-prefix has to be defined in `mongodb[:cluster_role_prefix]` . For example you
-could create a role called "my_replicaset" and add this role to the run_list of
-all nodes which should be in the replicaset. Finally you only have to define
-`mongodb[:cluster_role_prefix]` for all nodes in this cluster. This way they are
-able to find each other.
+prefix has to be defined in the attribute `node[:mongodb][:cluster_role_prefix]`.
+
+For example you could create a role called "my_replicaset" and add this role to the
+run_list of all nodes which should be in the replicaset. The role should define
+`node[:mongodb][:cluster_role_prefix] = my_replicaset`.
 
 ## Sharding
 
 You need a few more components, but the idea is the same: identification of the
 members with their different internal roles (mongos, configserver, etc.) is done via
-`mongodb[:cluster_role_prefix]` and a `mongodb[:shard_name]`
+the `node[:mongodb][:cluster_role_prefix]` and `node[:mongodb][:shard_name]` attributes.
 
 Let's have a look at a simple sharding setup, consisting of two shard servers, one
 config server and one mongos.
@@ -124,7 +124,7 @@ The setup is not much different to the one described above. All you have to do i
 `mongodb::replicaset` recipe to all shard nodes, and make sure that all shard
 nodes which should be in the same replicaset have the same shard name.
 
-For more details, you can find [tutorial for Sharding + Replication](https://github.com/edelight/cookbooks/wiki/MongoDB%3A-Replication%2BSharding) in the wiki.
+For more details, you can find a [tutorial for Sharding + Replication](https://github.com/edelight/cookbooks/wiki/MongoDB%3A-Replication%2BSharding) in the wiki.
 
 # LICENSE and AUTHOR:
 
