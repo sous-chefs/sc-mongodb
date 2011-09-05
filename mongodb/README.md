@@ -1,6 +1,11 @@
 # DESCRIPTION:
 
-Installs and configures various kind of MongoDB setups, including sharding and replication.
+Installs and configures MongoDB, supporting:
+
+* Single MongoDB
+* Replication
+* Sharding
+* Replication and Sharding
 
 # REQUIREMENTS:
 
@@ -16,7 +21,7 @@ of a sharded setup.
 
 For examples see the USAGE section below.
 
-# ATTRIBUTES: 
+# ATTRIBUTES:
 
 * `mongodb[:dbpath]` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
 * `mongodb[:logpath]` - Path for the logfiles, default is "/var/log/mongodb"
@@ -29,17 +34,17 @@ For examples see the USAGE section below.
 
 # USAGE:
 
-To install and run a single mongodb instance, simply add
+## Single mongodb instance
+
+Simply add
 
 ```ruby
 include_recipe "mongodb::default"
 ```
   
 to your recipe. This will run the mongodb instance as configured by your distribution.
-By changing the dbpath, logpath and port settings (see ATTRIBUTES) for this node
-you will be able to change this defaults.
-If you would like to tweak more settings, simply use the `mongodb_instance`
-definition, like
+You can change the dbpath, logpath and port settings (see ATTRIBUTES) for this node by
+using the `mongodb_instance` definition:
 
 ```ruby
 mongodb_instance "mongodb" do
@@ -62,9 +67,10 @@ The result is a new system service with
 ```shell
   /etc/init.d/my_instance <start|stop|restart|status>
 ```
-  
-If you would like to add your mongodb instance to a replicaset all you have to
-do is adding `mongodb::replicaset` to the node's run_list and make sure to add
+
+## Replicasets
+
+Add `mongodb::replicaset` to the node's run_list and make sure to add
 one or more roles with the same prefix to all members of the replicaset. This
 prefix has to be defined in `mongodb[:cluster_role_prefix]` . For example you
 could create a role called "my_replicaset" and add this role to the run_list of
@@ -72,9 +78,10 @@ all nodes which should be in the replicaset. Finally you only have to define
 `mongodb[:cluster_role_prefix]` for all nodes in this cluster. This way they are
 able to find each other.
 
-Configure sharding is a bit more complicated, because you need a few more
-components, but the idea is the same: identification of the members with their
-different internal roles (mongos, configserver, etc.) is done via
+## Sharding
+
+You need a few more components, but the idea is the same: identification of the
+members with their different internal roles (mongos, configserver, etc.) is done via
 `mongodb[:cluster_role_prefix]` and a `mongodb[:shard_name]`
 
 Let's have a look at a simple sharding setup, consisting of two shard servers, one
@@ -90,13 +97,17 @@ recipe.
 And finally you need to configure the mongos. This can be done by using the
 `mongodb::mongos` recipe. The mongos needs some special configuration, as these
 mongos are actually doing the configuration of the whole sharded cluster.
-Most importantly you need to define a set of `mongodb[:sharded_collections]`
-The value of this attribute should look like
+Most importantly you need to define what collections should be sharded by setting the
+attribute `mongodb[:sharded_collections]`:
 
 ```javascript
 {
-  "test.addressbook": "name",
-  "mydatabase.calendar": "date"
+  "mongodb": {
+    "sharded_collections": {
+      "test.addressbook": "name",
+      "mydatabase.calendar": "date"
+    }
+  }
 }
 ```
   
@@ -105,12 +116,15 @@ database. Also the "addressbook" and the "calendar" collection will be sharded,
 with sharding key "name" resp. "date".
 In the context of a sharding cluster always keep in mind to use roles with the same
 prefix, and define this prefix, to identify all members. Also shard names are
-important to distinguish the different shards.
+important to distinguish the different shards. This is esp. important when you want to replicate shards.
 
-This is esp. important when you want to replicate shards. The setup is not much
-different to the one described above. All you have to do is adding the 
+## Sharding + Replication
+
+The setup is not much different to the one described above. All you have to do is adding the 
 `mongodb::replicaset` recipe to all shard nodes, and make sure that all shard
 nodes which should be in the same replicaset have the same shard name.
+
+For more details, you can find [tutorial for Sharding + Replication](https://github.com/edelight/cookbooks/wiki/MongoDB%3A-Replication%2BSharding) in the wiki.
 
 # LICENSE and AUTHOR:
 
