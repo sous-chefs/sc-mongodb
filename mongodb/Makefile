@@ -2,7 +2,7 @@
 COOKBOOK=mongodb
 BRANCH=master
 
-BUILD_DIR=../../build
+BUILD_DIR=../build
 DIST=$(BUILD_DIR)/$(COOKBOOK).tar.gz
 
 all: metadata.json

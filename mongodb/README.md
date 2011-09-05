@@ -6,7 +6,7 @@ Installs and configures various kind of MongoDB setups, including sharding and r
 
 ## Platform:
 
-The cookbook aims to be platform independant, but is best tested on debian squeze systems.
+The cookbook aims to be platform independant, but is best tested on debian squeeze systems.
 
 # DEFINITIONS:
 
@@ -65,10 +65,10 @@ The result is a new system service with
   
 If you would like to add your mongodb instance to a replicaset all you have to
 do is adding `mongodb::replicaset` to the node's run_list and make sure to add
-one ore more roles with the same prefix to all members of the replicaset. This
+one or more roles with the same prefix to all members of the replicaset. This
 prefix has to be defined in `mongodb[:cluster_role_prefix]` . For example you
 could create a role called "my_replicaset" and add this role to the run_list of
-all nodes which should be in the replicaset. finally you only have to define
+all nodes which should be in the replicaset. Finally you only have to define
 `mongodb[:cluster_role_prefix]` for all nodes in this cluster. This way they are
 able to find each other.
 
@@ -108,7 +108,7 @@ prefix, and define this prefix, to identify all members. Also shard names are
 important to distinguish the different shards.
 
 This is esp. important when you want to replicate shards. The setup is not much
-different to the one described above. all you have to do is adding the 
+different to the one described above. All you have to do is adding the 
 `mongodb::replicaset` recipe to all shard nodes, and make sure that all shard
 nodes which should be in the same replicaset have the same shard name.
 

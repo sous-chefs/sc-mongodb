@@ -1,7 +1,7 @@
 
 DIRS = mongodb
 
-BUILD_DIR=../build
+BUILD_DIR=build
 
 dist: clean
 	mkdir -p $(BUILD_DIR)
