@@ -20,7 +20,7 @@
 include_recipe "mongodb"
 
 # if we are configuring a shard as a replicaset we do nothing in this recipe
-if !node.run_list.include?("mongodb::shard")
+if !node.recipes.include?("mongodb::shard")
   mongodb_instance "mongodb" do
     mongodb_type "mongod"
     port         node['mongodb']['port']

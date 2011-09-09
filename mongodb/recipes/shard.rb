@@ -27,7 +27,7 @@ service "mongodb" do
   action [:disable, :stop]
 end
 
-is_replicated = node.run_list.include?("mongodb::replicaset")
+is_replicated = node.recipes.include?("mongodb::replicaset")
 
 mongodb_instance "shard" do
   mongodb_type "shard"
