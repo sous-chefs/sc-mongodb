@@ -35,7 +35,7 @@ mongodb_instance "shard" do
   logpath      node['mongodb']['logpath']
   dbpath       node['mongodb']['dbpath']
   if is_replicated
-    rs_node    node
+    replicaset    node
   end
 end
 
