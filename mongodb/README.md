@@ -27,8 +27,7 @@ For examples see the USAGE section below.
 * `mongodb[:logpath]` - Path for the logfiles, default is "/var/log/mongodb"
 * `mongodb[:port]` - Port the mongod listens on, default is 27017
 * `mongodb[:client_role]` - Role identifing all external clients which should have access to a mongod instance
-* `mongodb[:cluster_role_prefix]` - Name prefix for all roles used to identify
-    all members of a mongodb cluster.
+* `mongodb[:cluster_role]` - Name of a role used to identify all members of a mongodb cluster.
 * `mongodb[:shard_name]` - Name of a shard, default is "default"
 * `mongodb[:sharded_collections]` - Define which collections are sharded
 
@@ -70,19 +69,20 @@ The result is a new system service with
 
 ## Replicasets
 
-Add `mongodb::replicaset` to the node's run_list and make sure to add
-one or more roles with the same prefix to all members of the replicaset. This
-prefix has to be defined in the attribute `node[:mongodb][:cluster_role_prefix]`.
+Add `mongodb::replicaset` to the node's run_list and make sure to create a new role.
+This role is supposed to identify all members of the replicaset and therefor must
+be added to all members run_list. Also `node[:mongodb][:cluster_role]` must be
+set to the name of the role for each node.
 
 For example you could create a role called "my_replicaset" and add this role to the
 run_list of all nodes which should be in the replicaset. The role should define
-`node[:mongodb][:cluster_role_prefix] = my_replicaset`.
+`node[:mongodb][:cluster_role] = my_replicaset`.
 
 ## Sharding
 
 You need a few more components, but the idea is the same: identification of the
 members with their different internal roles (mongos, configserver, etc.) is done via
-the `node[:mongodb][:cluster_role_prefix]` and `node[:mongodb][:shard_name]` attributes.
+the `node[:mongodb][:cluster_role]` and `node[:mongodb][:shard_name]` attributes.
 
 Let's have a look at a simple sharding setup, consisting of two shard servers, one
 config server and one mongos.
@@ -114,9 +114,10 @@ attribute `mongodb[:sharded_collections]`:
 Now mongos will automatically enable sharding for the "test" and the "mydatabase"
 database. Also the "addressbook" and the "calendar" collection will be sharded,
 with sharding key "name" resp. "date".
-In the context of a sharding cluster always keep in mind to use roles with the same
-prefix, and define this prefix, to identify all members. Also shard names are
-important to distinguish the different shards. This is esp. important when you want to replicate shards.
+In the context of a sharding cluster always keep in mind to use a single role
+which is added to all members of the cluster to identify all member nodes.
+Also shard names are important to distinguish the different shards.
+This is esp. important when you want to replicate shards.
 
 ## Sharding + Replication
 

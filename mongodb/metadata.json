@@ -47,20 +47,6 @@
       "display_name": "dbpath",
       "description": "Path to store the mongodb data"
     },
-    "mongodb/cluster_role_prefix": {
-      "required": "optional",
-      "calculated": false,
-      "choice": [
-
-      ],
-      "default": null,
-      "type": "string",
-      "recipes": [
-
-      ],
-      "display_name": "Cluster Role refix",
-      "description": "Prefix to identify all members of a mongodb cluster"
-    },
     "mongodb/logpath": {
       "required": "optional",
       "calculated": false,
@@ -74,6 +60,20 @@
       ],
       "display_name": "logpath",
       "description": "Path to store the logfiles of a mongodb instance"
+    },
+    "mongodb/cluster_role": {
+      "required": "optional",
+      "calculated": false,
+      "choice": [
+
+      ],
+      "default": null,
+      "type": "string",
+      "recipes": [
+
+      ],
+      "display_name": "Cluster Role",
+      "description": "Role to identify all members of a mongodb cluster"
     },
     "mongodb/client_roles": {
       "required": "optional",

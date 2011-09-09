@@ -34,9 +34,9 @@ attribute "mongodb/client_roles",
   :description => "Roles of nodes who need access to the mongodb instance",
   :default => []
   
-attribute "mongodb/cluster_role_prefix",
-  :display_name => "Cluster Role refix",
-  :description => "Prefix to identify all members of a mongodb cluster",
+attribute "mongodb/cluster_role",
+  :display_name => "Cluster Role",
+  :description => "Role to identify all members of a mongodb cluster",
   :default => nil
 
 attribute "mongodb/shard_name",
