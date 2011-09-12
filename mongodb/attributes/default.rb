@@ -23,6 +23,6 @@ default[:mongodb][:port] = 27017
 
 # roles
 default[:mongodb][:client_roles] = []
-default[:mongodb][:cluster_role] = nil
+default[:mongodb][:cluster_name] = nil
 default[:mongodb][:shard_name] = "default"
 

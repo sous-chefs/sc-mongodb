@@ -34,9 +34,9 @@ attribute "mongodb/client_roles",
   :description => "Roles of nodes who need access to the mongodb instance",
   :default => []
   
-attribute "mongodb/cluster_role",
-  :display_name => "Cluster Role",
-  :description => "Role to identify all members of a mongodb cluster",
+attribute "mongodb/cluster_name",
+  :display_name => "Cluster Name",
+  :description => "Name of the mongodb cluster, all nodes of a cluster must have the same name.",
   :default => nil
 
 attribute "mongodb/shard_name",

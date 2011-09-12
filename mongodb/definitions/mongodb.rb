@@ -134,7 +134,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   if !replicaset_name.nil?
     rs_nodes = search(
       :node,
-      "mongodb_cluster_role:#{replicaset['mongodb']['cluster_role']} AND \
+      "mongodb_cluster_name:#{replicaset['mongodb']['cluster_name']} AND \
        recipes:mongodb\\:\\:replicaset AND \
        mongodb_shard_name:#{replicaset['mongodb']['shard_name']} AND \
        chef_environment:#{replicaset.chef_environment}"
@@ -157,7 +157,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
     
     shard_nodes = search(
       :node,
-      "mongodb_cluster_role:#{node['mongodb']['cluster_role']} AND \
+      "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
        recipes:mongodb\\:\\:shard AND \
        chef_environment:#{node.chef_environment}"
     )

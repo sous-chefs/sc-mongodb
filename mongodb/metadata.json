@@ -61,7 +61,7 @@
       "display_name": "logpath",
       "description": "Path to store the logfiles of a mongodb instance"
     },
-    "mongodb/cluster_role": {
+    "mongodb/cluster_name": {
       "required": "optional",
       "calculated": false,
       "choice": [
@@ -72,8 +72,8 @@
       "recipes": [
 
       ],
-      "display_name": "Cluster Role",
-      "description": "Role to identify all members of a mongodb cluster"
+      "display_name": "Cluster Name",
+      "description": "Name of the mongodb cluster, all nodes of a cluster must have the same name."
     },
     "mongodb/client_roles": {
       "required": "optional",

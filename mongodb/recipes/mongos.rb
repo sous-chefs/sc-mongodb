@@ -27,7 +27,7 @@ end
 
 configsrv = search(
   :node,
-  "mongodb_cluster_role:#{node['mongodb']['cluster_role']} AND \
+  "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
    recipes:mongodb\\:\\:configserver AND \
    chef_environment:#{node.chef_environment}"
 )

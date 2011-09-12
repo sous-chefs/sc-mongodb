@@ -50,10 +50,10 @@ end
 #      source_nodes += search(:node, "role:#{client_role} AND chef_environment:#{node.chef_environment}")
 #    end
 #
-#    if !node['mongodb']['cluster_role'].nil?
+#    if !node['mongodb']['cluster_name'].nil?
 #      source_nodes += search(
 #        :node,
-#        "mongodb_cluster_role:#{node['mongodb']['cluster_role']} AND \
+#        "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
 #         (NOT ipaddress:#{node['ipaddress']}) AND \
 #         chef_environment:#{node.chef_environment}"
 #      )
