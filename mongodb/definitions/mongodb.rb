@@ -60,7 +60,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
     daemon = "/usr/bin/mongos"
     configfile = nil
     dbpath = nil
-    configserver = configserver_nodes.collect{|n| "#{n['ipaddress']}:#{n['mongodb']['port']}" }.join(",")
+    configserver = configserver_nodes.collect{|n| "#{n['fqdn']}:#{n['mongodb']['port']}" }.join(",")
   end
   
   # default file

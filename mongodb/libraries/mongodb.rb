@@ -43,7 +43,13 @@ class Chef::ResourceDefinitionList::MongoDB
     rs_members = []
     members.each_index do |n|
       port = members[n]['mongodb']['port']
-      rs_members << {"_id" => n, "host" => "#{members[n]['ipaddress']}:#{port}"}
+      rs_members << {"_id" => n, "host" => "#{members[n]['fqdn']}:#{port}"}
+    end
+    
+    rs_member_ips = []
+    members.each_index do |n|
+      port = members[n]['mongodb']['port']
+      rs_member_ips << {"_id" => n, "host" => "#{members[n]['ipaddress']}:#{port}"}
     end
     
     admin = connection['admin']
@@ -65,16 +71,49 @@ class Chef::ResourceDefinitionList::MongoDB
       # check if both configs are the same
       config = connection['local']['system']['replset'].find_one({"_id" => name})
       if config['_id'] == name and config['members'] == rs_members
+        # config is up-to-date, do nothing
         Chef::Log.info("Replicaset '#{name}' already configured")
+      elsif config['_id'] == name and config['members'] == rs_member_ips
+        # config is up-to-date, but ips are used instead of hostnames, change config to hostnames
+        Chef::Log.info("Need to convert ips to hostnames for replicaset '#{name}'")
+        old_members = config['members'].collect{ |m| m['host'] }
+        mapping = {}
+        rs_member_ips.each do |mem_h|
+          members.each do |n|
+            ip, prt = mem_h['host'].split(":")
+            if ip == n['ipaddress']
+              mapping["#{ip}:#{prt}"] = "#{n['fqdn']}:#{prt}"
+            end
+          end
+        end
+        config['members'].collect!{ |m| {"_id" => m["_id"], "host" => mapping[m["host"]]} }
+        config['version'] += 1
+        
+        rs_connection = Mongo::ReplSetConnection.new( *old_members.collect{ |m| m.split(":") })
+        admin = rs_connection['admin']
+        cmd = BSON::OrderedHash.new
+        cmd['replSetReconfig'] = config
+        result = nil
+        begin
+          result = admin.command(cmd, :check_response => false)
+        rescue Mongo::ConnectionFailure
+          # reconfiguring destroys exisiting connections, reconnect
+          Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
+          config = connection['local']['system']['replset'].find_one({"_id" => name})
+          Chef::Log.info("New config successfully applied: #{config.inspect}")
+        end
+        if !result.nil?
+          Chef::Log.error("configuring replicaset returned: #{result.inspect}")
+        end
       else
         # remove removed members from the replicaset and add the new ones
+        max_id = config['members'].collect{ |member| member['_id']}.max
         rs_members.collect!{ |member| member['host'] }
         config['version'] += 1
         old_members = config['members'].collect{ |member| member['host'] }
         members_delete = old_members - rs_members        
         config['members'] = config['members'].delete_if{ |m| members_delete.include?(m['host']) }
         members_add = rs_members - old_members
-        max_id = config['members'].collect{ |member| member['_id']}.max
         members_add.each do |m|
           max_id += 1
           config['members'] << {"_id" => max_id, "host" => m}
@@ -85,6 +124,8 @@ class Chef::ResourceDefinitionList::MongoDB
         
         cmd = BSON::OrderedHash.new
         cmd['replSetReconfig'] = config
+        
+        result = nil
         begin
           result = admin.command(cmd, :check_response => false)
         rescue Mongo::ConnectionFailure
@@ -92,6 +133,9 @@ class Chef::ResourceDefinitionList::MongoDB
           Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
           config = connection['local']['system']['replset'].find_one({"_id" => name})
           Chef::Log.info("New config successfully applied: #{config.inspect}")
+        end
+        if !result.nil?
+          Chef::Log.error("configuring replicaset returned: #{result.inspect}")
         end
       end
     elsif !result.fetch("errmsg", nil).nil?
@@ -112,7 +156,7 @@ class Chef::ResourceDefinitionList::MongoDB
       else
         key = '_single'
       end
-      shard_groups[key] << "#{n['ipaddress']}:#{n['mongodb']['port']}"
+      shard_groups[key] << "#{n['fqdn']}:#{n['mongodb']['port']}"
     end
     Chef::Log.info(shard_groups.inspect)
     
