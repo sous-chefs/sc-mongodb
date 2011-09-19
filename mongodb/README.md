@@ -13,6 +13,7 @@ Installs and configures MongoDB, supporting:
 ## Platform:
 
 The cookbook aims to be platform independant, but is best tested on debian squeeze systems.
+
 The `10gen_repo` recipe currently supports only the Debian and Ubuntu 10gen repository.
 Patches for other platforms are welcome.
 
@@ -44,7 +45,7 @@ Adds the stable [10gen repo](http://www.mongodb.org/downloads#packages) for the
 corresponding platform. Currently only implemented for the Debian and Ubuntu repository.
 
 Usage: just add `recipe[mongodb::10gen_repo]` to the node run_list *before* any other
-MongoDB recipe, and the mongodb-10gen packages will be installed instead of the distribution default.
+MongoDB recipe, and the mongodb-10gen **stable** packages will be installed instead of the distribution default.
 
 ## Single mongodb instance
 
