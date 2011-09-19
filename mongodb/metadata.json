@@ -123,7 +123,8 @@
     "mongodb::shard": "Installs and configures a single shard",
     "mongodb::configserver": "Installs and configures a configserver for mongodb sharding",
     "mongodb::replicaset": "Installs and configures a mongodb replicaset",
-    "mongodb::mongos": "Installs and configures a mongos which can be used in a sharded setup"
+    "mongodb::mongos": "Installs and configures a mongos which can be used in a sharded setup",
+    "mongodb::10gen_repo": "Adds the 10gen repo to get the latest packages"
   },
   "groupings": {
   },

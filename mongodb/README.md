@@ -6,12 +6,15 @@ Installs and configures MongoDB, supporting:
 * Replication
 * Sharding
 * Replication and Sharding
+* 10gen repository package installation
 
 # REQUIREMENTS:
 
 ## Platform:
 
 The cookbook aims to be platform independant, but is best tested on debian squeeze systems.
+The `10gen_repo` recipe currently supports only the Debian and Ubuntu 10gen repository.
+Patches for other platforms are welcome.
 
 # DEFINITIONS:
 
@@ -34,6 +37,14 @@ For examples see the USAGE section below.
 * `mongodb[:sharded_collections]` - Define which collections are sharded
 
 # USAGE:
+
+## 10gen repository
+
+Adds the stable [10gen repo](http://www.mongodb.org/downloads#packages) for the
+corresponding platform. Currently only implemented for the Debian and Ubuntu repository.
+
+Usage: just add `recipe[mongodb::10gen_repo]` to the node run_list *before* any other
+MongoDB recipe, and the mongodb-10gen packages will be installed instead of the distribution default.
 
 ## Single mongodb instance
 
