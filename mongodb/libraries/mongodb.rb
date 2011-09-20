@@ -46,6 +46,10 @@ class Chef::ResourceDefinitionList::MongoDB
       rs_members << {"_id" => n, "host" => "#{members[n]['fqdn']}:#{port}"}
     end
     
+    Chef::Log.info(
+      "Configuring replicaset with members #{members.collect{ |n| n['hostname'] }.join(', ')}"
+    )
+    
     rs_member_ips = []
     members.each_index do |n|
       port = members[n]['mongodb']['port']
