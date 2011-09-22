@@ -3,13 +3,12 @@ COOKBOOK=mongodb
 BRANCH=master
 
 BUILD_DIR=../build
-DIST=$(BUILD_DIR)/$(COOKBOOK).tar.gz
+DIST_PREFIX=$(BUILD_DIR)/$(COOKBOOK)
 
 all: metadata.json
 
 clean:
 	-rm metadata.json
-	-rm $(DIST)
 
 metadata.json:
 	-rm $@
@@ -17,4 +16,5 @@ metadata.json:
 	
 dist: clean metadata.json
 	mkdir -p $(BUILD_DIR)
-	tar --exclude-vcs --exclude=Makefile -cvzf $(DIST) ../$(COOKBOOK)
+	version=`python -c "import json;c = json.load(open('metadata.json')); print c.get('version', 'UNKNOWN')"`; \
+	tar --exclude-vcs --exclude=Makefile -cvzf $(DIST_PREFIX)-$$version.tar.gz ../$(COOKBOOK)

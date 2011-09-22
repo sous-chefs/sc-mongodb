@@ -3,7 +3,7 @@ DIRS = mongodb
 
 BUILD_DIR=build
 
-dist: clean
+dist:
 	mkdir -p $(BUILD_DIR)
 	for i in $(DIRS); do make -C $$i $@; done
 	
