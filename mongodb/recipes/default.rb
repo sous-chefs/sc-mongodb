@@ -26,18 +26,21 @@ end
 needs_mongo_gem = (node.recipes.include?("mongodb::replicaset") or node.recipes.include?("mongodb::mongos"))
 
 if needs_mongo_gem
+  # install the mongo ruby gem at compile time to make it globally available
   gem_package 'mongo' do
     action :nothing
   end.run_action(:install)
   Gem.clear_paths
 end
 
-# configure default instance
-mongodb_instance "mongodb" do
-  mongodb_type "mongod"
-  port         node['mongodb']['port']
-  logpath      node['mongodb']['logpath']
-  dbpath       node['mongodb']['dbpath']
+if node.recipes.include?("mongodb::default") or node.recipes.include?("mongodb")
+  # configure default instance
+  mongodb_instance "mongodb" do
+    mongodb_type "mongod"
+    port         node['mongodb']['port']
+    logpath      node['mongodb']['logpath']
+    dbpath       node['mongodb']['dbpath']
+  end
 end
 
 ## Firewall configuration ##
