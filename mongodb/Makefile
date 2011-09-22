@@ -17,4 +17,4 @@ metadata.json:
 	
 dist: clean metadata.json
 	mkdir -p $(BUILD_DIR)
-	tar --exclude-vcs --exclude=Makefile -cvzf $(DIST) *
+	tar --exclude-vcs --exclude=Makefile -cvzf $(DIST) ../$(COOKBOOK)
