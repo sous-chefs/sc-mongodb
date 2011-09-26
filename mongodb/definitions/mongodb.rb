@@ -104,12 +104,13 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   end
   
   # init script
-  cookbook_file "/etc/init.d/#{name}" do
+  template "/etc/init.d/#{name}" do
     action :create
-    source "mongodb.init"
+    source "mongodb.init.erb"
     group "root"
     owner "root"
     mode "0755"
+    variables :provides => name
     notifies :restart, "service[#{name}]"
   end
   
