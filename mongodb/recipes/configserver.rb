@@ -26,6 +26,9 @@ service "mongodb" do
   action [:disable, :stop]
 end
 
+# we are not starting the configserver service with the --configsvr
+# commandline option because right now this only changes the port it's
+# running on, and we are overwriting this port anyway.
 mongodb_instance "configserver" do
   mongodb_type "configserver"
   port         node['mongodb']['port']
