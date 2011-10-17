@@ -14,7 +14,7 @@ Installs and configures MongoDB, supporting:
 
 The cookbook aims to be platform independant, but is best tested on debian squeeze systems.
 
-The `10gen_repo` recipe currently supports only the Debian and Ubuntu 10gen repository.
+The `10gen_repo` recipe currently supports only the Debian and Ubuntu and Fedora and CentOS 10gen repository.
 Patches for other platforms are welcome.
 
 # DEFINITIONS:

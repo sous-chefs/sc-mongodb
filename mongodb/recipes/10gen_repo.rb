@@ -42,6 +42,27 @@ when "debian", "ubuntu"
   package "mongodb" do
     package_name "mongodb-10gen"
   end
+
+when "centos","redhat","fedora","suse"
+  
+  processor = node[:kernel][:machine]
+  if processor != "x86_64"
+    processor = "i686"
+  end
+  
+	template "/etc/yum.repos.d/10gen.repo" do
+	  source "10gen.repo.erb"
+	  owner "root"
+	  group "root"
+	  mode "0644"
+	  variables(
+	    :processor => processor
+	  )
+	end
+
+	execute "refresh repos" do
+	  command "yum clean all"
+	end
 else
     Chef::Log.warn("Adding the #{node['platform']} 10gen repository is not yet not supported by this cookbook")
 end
