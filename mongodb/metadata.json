@@ -17,8 +17,8 @@
       "recipes": [
 
       ],
-      "display_name": "Sharded Collections",
-      "description": "collections to shard"
+      "description": "collections to shard",
+      "display_name": "Sharded Collections"
     },
     "mongodb/shard_name": {
       "required": "optional",
@@ -31,8 +31,8 @@
       "recipes": [
 
       ],
-      "display_name": "Shard name",
-      "description": "Name of a mongodb shard"
+      "description": "Name of a mongodb shard",
+      "display_name": "Shard name"
     },
     "mongodb/dbpath": {
       "required": "optional",
@@ -45,8 +45,8 @@
       "recipes": [
 
       ],
-      "display_name": "dbpath",
-      "description": "Path to store the mongodb data"
+      "description": "Path to store the mongodb data",
+      "display_name": "dbpath"
     },
     "mongodb/logpath": {
       "required": "optional",
@@ -59,8 +59,22 @@
       "recipes": [
 
       ],
-      "display_name": "logpath",
-      "description": "Path to store the logfiles of a mongodb instance"
+      "description": "Path to store the logfiles of a mongodb instance",
+      "display_name": "logpath"
+    },
+    "mongodb/replicaset_name": {
+      "required": "optional",
+      "calculated": false,
+      "choice": [
+
+      ],
+      "default": null,
+      "type": "string",
+      "recipes": [
+
+      ],
+      "description": "Name of a mongodb replicaset",
+      "display_name": "Replicaset_name"
     },
     "mongodb/cluster_name": {
       "required": "optional",
@@ -73,8 +87,8 @@
       "recipes": [
 
       ],
-      "display_name": "Cluster Name",
-      "description": "Name of the mongodb cluster, all nodes of a cluster must have the same name."
+      "description": "Name of the mongodb cluster, all nodes of a cluster must have the same name.",
+      "display_name": "Cluster Name"
     },
     "mongodb/client_roles": {
       "required": "optional",
@@ -89,8 +103,8 @@
       "recipes": [
 
       ],
-      "display_name": "Client Roles",
-      "description": "Roles of nodes who need access to the mongodb instance"
+      "description": "Roles of nodes who need access to the mongodb instance",
+      "display_name": "Client Roles"
     },
     "mongodb/port": {
       "required": "optional",
@@ -103,8 +117,8 @@
       "recipes": [
 
       ],
-      "display_name": "Port",
-      "description": "Port the mongodb instance is running on"
+      "description": "Port the mongodb instance is running on",
+      "display_name": "Port"
     }
   },
   "license": "Apache 2.0",

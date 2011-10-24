@@ -21,7 +21,8 @@ default[:mongodb][:dbpath] = "/var/lib/mongodb"
 default[:mongodb][:logpath] = "/var/log/mongodb"
 default[:mongodb][:port] = 27017
 
-# roles
+# cluster identifier
 default[:mongodb][:client_roles] = []
 default[:mongodb][:cluster_name] = nil
+default[:mongodb][:replicaset_name] = nil
 default[:mongodb][:shard_name] = "default"

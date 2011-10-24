@@ -41,10 +41,20 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   configserver_nodes = params[:configserver]
   
   replicaset = params[:replicaset]
-  begin
-    replicaset_name = "rs_#{replicaset['mongodb']['shard_name']}" # Looks weird, but we need just some name
-  rescue
-    replicaset_name = nil
+  if type == "shard"
+    # for replicated shards we autogenerate the replicaset name for each shard
+    replicaset_name = "rs_#{replicaset['mongodb']['shard_name']}"
+  else
+    # if there is a predefined replicaset name we use it,
+    # otherwise we try to generate one using 'rs_$SHARD_NAME'
+    replicaset_name = replicaset['mongodb']['replicaset_name']
+    if replicaset_name.nil?
+      begin
+        replicaset_name = "rs_#{replicaset['mongodb']['shard_name']}"
+      rescue
+        replicaset_name = nil
+      end
+    end
   end
   
   if !["mongod", "shard", "configserver", "mongos"].include?(type)
