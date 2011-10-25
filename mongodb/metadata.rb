@@ -57,3 +57,6 @@ attribute "mongodb/replicaset_name",
   :description => "Name of a mongodb replicaset",
   :default => nil
   
+attribute "mongodb/enable_rest",
+  :display_name => "Enable Rest",
+  :description => "Enable the ReST interface of the webserver"

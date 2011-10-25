@@ -76,6 +76,19 @@
       "description": "Name of a mongodb replicaset",
       "display_name": "Replicaset_name"
     },
+    "mongodb/enable_rest": {
+      "required": "optional",
+      "calculated": false,
+      "choice": [
+
+      ],
+      "type": "string",
+      "recipes": [
+
+      ],
+      "description": "Enable the ReST interface of the webserver",
+      "display_name": "Enable Rest"
+    },
     "mongodb/cluster_name": {
       "required": "optional",
       "calculated": false,

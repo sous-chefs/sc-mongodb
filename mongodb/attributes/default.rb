@@ -26,3 +26,5 @@ default[:mongodb][:client_roles] = []
 default[:mongodb][:cluster_name] = nil
 default[:mongodb][:replicaset_name] = nil
 default[:mongodb][:shard_name] = "default"
+
+default[:mongodb][:enable_rest] = false

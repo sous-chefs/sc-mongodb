@@ -41,4 +41,5 @@ mongodb_instance "shard" do
   if is_replicated
     replicaset    node
   end
+  enable_rest node['mongodb']['enable_rest']
 end
