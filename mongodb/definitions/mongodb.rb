@@ -107,6 +107,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
     group "mongodb"
     mode "0755"
     action :create
+    recursive true
   end
   
   if type != "mongos"
@@ -116,6 +117,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
       group "mongodb"
       mode "0755"
       action :create
+      recursive true
     end
   end
   
