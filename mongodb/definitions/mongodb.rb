@@ -43,8 +43,12 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   
   replicaset = params[:replicaset]
   if type == "shard"
-    # for replicated shards we autogenerate the replicaset name for each shard
-    replicaset_name = "rs_#{replicaset['mongodb']['shard_name']}"
+    if replicaset.nil?
+      replicaset_name = nil
+    else
+      # for replicated shards we autogenerate the replicaset name for each shard
+      replicaset_name = "rs_#{replicaset['mongodb']['shard_name']}"
+    end
   else
     # if there is a predefined replicaset name we use it,
     # otherwise we try to generate one using 'rs_$SHARD_NAME'
@@ -141,7 +145,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
       notifies :create, "ruby_block[config_replicaset]"
     end
     if type == "mongos"
-      notifies :create, "ruby_block[config_sharding]"
+      notifies :create, "ruby_block[config_sharding]", :immediately
     end
     if name == "mongodb"
       # we don't care about a running mongodb service in these cases, all we need is stopping it
