@@ -20,7 +20,7 @@
 #
 
 define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :start],
-    :bind_ip => "0.0.0.0", :port => 27017 , :logpath => "/var/log/mongodb",
+    :bind_ip => nil, :port => 27017 , :logpath => "/var/log/mongodb",
     :dbpath => "/data", :configfile => "/etc/mongodb.conf", :configserver => [],
     :replicaset => nil, :enable_rest => false, :notifies => [] do
     
