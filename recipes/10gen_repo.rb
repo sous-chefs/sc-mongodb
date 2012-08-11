@@ -39,10 +39,6 @@ when "debian", "ubuntu"
     notifies :run, "execute[apt-get update]", :immediately
   end
 
-  package "mongodb" do
-    package_name "mongodb-10gen"
-  end
-
 when "centos","redhat","fedora","amazon"
   yum_repository "10gen" do
     description "10gen RPM Repository"
