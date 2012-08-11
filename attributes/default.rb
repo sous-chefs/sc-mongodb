@@ -49,6 +49,7 @@ when "centos","redhat","fedora","amazon"
   default[:mongodb][:package_name] = "mongo-10gen-server"
   default[:mongodb][:user] = "mongod"
   default[:mongodb][:group] = "mongod"
+  default[:mongodb][:init_script_template] = "redhat-mongodb.init.erb"
 
 else
   default[:mongodb][:defaults_dir] = "/etc/default"
