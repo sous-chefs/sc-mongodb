@@ -13,7 +13,7 @@ recipe "mongodb::replicaset", "Installs and configures a mongodb replicaset"
 
 depends "apt"
 
-%w{ ubuntu debian }.each do |os|
+%w{ ubuntu debian freebsd }.each do |os|
   supports os
 end
 
@@ -51,3 +51,12 @@ attribute "mongodb/sharded_collections",
   :display_name => "Sharded Collections",
   :description => "collections to shard",
   :default => {}
+
+attribute "mongodb/replicaset_name",
+  :display_name => "Replicaset_name",
+  :description => "Name of a mongodb replicaset",
+  :default => nil
+  
+attribute "mongodb/enable_rest",
+  :display_name => "Enable Rest",
+  :description => "Enable the ReST interface of the webserver"

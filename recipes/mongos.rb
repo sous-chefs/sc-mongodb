@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: mongodb
-# Recipe:: configserver
+# Recipe:: mongos
 #
 # Copyright 2011, edelight GmbH
 # Authors:
@@ -22,16 +22,26 @@
 include_recipe "mongodb"
 
 service "mongodb" do
-  supports :status => true, :restart => true
   action [:disable, :stop]
 end
 
-# we are not starting the configserver service with the --configsvr
-# commandline option because right now this only changes the port it's
-# running on, and we are overwriting this port anyway.
-mongodb_instance "configserver" do
-  mongodb_type "configserver"
+configsrv = search(
+  :node,
+  "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
+   recipes:mongodb\\:\\:configserver AND \
+   chef_environment:#{node.chef_environment}"
+)
+
+if configsrv.length != 1 and configsrv.length != 3
+  Chef::Log.error("Found #{configsrv.length} configserver, need either one or three of them")
+  raise "Wrong number of configserver nodes"
+end
+
+mongodb_instance "mongos" do
+  mongodb_type "mongos"
   port         node['mongodb']['port']
   logpath      node['mongodb']['logpath']
   dbpath       node['mongodb']['dbpath']
+  configserver configsrv
+  enable_rest  node['mongodb']['enable_rest']
 end

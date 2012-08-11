@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: mongodb
-# Recipe:: mongos
+# Recipe:: shard
 #
 # Copyright 2011, edelight GmbH
 # Authors:
@@ -19,28 +19,27 @@
 # limitations under the License.
 #
 
-include_recipe "mongodb"
+include_recipe "mongodb::default"
 
+# disable and stop the default mongodb instance
 service "mongodb" do
+  supports :status => true, :restart => true
   action [:disable, :stop]
 end
 
-configsrv = search(
-  :node,
-  "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
-   recipes:mongodb\\:\\:configserver AND \
-   chef_environment:#{node.chef_environment}"
-)
+is_replicated = node.recipes.include?("mongodb::replicaset")
 
-if configsrv.length != 1 and configsrv.length != 3
-  Chef::Log.error("Found #{configsrv.length} configserver, need either one or three of them")
-  raise "Wrong number of configserver nodes"
-end
 
-mongodb_instance "mongos" do
-  mongodb_type "mongos"
+# we are not starting the shard service with the --shardsvr
+# commandline option because right now this only changes the port it's
+# running on, and we are overwriting this port anyway.
+mongodb_instance "shard" do
+  mongodb_type "shard"
   port         node['mongodb']['port']
   logpath      node['mongodb']['logpath']
   dbpath       node['mongodb']['dbpath']
-  configserver configsrv
+  if is_replicated
+    replicaset    node
+  end
+  enable_rest node['mongodb']['enable_rest']
 end
