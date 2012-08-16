@@ -19,7 +19,7 @@
 # limitations under the License.
 #
 
-package "mongodb" do
+package node[:mongodb][:package_name] do
   action :install
 end
 
@@ -40,5 +40,6 @@ if node.recipes.include?("mongodb::default") or node.recipes.include?("mongodb")
     port         node['mongodb']['port']
     logpath      node['mongodb']['logpath']
     dbpath       node['mongodb']['dbpath']
+    enable_rest  node['mongodb']['enable_rest']
   end
 end

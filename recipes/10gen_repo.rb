@@ -39,30 +39,13 @@ when "debian", "ubuntu"
     notifies :run, "execute[apt-get update]", :immediately
   end
 
-  package "mongodb" do
-    package_name "mongodb-10gen"
+when "centos","redhat","fedora","amazon"
+  yum_repository "10gen" do
+    description "10gen RPM Repository"
+    url "http://downloads-distro.mongodb.org/repo/redhat/os/$arch"
+    action :add
   end
 
-when "centos","redhat","fedora","suse"
-  
-  processor = node[:kernel][:machine]
-  if processor != "x86_64"
-    processor = "i686"
-  end
-  
-	template "/etc/yum.repos.d/10gen.repo" do
-	  source "10gen.repo.erb"
-	  owner "root"
-	  group "root"
-	  mode "0644"
-	  variables(
-	    :processor => processor
-	  )
-	end
-
-	execute "refresh repos" do
-	  command "yum clean all"
-	end
 else
     Chef::Log.warn("Adding the #{node['platform']} 10gen repository is not yet not supported by this cookbook")
 end

@@ -1,8 +1,8 @@
 #
 # Cookbook Name:: mongodb
-# Attributes:: default
+# Recipe:: replicatset
 #
-# Copyright 2010, edelight GmbH
+# Copyright 2011, edelight GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,11 +17,16 @@
 # limitations under the License.
 #
 
-default[:mongodb][:dbpath] = "/var/lib/mongodb"
-default[:mongodb][:logpath] = "/var/log/mongodb"
-default[:mongodb][:port] = 27017
+include_recipe "mongodb"
 
-# roles
-default[:mongodb][:client_roles] = []
-default[:mongodb][:cluster_name] = nil
-default[:mongodb][:shard_name] = "default"
+# if we are configuring a shard as a replicaset we do nothing in this recipe
+if !node.recipes.include?("mongodb::shard")
+  mongodb_instance "mongodb" do
+    mongodb_type "mongod"
+    port         node['mongodb']['port']
+    logpath      node['mongodb']['logpath']
+    dbpath       node['mongodb']['dbpath']
+    replicaset   node
+    enable_rest  node['mongodb']['enable_rest']
+  end
+end
