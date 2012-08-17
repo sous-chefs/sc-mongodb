@@ -61,7 +61,7 @@ attribute "mongodb/enable_rest",
   :display_name => "Enable Rest",
   :description => "Enable the ReST interface of the webserver"
 
-attribute "mongodb/bin_ip",
+attribute "mongodb/bind_ip",
   :display_name => "Bind address",
   :description => "MongoDB instance bind address",
   :default => nil
