@@ -36,8 +36,8 @@ end
 # Create keyFile if specified
 if node[:mongodb][:key_file]
   file "/etc/mongodb.key" do
-    owner "mongodb"
-    group "mongodb"
+    owner node[:mongodb][:user]
+    group node[:mongodb][:group]
     mode  "0600"
     backup false
     content node[:mongodb][:key_file]
