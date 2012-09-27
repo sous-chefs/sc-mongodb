@@ -70,6 +70,14 @@ define :mongodb_instance,
   new_resource.template_cookbook          = node['mongodb']['template_cookbook']
   new_resource.ulimit                     = node['mongodb']['ulimit']
 
+  KNOWN_RELOAD_ACTIONS = %w(restart nothing)
+  if KNOWN_RELOAD_ACTIONS.include?(action = node['mongodb']['reload_action'].to_s)
+    new_resource.reload_action = action
+  else
+    Chef::Log.info "Unknown mongodb.reload_action #{action}, should be 'restart' or 'nothing'. Defaulting to 'nothing'"
+    new_resource.reload_action = 'nothing'
+  end
+
   if node['mongodb']['apt_repo'] == "ubuntu-upstart"
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
     mode = "0644"
@@ -121,7 +129,7 @@ define :mongodb_instance,
     variables({
       :sysconfig => new_resource.sysconfig_vars
     })
-    notifies :restart, "service[#{new_resource.name}]"
+    notifies new_resource.reload_action, "service[#{new_resource.name}]"
   end
 
   # config file
@@ -134,8 +142,8 @@ define :mongodb_instance,
       :config => new_resource.config
     })
     mode "0644"
+    notifies new_resource.reload_action, "service[#{new_resource.name}]"
   end
-
 
   # log dir [make sure it exists]
   directory new_resource.logpath do
@@ -171,7 +179,7 @@ define :mongodb_instance,
       :bind_ip =>        new_resource.bind_ip,
       :port =>           new_resource.port
     })
-    notifies :restart, "service[#{new_resource.name}]"
+    notifies new_resource.reload_action, "service[#{new_resource.name}]"
   end
 
   # service
