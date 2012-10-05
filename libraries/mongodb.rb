@@ -87,7 +87,7 @@ class Chef::ResourceDefinitionList::MongoDB
           retry
         end
       rescue => error_code
-        Chef::Log.warn("Unable to connect to #{host_members.first}. #{error_code}")
+        Chef::Log.warn("Unable to connect to #{host_members.first}. #{error_code}")        
         return
       end
 
@@ -108,7 +108,7 @@ class Chef::ResourceDefinitionList::MongoDB
         Chef::Log.info("We are connected to the primary, continuing ...")
       else
         ## NEED TO ABORT
-        Chef::Log.warn("We are not connect to the primary, aborting ...")
+        Chef::Log.warn("We are not connected to the primary, aborting ...")
         return
       end
     end
@@ -121,7 +121,7 @@ class Chef::ResourceDefinitionList::MongoDB
         found = true
       end
     end
-    if found = false
+    if found == false
       members << node
     end
 
