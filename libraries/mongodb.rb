@@ -56,39 +56,45 @@ class Chef::ResourceDefinitionList::MongoDB
       connection = Mongo::ReplSetConnection.new( host_members )
     rescue Mongo::ConnectionFailure => error_code
       if error_code.to_s().include?('Cannot connect to a replica set')
-        Chef::Log.warn("Not a replicaset yet")
+        Chef::Log.warn("No replicaset found to be initiated.")
         is_replicaset = false
       else
-        Chef::Log.warn("111 Trying more times. Could not connect to database: 'localhost:#{node['mongodb']['port']}'")
+        Chef::Log.warn("Could not connect to database: #{members.collect{ |n| n['hostname'] }.join(', ')}")
       end
     rescue => error_code
       if error_code.to_s().include?('Cannot connect to a replica set')
-        Chef::Log.warn("Not a replicaset yet")
+        Chef::Log.warn("No replicaset found to be initiated.")
         is_replicaset = false
       else
-        Chef::Log.warn("222 Trying more times. Could not connect to database: 'localhost:#{node['mongodb']['port']}'")
+        Chef::Log.warn("Could not connect to database: #{members.collect{ |n| n['hostname'] }.join(', ')}")
       end
     else
-      Chef::Log.info("We are a replicaset and we are connected!")
+      Chef::Log.info("Replicaset found. Connected to replicaset.")
       is_replicaset = true
     end
 
     # IF we aren't a replica set
     if (is_replicaset == false)
-      Chef::Log.info("We are not a replica set ... starting configuring")
+      Chef::Log.info("Initiating replicaset")
+      retries = 5
       begin
         connection = Mongo::Connection.new([host_members.first])
-      rescue => error_Code
-        Chef::Log.warn("Unable to connect")
-        Chef::Log.warn(error_code)
+      rescue Mongo::ConnectionFailure
+        if (retries > 0)
+          Chef::Log.warn("Unable to connect to #{host_members.first}, retrying ...")
+          retries -= 1
+          sleep(15)
+          retry
+        end
+      rescue => error_code
+        Chef::Log.warn("Unable to connect to #{host_members.first}. #{error_code}")
         return
       end
 
       ## TODO IMPLEMENT RESCUE AND TRY IF TIMEOUT
       result = connection['admin'].command({:replSetInitiate => 1}, :check_response => false)
       if result.fetch('ok', nil) == 1
-        Chef::Log.info('Replicaset has been initiated')
-        
+        Chef::Log.info('Replicaset has been initiated')        
         #ALL DONE, WE WILL ADD ANOTHER NODE LATER
         return
       else
