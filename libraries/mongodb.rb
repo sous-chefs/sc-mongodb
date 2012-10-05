@@ -4,7 +4,16 @@
 #
 # Copyright 2011, edelight GmbH
 # Authors:
-#       Markus Korn <markus.korn@edelight.de>
+#       Markus Korn <markus.korn@edelight.de> (original)
+#       Erik Kristensen <erik@erikkristensen.com> (complete rewrite of configure_replicaset)
+#
+# The configure_replicaset did not work for more than two nodes, it was a 
+# complete rewrite to  allow for N + 1 mongo nodes in a replicaset.
+#
+# TODO LIST
+#  - Only allow for 12 nodes (max number allowed)
+#  - Test new configure_replicaset with sharding
+#
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
