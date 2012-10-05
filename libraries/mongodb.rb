@@ -27,25 +27,91 @@ class Chef::ResourceDefinitionList::MongoDB
     # lazy require, to move loading this modules to runtime of the cookbook
     require 'rubygems'
     require 'mongo'
-    
+
     if members.length == 0
       if Chef::Config[:solo]
         abort("Cannot configure replicaset '#{name}', no member nodes found")
+      end
+
+      members << node unless members.include?(node)
+    end
+
+    host_members = members.collect{ |m| m['fqdn'] + ":" + node['mongodb']['port'].to_s }
+
+    is_replicaset = false
+
+    sleep(10)
+
+    # Connect to existing node, check if replicaset is enabled?! Then proceed
+    begin      
+      connection = Mongo::ReplSetConnection.new( host_members )
+    rescue Mongo::ConnectionFailure => error_code
+      if error_code.to_s().include?('Cannot connect to a replica set')
+        Chef::Log.warn("Not a replicaset yet")
+        is_replicaset = false
       else
-        Chef::Log.warn("Cannot configure replicaset '#{name}', no member nodes found")
+        Chef::Log.warn("111 Trying more times. Could not connect to database: 'localhost:#{node['mongodb']['port']}'")
+      end
+    rescue => error_code
+      if error_code.to_s().include?('Cannot connect to a replica set')
+        Chef::Log.warn("Not a replicaset yet")
+        is_replicaset = false
+      else
+        Chef::Log.warn("222 Trying more times. Could not connect to database: 'localhost:#{node['mongodb']['port']}'")
+      end
+    else
+      Chef::Log.info("We are a replicaset and we are connected!")
+      is_replicaset = true
+    end
+
+    # IF we aren't a replica set
+    if (is_replicaset == false)
+      Chef::Log.info("We are not a replica set ... starting configuring")
+      begin
+        connection = Mongo::Connection.new([host_members.first])
+      rescue => error_Code
+        Chef::Log.warn("Unable to connect")
+        Chef::Log.warn(error_code)
+        return
+      end
+
+      ## TODO IMPLEMENT RESCUE AND TRY IF TIMEOUT
+      result = connection['admin'].command({:replSetInitiate => 1}, :check_response => false)
+      if result.fetch('ok', nil) == 1
+        Chef::Log.info('Replicaset has been initiated')
+        
+        #ALL DONE, WE WILL ADD ANOTHER NODE LATER
+        return
+      else
+        Chef::Log.warn("Replicaset initiation failed with" + result.fetch('errmsg', nil))
+      end
+    else
+      Chef::Log.info("We are a replica set ... ensuring the primary is up and running")
+      result = connection['admin'].command({:isMaster => 1}, :check_response => false)
+      
+      if result.fetch("ok", nil) == 1 and result.fetch("ismaster", nil) == true
+        Chef::Log.info("We are connected to the primary, continuing ...")
+      else
+        ## NEED TO ABORT
+        Chef::Log.warn("We are not connect to the primary, aborting ...")
         return
       end
     end
-    
-    begin
-      connection = Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
-    rescue
-      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['port']}'")
-      return
-    end
-    
+
     # Want the node originating the connection to be included in the replicaset
-    members << node unless members.include?(node)
+    Chef::Log.info(members)
+    found = false
+    members.each_index do |n|
+      if members[n]['name'] == node['name']
+        found = true
+      end
+    end
+    if found = false
+      members << node
+    end
+
+
+    ## Lets get ready to reconfigure
     members.sort!{ |x,y| x.name <=> y.name }
     rs_members = []
     members.each_index do |n|
@@ -53,105 +119,35 @@ class Chef::ResourceDefinitionList::MongoDB
       rs_members << {"_id" => n, "host" => "#{members[n]['fqdn']}:#{port}"}
     end
 
-    
     Chef::Log.info(
       "Configuring replicaset with members #{members.collect{ |n| n['hostname'] }.join(', ')}"
     )
-    
+
     rs_member_ips = []
     members.each_index do |n|
       port = members[n]['mongodb']['port']
       rs_member_ips << {"_id" => n, "host" => "#{members[n]['ipaddress']}:#{port}"}
     end
+
+    # #1 - Get Current Configuration
+    config = connection['local']['system']['replset'].find_one({"_id" => name})
+
+    #2 - Increment document version
+    config['version'] += 1
     
-    admin = connection['admin']
-    cmd = BSON::OrderedHash.new
-    cmd['replSetInitiate'] = {
-        "_id" => name,
-        "members" => rs_members
-    }
-    
+    #3 - Update Config
+    config['members'] = rs_members
+
+    #4 - Run replSetReconfig
     begin
-      result = admin.command(cmd, :check_response => false)
-    rescue Mongo::OperationTimeout
-      Chef::Log.info("Started configuring the replicaset, this will take some time, another run should run smoothly")
-      return
-    end
-    if result.fetch("ok", nil) == 1
-      # everything is fine, do nothing
-    elsif result.fetch("errmsg", nil) == "already initialized"
-      # check if both configs are the same
-      config = connection['local']['system']['replset'].find_one({"_id" => name})
-      if config['_id'] == name and config['members'] == rs_members
-        # config is up-to-date, do nothing
-        Chef::Log.info("Replicaset '#{name}' already configured")
-      elsif config['_id'] == name and config['members'] == rs_member_ips
-        # config is up-to-date, but ips are used instead of hostnames, change config to hostnames
-        Chef::Log.info("Need to convert ips to hostnames for replicaset '#{name}'")
-        old_members = config['members'].collect{ |m| m['host'] }
-        mapping = {}
-        rs_member_ips.each do |mem_h|
-          members.each do |n|
-            ip, prt = mem_h['host'].split(":")
-            if ip == n['ipaddress']
-              mapping["#{ip}:#{prt}"] = "#{n['fqdn']}:#{prt}"
-            end
-          end
-        end
-        config['members'].collect!{ |m| {"_id" => m["_id"], "host" => mapping[m["host"]]} }
-        config['version'] += 1
-        
-        rs_connection = Mongo::ReplSetConnection.new( *old_members.collect{ |m| m.split(":") })
-        admin = rs_connection['admin']
-        cmd = BSON::OrderedHash.new
-        cmd['replSetReconfig'] = config
-        result = nil
-        begin
-          result = admin.command(cmd, :check_response => false)
-        rescue Mongo::ConnectionFailure
-          # reconfiguring destroys exisiting connections, reconnect
-          Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
-          config = connection['local']['system']['replset'].find_one({"_id" => name})
-          Chef::Log.info("New config successfully applied: #{config.inspect}")
-        end
-        if !result.nil?
-          Chef::Log.error("configuring replicaset returned: #{result.inspect}")
-        end
+      result = connection['admin'].command({:replSetReconfig => config}, :check_response => false)
+    rescue
+      if result.fetch('ok', nil) == 1
+        Chef::Log.info("Replicaset reconfig worked")
       else
-        # remove removed members from the replicaset and add the new ones
-        max_id = config['members'].collect{ |member| member['_id']}.max
-        rs_members.collect!{ |member| member['host'] }
-        config['version'] += 1
-        old_members = config['members'].collect{ |member| member['host'] }
-        members_delete = old_members - rs_members        
-        config['members'] = config['members'].delete_if{ |m| members_delete.include?(m['host']) }
-        members_add = rs_members - old_members
-        members_add.each do |m|
-          max_id += 1
-          config['members'] << {"_id" => max_id, "host" => m}
-        end
-        
-        rs_connection = Mongo::ReplSetConnection.new( *old_members.collect{ |m| m.split(":") })
-        admin = rs_connection['admin']
-        
-        cmd = BSON::OrderedHash.new
-        cmd['replSetReconfig'] = config
-        
-        result = nil
-        begin
-          result = admin.command(cmd, :check_response => false)
-        rescue Mongo::ConnectionFailure
-          # reconfiguring destroys exisiting connections, reconnect
-          Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
-          config = connection['local']['system']['replset'].find_one({"_id" => name})
-          Chef::Log.info("New config successfully applied: #{config.inspect}")
-        end
-        if !result.nil?
-          Chef::Log.error("configuring replicaset returned: #{result.inspect}")
-        end
+        Chef::Log.warn("Replicaset reconfig failed")
+        Chef::Log.warn(result.fetch('errmsg', nil))
       end
-    elsif !result.fetch("errmsg", nil).nil?
-      Chef::Log.error("Failed to configure replicaset, reason: #{result.inspect}")
     end
   end
   
