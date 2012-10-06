@@ -76,15 +76,17 @@ class Chef::ResourceDefinitionList::MongoDB
     # IF we aren't a replica set
     if (is_replicaset == false)
       Chef::Log.info("Initiating replicaset")
-      retries = 5
+      retries = 10
       begin
         connection = Mongo::Connection.new([host_members.first])
       rescue Mongo::ConnectionFailure
         if (retries > 0)
           Chef::Log.warn("Unable to connect to #{host_members.first}, retrying ...")
           retries -= 1
-          sleep(15)
+          sleep(20)
           retry
+        else
+          abort("Unable to connect to configure replicaset, aborting ...")
         end
       rescue => error_code
         Chef::Log.warn("Unable to connect to #{host_members.first}. #{error_code}")        
@@ -115,16 +117,10 @@ class Chef::ResourceDefinitionList::MongoDB
 
     # Want the node originating the connection to be included in the replicaset
     Chef::Log.info(members)
-    found = false
-    members.each_index do |n|
-      if members[n]['name'] == node['name']
-        found = true
-      end
-    end
-    if found == false
-      members << node
-    end
-
+    fqdns = members.collect{ |m| m['fqdn'] }
+    Chef::Log.info(fqdns)
+    members << node unless fqdns.include?(node['fqdn'])
+    Chef::Log.info(members)
 
     ## Lets get ready to reconfigure
     members.sort!{ |x,y| x.name <=> y.name }
@@ -153,14 +149,18 @@ class Chef::ResourceDefinitionList::MongoDB
     #3 - Update Config
     config['members'] = rs_members
 
+    cmd = BSON::OrderedHash.new
+    cmd['replSetReconfig'] = config
+
     #4 - Run replSetReconfig
     begin
-      result = connection['admin'].command({:replSetReconfig => config}, :check_response => false)
+      Chef::Log.info("Executing replSetReconfig")
+      result = connection['admin'].command(cmd, :check_response => false)
     rescue
       if result.fetch('ok', nil) == 1
-        Chef::Log.info("Replicaset reconfig worked")
+        Chef::Log.info("Reconfiguration of replicaset successful")
       else
-        Chef::Log.warn("Replicaset reconfig failed")
+        Chef::Log.warn("Failed to reconfigure replicaset")
         Chef::Log.warn(result.fetch('errmsg', nil))
       end
     end
