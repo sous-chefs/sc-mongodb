@@ -13,6 +13,9 @@ recipe "mongodb::shard", "Installs and configures a single shard"
 recipe "mongodb::replicaset", "Installs and configures a mongodb replicaset"
 
 depends "apt", ">= 1.8.2"
+depends "apt"
+depends "python"
+depends "runit"
 depends "yum"
 
 %w{ ubuntu debian freebsd centos redhat fedora amazon scientific}.each do |os|
@@ -64,11 +67,11 @@ attribute "mongodb/replicaset_name",
 attribute "mongodb/enable_rest",
   :display_name => "Enable Rest",
   :description => "Enable the ReST interface of the webserver"
-  
+
 attribute "mongodb/smallfiles",
   :display_name => "Use small files",
   :description => "Modify MongoDB to use a smaller default data file size"
-  
+
 attribute "mongodb/bind_ip",
   :display_name => "Bind address",
   :description => "MongoDB instance bind address",
@@ -88,3 +91,14 @@ attribute "mongodb/nojournal",
   :display_name => "Disable Journals",
   :description => "Journals are enabled by default on 64bit after mongo 2.0, this can disable it",
   :default => "false"
+
+attribute "mongodb/mms_agent",
+  :display_name => "MMS Agent",
+  :description => "Hash of MMS Agent attributes",
+  :type => "hash"
+
+attribute "mongodb/mms_agent/api_key",
+  :display_name => "MMS Agent API Key"
+
+attribute "mongodb/mms_agent/secret_key",
+  :display_name => "MMS Agent Secret Key"
