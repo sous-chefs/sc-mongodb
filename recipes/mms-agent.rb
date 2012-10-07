@@ -42,8 +42,8 @@ ruby_block 'modify settings.py' do
     }
     s = orig_s
     s = s.gsub(/mms\.10gen\.com/, 'mms.10gen.com')
-    s = s.gsub(/@API_KEY@/, node[:mms_agent][:api_key])
-    s = s.gsub(/@SECRET_KEY@/, node[:mms_agent][:secret_key])
+    s = s.gsub(/@API_KEY@/, node['mongodb']['mms_agent']['api_key'])
+    s = s.gsub(/@SECRET_KEY@/, node['mongodb']['mms_agent']['secret_key'])
     if s != orig_s
       open('/usr/local/share/mms-agent/settings.py','w') { |f|
         f.puts(s)
