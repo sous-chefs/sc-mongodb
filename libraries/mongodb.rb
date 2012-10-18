@@ -94,7 +94,16 @@ class Chef::ResourceDefinitionList::MongoDB
       end
 
       ## TODO IMPLEMENT RESCUE AND TRY IF TIMEOUT
-      result = connection['admin'].command({:replSetInitiate => 1}, :check_response => false)
+      rs_members = []
+      rs_members << {"_id" => 0, "host" => host_members.first }
+
+      cmd = BSON::OrderedHash.new
+      cmd['replSetInitiate'] = {
+          "_id" => name,
+          "members" => rs_members
+      }
+
+      result = connection['admin'].command(cmd, :check_response => false)
       if result.fetch('ok', nil) == 1
         Chef::Log.info('Replicaset has been initiated')        
         #ALL DONE, WE WILL ADD ANOTHER NODE LATER
