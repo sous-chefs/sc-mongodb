@@ -152,18 +152,49 @@ class Chef::ResourceDefinitionList::MongoDB
     cmd = BSON::OrderedHash.new
     cmd['replSetReconfig'] = config
 
+    retries = 5
+    begin
+      testconn = Mongo::Connection.new([node.fqdn])
+    rescue Mongo::ConnectionFailure
+      if (retries > 0)
+        Chef::Log.warn("Unable to connect to #{node.fqdn}, retrying in 20 seconds ...")
+        retries -= 1
+        sleep(20)
+        retry
+      end
+    rescue => error_code
+      Chef::Log.warn("Unable to connect to #{node.fqdn}. #{error_code}")
+      return
+    end
+
     #4 - Run replSetReconfig
+    retries = 0
     begin
       Chef::Log.info("Executing replSetReconfig")
       result = connection['admin'].command(cmd, :check_response => false)
     rescue
       if result.fetch('ok', nil) == 1
         Chef::Log.info("Reconfiguration of replicaset successful")
+        retries = 5
       else
-        Chef::Log.warn("Failed to reconfigure replicaset")
+        Chef::Log.warn("Unable to reconfigure replicaset, retrying in 30 seconds")
         Chef::Log.warn(result.fetch('errmsg', nil))
+        config['version'] += 1
+        sleep(30)
+        retries += 1
       end
-    end
+    else
+      if result.fetch("ok", nil) == 1
+        Chef::Log.info("Reconfiguration of replicaset successful")
+        retries = 5
+      else
+        Chef::Log.warn("Unable to reconfigure replicaset, retrying in 30 seconds")
+        Chef::Log.warn(result.fetch('errmsg', nil))
+        config['version']
+        sleep(30)
+        retries += 1
+      end
+    end until retries > 4
   end
   
   def self.configure_shards(node, shard_nodes)
