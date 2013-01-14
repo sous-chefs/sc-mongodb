@@ -78,7 +78,7 @@ class Chef::ResourceDefinitionList::MongoDB
       Chef::Log.info("Initiating replicaset")
       retries = 10
       begin
-        connection = Mongo::Connection.new([host_members.first])
+        connection = Mongo::Connection.new(members.first['fqdn'], members.first['mongodb']['port'])
       rescue Mongo::ConnectionFailure
         if (retries > 0)
           Chef::Log.warn("Unable to connect to #{host_members.first}, retrying ...")
@@ -175,7 +175,7 @@ class Chef::ResourceDefinitionList::MongoDB
 
       retries = 5
       begin
-        testconn = Mongo::Connection.new([node.fqdn])
+        testconn = Mongo::Connection.new(node.fqdn, node['mongodb']['port'])
       rescue Mongo::ConnectionFailure
         if (retries > 0)
           Chef::Log.warn("Unable to connect to #{node.fqdn}, retrying in 20 seconds ...")
