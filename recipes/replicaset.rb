@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+node.set[:mongodb][:is_replicaset] = true
+
 include_recipe "mongodb::install"
 include_recipe "mongodb::mongo_gem"
 
