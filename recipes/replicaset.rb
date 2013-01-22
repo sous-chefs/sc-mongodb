@@ -22,8 +22,7 @@ node.set[:mongodb][:is_replicaset] = true
 include_recipe "mongodb::install"
 include_recipe "mongodb::mongo_gem"
 
-# if we are configuring a shard as a replicaset we do nothing in this recipe
-if !node.recipe?("mongodb::shard")
+unless node.mongodb.is_shard
   mongodb_instance node['mongodb']['instance_name'] do
     mongodb_type "mongod"
     port         node['mongodb']['port']
