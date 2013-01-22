@@ -24,6 +24,10 @@ DAEMON_OPTS="$DAEMON_OPTS --replSet <%= @replicaset_name %>"
 DAEMON_OPTS="$DAEMON_OPTS --keyFile /etc/mongodb.key"
 <% end %>
 
+<% if node[:mongodb][:oplog_size] %>
+DAEMON_OPTS="$DAEMON_OPTS --oplogSize <%= node[:mongodb][:oplog_size] %>"
+<% end %>
+
 <% if @enable_rest %>
 DAEMON_OPTS="$DAEMON_OPTS --rest"
 <% end %>
