@@ -182,7 +182,7 @@ define :mongodb_instance,
     rs_nodes = search(
       :node,
       "mongodb_cluster_name:#{new_resource.replicaset['mongodb']['cluster_name']} AND \
-       recipes:mongodb\\:\\:replicaset AND \
+       mongodb_is_replicaset:true AND \
        mongodb_shard_name:#{new_resource.replicaset['mongodb']['shard_name']} AND \
        chef_environment:#{new_resource.replicaset.chef_environment}"
     )
