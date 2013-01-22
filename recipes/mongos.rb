@@ -19,7 +19,7 @@
 # limitations under the License.
 #
 
-include_recipe "mongodb"
+include_recipe "mongodb::install"
 include_recipe "mongodb::mongo_gem"
 
 service "mongodb" do
