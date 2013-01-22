@@ -210,7 +210,7 @@ define :mongodb_instance,
     shard_nodes = search(
       :node,
       "mongodb_cluster_name:#{new_resource.cluster_name} AND \
-       recipes:mongodb\\:\\:shard AND \
+       mongodb_is_shard:true AND \
        chef_environment:#{node.chef_environment}"
     )
 
