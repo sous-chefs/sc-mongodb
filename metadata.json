@@ -1,0 +1,29 @@
+{
+  "name": "mongodb",
+  "description": "Installs/Configures mongodb",
+  "long_description": "= DESCRIPTION:\n\n= REQUIREMENTS:\n\n= ATTRIBUTES:\n\n= USAGE:\n\n",
+  "license": "Apache 2.0",
+  "platforms": {
+  },
+  "dependencies": {
+    "git": ">= 0.0.0",
+    "build-essential": ">= 0.0.0",
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+  },
+  "version": "0.0.1"
+}
