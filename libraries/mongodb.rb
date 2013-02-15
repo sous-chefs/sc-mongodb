@@ -79,7 +79,11 @@ class Chef::ResourceDefinitionList::MongoDB
     elsif not node['mongodb']['replicaset_members'].nil?
       # We have defined members to include. Need to add to the array.
       node['mongodb']['replicaset_members'].each_with_index do |address, index|
-        rs_member_ips << {"_id" => index + rs_members.count, "host" => "#{address}"}
+        if index == 0
+          rs_member_ips << {"_id" => index + rs_members.count, "host" => "#{address}", "arbiterOnly" => true}
+        else
+          rs_member_ips << {"_id" => index + rs_members.count, "host" => "#{address}"}
+        end
       end
     end
 
@@ -132,6 +136,7 @@ class Chef::ResourceDefinitionList::MongoDB
           
           cmd = BSON::OrderedHash.new
           cmd['replSetReconfig'] = config
+          puts "cmd = #{cmd}"
           
           result = nil
           begin
