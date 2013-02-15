@@ -18,6 +18,7 @@
 #
 
 include_recipe "mongodb"
+include_recipe "mongodb::firewall"
 
 # if we are configuring a shard as a replicaset we do nothing in this recipe
 if !node.recipe?("mongodb::shard")

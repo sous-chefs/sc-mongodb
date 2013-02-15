@@ -144,6 +144,7 @@ class Chef::ResourceDefinitionList::MongoDB
           admin = rs_connection['admin']
           cmd = BSON::OrderedHash.new
           cmd['replSetReconfig'] = config
+
           result = nil
           begin
             result = admin.command(cmd, :check_response => false)
