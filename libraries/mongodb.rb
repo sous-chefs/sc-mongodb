@@ -290,3 +290,4 @@ class Chef::ResourceDefinitionList::MongoDB
   end
 
 end
+
