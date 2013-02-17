@@ -60,6 +60,10 @@ class Chef::ResourceDefinitionList::MongoDB
     
     rs_member_ips = []
 
+   if node['mongodb']['replicaset_members'] != nil and Chef::Config[:solo]
+     node.set['mongodb']['replicaset_members'] << node['mongodb']['bind_ip'] unless node['mongodb']['replicaset_members'].include?(node['mongodb']['bind_ip'])
+   end
+
     if not Chef::Config[:solo]
       members.each_index do |n|
         port = members[n]['mongodb']['port']
@@ -76,13 +80,13 @@ class Chef::ResourceDefinitionList::MongoDB
           rs_member_ips << {"_id" => n, "host" => "#{members[n]['ipaddress']}:#{port}"}
         end
       end
-    elsif not node['mongodb']['replicaset_members'].nil?
+    elsif node['mongodb']['replicaset_members'] != nil
       # We have defined members to include. Need to add to the array.
       node['mongodb']['replicaset_members'].each_with_index do |address, index|
         if index == 0
-          rs_member_ips << {"_id" => index + rs_members.count, "host" => "#{address}", "arbiterOnly" => true}
+          rs_member_ips << {"_id" => index + rs_members.count, "host" => "#{address}:#{node['mongodb']['port']}", "arbiterOnly" => true}
         else
-          rs_member_ips << {"_id" => index + rs_members.count, "host" => "#{address}"}
+          rs_member_ips << {"_id" => index + rs_members.count, "host" => "#{address}:#{node['mongodb']['port']}"}
         end
       end
     end
@@ -91,7 +95,7 @@ class Chef::ResourceDefinitionList::MongoDB
       rs_members = rs_member_ips
     end
 
-    if not node['mongodb']['replicaset_members'].nil? or not Chef::Config['solo']
+    if node['mongodb']['replicaset_members'] != nil or not Chef::Config['solo']
       admin = connection['admin']
       cmd = BSON::OrderedHash.new
       cmd['replSetInitiate'] = {
@@ -270,3 +274,4 @@ class Chef::ResourceDefinitionList::MongoDB
   end
   
 end
+
