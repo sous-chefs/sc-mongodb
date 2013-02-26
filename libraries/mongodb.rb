@@ -109,7 +109,7 @@ class Chef::ResourceDefinitionList::MongoDB
         config['members'].collect!{ |m| {"_id" => m["_id"], "host" => mapping[m["host"]]} }
         config['version'] += 1
         
-        rs_connection = Mongo::ReplSetConnection.new( *old_members.collect{ |m| m.split(":") })
+        rs_connection = Mongo::ReplSetConnection.new(old_members)
         admin = rs_connection['admin']
         cmd = BSON::OrderedHash.new
         cmd['replSetReconfig'] = config
@@ -139,7 +139,7 @@ class Chef::ResourceDefinitionList::MongoDB
           config['members'] << {"_id" => max_id, "host" => m}
         end
         
-        rs_connection = Mongo::ReplSetConnection.new( *old_members.collect{ |m| m.split(":") })
+        rs_connection = Mongo::ReplSetConnection.new(old_members)
         admin = rs_connection['admin']
         
         cmd = BSON::OrderedHash.new
