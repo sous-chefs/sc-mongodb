@@ -123,7 +123,7 @@ class Chef::ResourceDefinitionList::MongoDB
           Chef::Log.info("New config successfully applied: #{config.inspect}")
         end
         if !result.nil?
-          Chef::Log.error("configuring replicaset returned: #{result.inspect}")
+          Chef::Log.info("configuring replicaset returned: #{result.inspect}")
         end
       else
         # remove removed members from the replicaset and add the new ones
@@ -155,7 +155,7 @@ class Chef::ResourceDefinitionList::MongoDB
           Chef::Log.info("New config successfully applied: #{config.inspect}")
         end
         if !result.nil?
-          Chef::Log.error("configuring replicaset returned: #{result.inspect}")
+          Chef::Log.info("configuring replicaset returned: #{result.inspect}")
         end
       end
     elsif !result.fetch("errmsg", nil).nil?
