@@ -84,3 +84,6 @@ default[:mongodb][:volsize] = 1000
 default[:mongodb][:vols] = 2
 # set blockdev read ahead to something sane
 default[:mongodb][:setra] = 512
+
+# identify the host that will be running backups - override this value in your node or role
+default[:mongodb][:backup_host] = nil
