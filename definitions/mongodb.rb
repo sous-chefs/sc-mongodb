@@ -171,8 +171,8 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   service name do
     supports :status => true, :restart => true
     action service_action
-    unless service_notifies.empty?
-      notifies service_notifies
+    service_notifies.each do |service_notify|
+      notifies :run, service_notify
     end
     if !replicaset_name.nil?
       notifies :create, "ruby_block[config_replicaset]"
