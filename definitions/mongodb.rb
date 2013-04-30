@@ -85,6 +85,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   # default file
   template "#{node['mongodb']['defaults_dir']}/#{name}" do
     action :create
+    cookbook 'mongodb'
     source "mongodb.default.erb"
     group node['mongodb']['root_group']
     owner "root"
@@ -129,6 +130,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   # init script
   template "#{node['mongodb']['init_dir']}/#{name}" do
     action :create
+    cookbook 'mongodb'
     source node[:mongodb][:init_script_template]
     group node['mongodb']['root_group']
     owner "root"
