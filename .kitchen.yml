@@ -4,29 +4,30 @@ driver_plugin: vagrant
 platforms:
 - name: ubuntu-12.04
   driver_config:
-    box: canonical-ubuntu-12.04
-    box_url: http://cloud-images.ubuntu.com/vagrant/precise/current/precise-server-cloudimg-amd64-vagrant-disk1.box
-    require_chef_omnibus: 11.4.4
+    box: vagrant-ubuntu-12.04
+    box_url: http://files.vagrantup.com/precise64.box
+    require_chef_omnibus: true
   run_list:
   - recipe[apt]
 - name: ubuntu-10.04
   driver_config:
-    box: opscode-ubuntu-10.04
-    box_url: http://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-10.04_chef-11.2.0.box
+    box: vagrant-ubuntu-10.04
+    box_url: http://files.vagrantup.com/lucid64.box
+    require_chef_omnibus: true
   run_list:
   - recipe[apt]
-- name: centos-6.3
-  driver_config:
-    box: opscode-centos-6.3
-    box_url: http://opscode-vm.s3.amazonaws.com/vagrant/opscode_centos-6.3_chef-11.2.0.box
-  run_list:
-  - recipe[yum]
-- name: centos-5.8
-  driver_config:
-    box: opscode-centos-5.8
-    box_url: http://opscode-vm.s3.amazonaws.com/vagrant/opscode_centos-5.8_chef-11.2.0.box
-  run_list:
-  - recipe[yum]
+# - name: centos-6.3
+#   driver_config:
+#     box: opscode-centos-6.3
+#     box_url: http://opscode-vm.s3.amazonaws.com/vagrant/opscode_centos-6.3_chef-11.2.0.box
+#   run_list:
+#   - recipe[yum]
+# - name: centos-5.8
+#   driver_config:
+#     box: opscode-centos-5.8
+#     box_url: http://opscode-vm.s3.amazonaws.com/vagrant/opscode_centos-5.8_chef-11.2.0.box
+#   run_list:
+#   - recipe[yum]
 
 suites:
 - name: mongo
@@ -34,3 +35,12 @@ suites:
   - recipe[mongodb::10gen_repo]
   - recipe[mongodb]
   attributes: {}
+- name: replicaset
+  run_list:
+  - recipe[mongodb::10gen_repo]
+  - recipe[mongodb]
+  - recipe[mongodb::replicaset]
+  attributes:
+    mongodb:
+      cluster_name: clustrname
+      replicaset_name: replset
