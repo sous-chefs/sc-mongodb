@@ -19,13 +19,17 @@
 
 default[:mongodb][:dbpath] = "/var/lib/mongodb"
 default[:mongodb][:logpath] = "/var/log/mongodb"
+default[:mongodb][:use_fqdn] = true
 default[:mongodb][:bind_ip] = nil
 default[:mongodb][:port] = 27017
+
+default[:mongodb][:fqdn_interface] = nil
 
 # cluster identifier
 default[:mongodb][:client_roles] = []
 default[:mongodb][:cluster_name] = nil
 default[:mongodb][:replicaset_name] = nil
+default[:mongodb][:replicaset_members] = nil
 default[:mongodb][:shard_name] = "default"
 
 default[:mongodb][:auto_configure][:replicaset] = true
