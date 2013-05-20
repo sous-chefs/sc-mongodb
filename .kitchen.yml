@@ -37,6 +37,7 @@ suites:
   attributes: {}
 - name: replicaset
   run_list:
+  - recipe[build-essential]
   - recipe[mongodb::10gen_repo]
   - recipe[mongodb]
   - recipe[mongodb::replicaset]
@@ -44,3 +45,5 @@ suites:
     mongodb:
       cluster_name: clustrname
       replicaset_name: replset
+      replicaset_members:
+      - 127.0.0.1
