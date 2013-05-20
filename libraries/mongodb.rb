@@ -287,10 +287,15 @@ class Chef::ResourceDefinitionList::MongoDB
     op_timeout = opts[:op_timeout] || 5
     slave_ok   = opts[:slave_ok] || false
 
+    puts host
+    puts port
+    puts op_timeout
+    puts slave_ok
+
     begin
       Mongo::Connection.new(host, port, :op_timeout => op_timeout, :slave_ok => slave_ok)
     rescue Exception => e
-      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['port']}', reason #{e}")
+      Chef::Log.warn("Could not connect to database: '#{host}:#{port}', reason #{e}")
       return
     end
   end
