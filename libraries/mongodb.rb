@@ -37,16 +37,7 @@ class Chef::ResourceDefinitionList::MongoDB
       end
     end
 
-    begin
-	  connection = nil
-	  rescue_connection_failure do
-	    connection = Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
-	    connection.database_names # check connection
-	  end
-    rescue
-      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['port']}'")
-      return
-    end
+    connection = get_connection('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
 
     # Want the node originating the connection to be included in the replicaset
     members << node unless members.any? {|m| m.name == node.name }
@@ -191,12 +182,7 @@ class Chef::ResourceDefinitionList::MongoDB
     end
     Chef::Log.info(shard_members.inspect)
 
-    begin
-      connection = Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5)
-    rescue Exception => e
-      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['port']}', reason #{e}")
-      return
-    end
+    connection = get_connection('localhost', node['mongodb']['port'], :op_timeout => 5)
 
     admin = connection['admin']
 
@@ -217,12 +203,7 @@ class Chef::ResourceDefinitionList::MongoDB
     require 'rubygems'
     require 'mongo'
 
-    begin
-      connection = Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5)
-    rescue Exception => e
-      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['port']}', reason #{e}")
-      return
-    end
+    connection = get_connection('localhost', node['mongodb']['port'], :op_timeout => 5)
 
     admin = connection['admin']
 
@@ -289,5 +270,29 @@ class Chef::ResourceDefinitionList::MongoDB
     end
   end
 
+  def self.configure_user(username, password, database, delete = false)
+    connection = get_connection('localhost', node['mongodb']['port'], :op_timeout => 5)
+
+    database = connection.db(database)
+    if delete
+      database.remove_user(username)
+    else
+      database.add_user(username, password)
+    end
+  end
+
+  private
+
+  def self.get_connection(host, port, opts = {})
+    op_timeout = opts[:op_timeout] || 5
+    slave_ok   = opts[:slave_ok] || false
+
+    begin
+      Mongo::Connection.new(host, port, :op_timeout => op_timeout, :slave_ok => slave_ok)
+    rescue Exception => e
+      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['port']}', reason #{e}")
+      return
+    end
+  end
 end
 
