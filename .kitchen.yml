@@ -32,9 +32,15 @@ platforms:
 suites:
 - name: mongo
   run_list:
+  - recipe[build-essential]
   - recipe[mongodb::10gen_repo]
   - recipe[mongodb]
-  attributes: {}
+  - recipe[mongo_test]
+  attributes:
+    build_essential:
+      compiletime: true
+    mongodb:
+      auth: true
 - name: replicaset
   run_list:
   - recipe[build-essential]
@@ -47,3 +53,4 @@ suites:
       replicaset_name: replset
       replicaset_members:
       - 127.0.0.1
+      auth: true

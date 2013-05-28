@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+default[:mongodb][:auth] = false
 default[:mongodb][:dbpath] = "/var/lib/mongodb"
 default[:mongodb][:logpath] = "/var/log/mongodb"
 default[:mongodb][:use_fqdn] = true
