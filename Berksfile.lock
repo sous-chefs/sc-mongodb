@@ -3,14 +3,15 @@
   "sources": {
     "mongodb": {
       "locked_version": "0.12.0",
-      "constraint": "= 0.12.0",
+      "constraint": "~> 0.12.0",
       "path": "."
     },
     "apt": {
-      "locked_version": "1.6.1"
+      "locked_version": "1.4.8",
+      "constraint": "~> 1.4.4"
     },
     "yum": {
-      "locked_version": "2.0.6"
+      "locked_version": "2.2.2"
     }
   }
 }
