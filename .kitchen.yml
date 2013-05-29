@@ -30,8 +30,28 @@ platforms:
   - "recipe[yum]"
 
 suites:
-- name: default
+- name: mongo
   run_list:
-  - "recipe[mongodb::10gen_repo]"
-  - "recipe[mongodb]"
-  attributes: {}
+  - recipe[build-essential]
+  - recipe[mongodb::10gen_repo]
+  - recipe[mongodb]
+  - recipe[mongo_test]
+  attributes:
+    build_essential:
+      compiletime: true
+    mongodb:
+      auth: true
+- name: replicaset
+  run_list:
+  - recipe[build-essential]
+  - recipe[mongodb::10gen_repo]
+  - recipe[mongodb]
+  - recipe[mongodb::replicaset]
+  - recipe[mongo_test]
+  attributes:
+    mongodb:
+      cluster_name: clustrname
+      replicaset_name: replset
+      replicaset_members:
+      - 127.0.0.1
+      auth: true
