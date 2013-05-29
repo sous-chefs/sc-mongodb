@@ -43,6 +43,9 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   configserver_nodes = params[:configserver]
   
   replicaset = params[:replicaset]
+
+  nojournal = node['mongodb']['nojournal']
+
   if type == "shard"
     if replicaset.nil?
       replicaset_name = nil
@@ -99,6 +102,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
       "replicaset_name" => replicaset_name,
       "configsrv" => false, #type == "configserver", this might change the port
       "shardsrv" => false,  #type == "shard", dito.
+      "nojournal" => nojournal,
       "enable_rest" => params[:enable_rest]
     )
     notifies :restart, "service[#{name}]"

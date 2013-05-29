@@ -77,3 +77,8 @@ attribute "mongodb/configfile",
   :display_name => "Configuration File",
   :description => "Name of configuration file to use with when starting mongod/mongos vs command line options",
   :default => nil
+
+attribute "mongodb/nojournal",
+  :display_name => "Disable Journals",
+  :description => "Journals are enabled by default on 64bit after mongo 2.0, this can disable it",
+  :default => "false"
