@@ -90,7 +90,11 @@ define :mongodb_instance, :mongodb_type => "mongod",
   if replicaset_name and auth
     keyfile = "/etc/#{replicaset_name}-keyfile"
 
-     template keyfile do 
+    unless node['mongodb']['keyfile']['string']
+      Chef::Application.fatal!("You must set the keyfile contents to enable auth and replication!")
+    end
+
+    template keyfile do 
       action :create
       source "mongodb.keyfile.erb"
       group node['mongodb']['root_group']
