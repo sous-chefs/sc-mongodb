@@ -22,13 +22,14 @@ depends "build-essential"
 end
 
 attribute "mongodb/auth",
-  :display_name "Auth",
+  :display_name => "Auth",
   :description => "Enable or disable auth",
-  :default => false
+  :default => "false"
 
-attribute "mongodb/keyfile/string",
-  :display_name "keyFile secret",
+attribute "mongodb/keyfile",
+  :display_name => "keyFile secret",
   :description => "Secret string for keyFile replication",
+  :default => nil
 
 attribute "mongodb/dbpath",
   :display_name => "dbpath",
