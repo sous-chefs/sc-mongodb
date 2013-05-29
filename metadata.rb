@@ -72,3 +72,8 @@ attribute "mongodb/package_version",
   :display_name => "MongoDB package version",
   :description => "Version of the MongoDB package to install",
   :default => nil
+
+attribute "mongodb/configfile",
+  :display_name => "Configuration File",
+  :description => "Name of configuration file to use with when starting mongod/mongos vs command line options",
+  :default => nil
