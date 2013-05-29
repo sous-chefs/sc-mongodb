@@ -15,10 +15,20 @@ recipe "mongodb::replicaset", "Installs and configures a mongodb replicaset"
 depends "apt", ">= 1.8.2"
 depends "yum"
 depends "firewall"
+depends "build-essential"
 
 %w{ ubuntu debian freebsd centos redhat fedora amazon scientific}.each do |os|
   supports os
 end
+
+attribute "mongodb/auth",
+  :display_name "Auth",
+  :description => "Enable or disable auth",
+  :default => false
+
+attribute "mongodb/keyfile/string",
+  :display_name "keyFile secret",
+  :description => "Secret string for keyFile replication",
 
 attribute "mongodb/dbpath",
   :display_name => "dbpath",
