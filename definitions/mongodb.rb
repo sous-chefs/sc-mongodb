@@ -22,9 +22,8 @@
 define :mongodb_instance, :mongodb_type => "mongod",
        :action => [:enable, :start], :bind_ip => nil, :port => 27017, 
        :logpath => "/var/log/mongodb", :dbpath => "/data",
-       :configfile => "/etc/mongodb.conf", :configserver => [],
-       :replicaset => nil, :enable_rest => false, :smallfiles => false,
-       :notifies => [], :auth => false do
+       :configserver => [], :replicaset => nil, :enable_rest => false,
+       :smallfiles => false, :notifies => [], :auth => false do
     
   include_recipe "mongodb::default"
   
@@ -87,10 +86,17 @@ define :mongodb_instance, :mongodb_type => "mongod",
     configserver = configserver_nodes.collect{|n| "#{n['fqdn']}:#{n['mongodb']['port']}" }.join(",")
   end
 
-  if replicaset_name and auth
-    keyfile = "/etc/#{replicaset_name}-keyfile"
+  if replicaset_name and node['mongodb']['keyfile']
+    keyfile = "/etc/mongodb/#{replicaset_name}-keyfile"
 
-    unless node['mongodb']['keyfile']['string']
+    directory "/etc/mongodb" do
+      group node['mongodb']['root_group']
+      owner "root"
+      mode "0755"
+      action :create
+    end
+
+    unless node['mongodb']['keyfile']
       Chef::Application.fatal!("You must set the keyfile contents to enable auth and replication!")
     end
 

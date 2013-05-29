@@ -36,7 +36,7 @@ For examples see the USAGE section below.
 # ATTRIBUTES:
 
 * `mongodb[:auth]` - Enable or disable auth
-* `mongodb[:keyfile][:string]` - keyFile contents for auth w/ replicasets
+* `mongodb[:keyfile]` - keyFile contents for auth w/ replicasets
 * `mongodb[:dbpath]` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
 * `mongodb[:logpath]` - Path for the logfiles, default is "/var/log/mongodb"
 * `mongodb[:port]` - Port the mongod listens on, default is 27017
@@ -161,14 +161,12 @@ setting the `auth` attribute to true
 }
 ```
 
-If you are using replicasets, you will nee to also define the keyFile secret string.
+If you are using replicasets, you only need to define the keyFile secret string.
 
 ```json
 {
   "mongodb": {
-    "keyfile": {
-      "string": "5UJ1aZngn9OM/YN0IsiivhQUmGY..."
-    }
+    "keyfile": "5UJ1aZngn9OM/YN0IsiivhQUmGY..."
   }
 }
 ```
@@ -176,13 +174,13 @@ If you are using replicasets, you will nee to also define the keyFile secret str
 The keyFile contents is arbitrary, but a long string is suggested. `openssl` can be used to generate a good string:
 
 ```bash
-$ openssl rand -base64 20
+$ openssl rand -base64 753
 ```
 
 ```ruby
 require 'openssl'
 
-default['mongodb']['keyfile']['string'] = ::OpenSSL::Random.random_bytes(753).gsub(/\W/, '')
+default['mongodb']['keyfile'] = ::OpenSSL::Random.random_bytes(753).gsub(/\W/, '')
 ```
 
 Once authentication has been enabled, you can then define users simply by including
