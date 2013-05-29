@@ -42,14 +42,14 @@ default[:mongodb][:init_dir] = "/etc/init.d"
 
 default[:mongodb][:init_script_template] = "mongodb.init.erb"
 
-case node['platform']
+case node['platform_family']
 when "freebsd"
   default[:mongodb][:defaults_dir] = "/etc/rc.conf.d"
   default[:mongodb][:init_dir] = "/usr/local/etc/rc.d"
   default[:mongodb][:root_group] = "wheel"
   default[:mongodb][:package_name] = "mongodb"
 
-when "centos","redhat","fedora","amazon","scientific"
+when "rhel","fedora"
   default[:mongodb][:defaults_dir] = "/etc/sysconfig"
   default[:mongodb][:package_name] = "mongo-10gen-server"
   default[:mongodb][:user] = "mongod"

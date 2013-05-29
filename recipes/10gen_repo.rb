@@ -42,5 +42,5 @@ when "rhel","fedora"
   end
 
 else
-    Chef::Log.warn("Adding the #{node['platform']} 10gen repository is not yet not supported by this cookbook")
+    Chef::Log.warn("Adding the #{node['platform_family']} 10gen repository is not yet not supported by this cookbook")
 end
