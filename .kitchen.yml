@@ -47,6 +47,7 @@ suites:
   - recipe[mongodb::10gen_repo]
   - recipe[mongodb]
   - recipe[mongodb::replicaset]
+  - recipe[mongo_test]
   attributes:
     mongodb:
       cluster_name: clustrname
