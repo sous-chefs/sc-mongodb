@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-cd /usr/local/share/mms-agent/
+cd <%= @options[:mms_agent_install_dir] %>
 
 exec 2>&1
-exec chpst -u root:root python /usr/local/share/mms-agent/agent.py 2>&1
+exec chpst -u root:root python <%= @options[:mms_agent_install_dir] %>/mms-agent/agent.py 2>&1
