@@ -107,10 +107,10 @@ class Chef::ResourceDefinitionList::MongoDB
         
      
 
-		rs_connection = nil
-		rescue_connection_failure do
-			rs_connection = Mongo::ReplSetConnection.new( old_members) 
-			rs_connection.database_names #check connection
+        rs_connection = nil
+        rescue_connection_failure do
+          rs_connection = Mongo::ReplSetConnection.new( old_members) 
+          rs_connection.database_names #check connection
         end
          
         admin = rs_connection['admin']
@@ -123,7 +123,6 @@ class Chef::ResourceDefinitionList::MongoDB
           # reconfiguring destroys exisiting connections, reconnect
           Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
           config = connection['local']['system']['replset'].find_one({"_id" => name})
-
           Chef::Log.info("New config successfully applied: #{config.inspect}")
         end
         if !result.nil?
@@ -143,12 +142,10 @@ class Chef::ResourceDefinitionList::MongoDB
           config['members'] << {"_id" => max_id, "host" => m}
         end
         
-    
-
-		rs_connection = nil
-		rescue_connection_failure do
-			rs_connection = Mongo::ReplSetConnection.new( old_members) 
-			rs_connection.database_names #check connection
+        rs_connection = nil
+        rescue_connection_failure do
+          rs_connection = Mongo::ReplSetConnection.new( old_members) 
+          rs_connection.database_names #check connection
         end
         
         admin = rs_connection['admin']
@@ -163,7 +160,6 @@ class Chef::ResourceDefinitionList::MongoDB
           # reconfiguring destroys exisiting connections, reconnect
           Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
           config = connection['local']['system']['replset'].find_one({"_id" => name})
-
           Chef::Log.info("New config successfully applied: #{config.inspect}")
         end
         if !result.nil?
@@ -290,15 +286,15 @@ class Chef::ResourceDefinitionList::MongoDB
   
   # Ensure retry upon failure
   def self.rescue_connection_failure(max_retries=30)
-	retries = 0
-	begin
-	  yield
-	rescue Mongo::ConnectionFailure => ex
-	  retries += 1
-	  raise ex if retries > max_retries
-	  sleep(0.5)
-	  retry
-	end
+    retries = 0
+    begin
+      yield
+    rescue Mongo::ConnectionFailure => ex
+      retries += 1
+      raise ex if retries > max_retries
+      sleep(0.5)
+      retry
+    end
   end
 
 end
