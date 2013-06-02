@@ -54,7 +54,7 @@ attribute "mongodb/sharded_collections",
   :display_name => "Sharded Collections",
   :description => "collections to shard",
   :type => "array",
-  :default => nil
+  :default => []
 
 attribute "mongodb/replicaset_name",
   :display_name => "Replicaset_name",
