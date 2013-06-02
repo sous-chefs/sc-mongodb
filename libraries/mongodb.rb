@@ -150,13 +150,13 @@ class Chef::ResourceDefinitionList::MongoDB
           # reconfiguring destroys exisiting connections, reconnect
           Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
           config = connection['local']['system']['replset'].find_one({"_id" => name})
-		  # Validate configuration change 
-		  if config['members'] == rs_members
-			Chef::Log.info("New config successfully applied: #{config.inspect}")
-		  else
-			Chef::Log.error("Failed to apply new config. Current config: #{config.inspect} Target config #{rs_members}")
-			return
-		  end
+          # Validate configuration change
+          if config['members'] == rs_members
+            Chef::Log.info("New config successfully applied: #{config.inspect}")
+          else
+            Chef::Log.error("Failed to apply new config. Current config: #{config.inspect} Target config #{rs_members}")
+            return
+          end
         end
         if !result.nil?
           Chef::Log.error("configuring replicaset returned: #{result.inspect}")
