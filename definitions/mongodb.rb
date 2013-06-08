@@ -104,7 +104,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
       "shardsrv" => false,  #type == "shard", dito.
       "nojournal" => nojournal,
       "enable_rest" => params[:enable_rest],
-	   "smallfiles" => params[:smallfiles]
+      "smallfiles" => params[:smallfiles]
     )
     notifies :restart, "service[#{name}]"
   end
