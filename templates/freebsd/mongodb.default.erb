@@ -24,4 +24,8 @@ DAEMON_OPTS="$DAEMON_OPTS --replSet <%= @replicaset_name %>"
 DAEMON_OPTS="$DAEMON_OPTS --rest"
 <% end %>
 
+<% if @smallfiles %>
+DAEMON_OPTS="$DAEMON_OPTS --smallfiles"
+<% end %>
+
 <%= @name %>_command_args="$DAEMON_OPTS"
