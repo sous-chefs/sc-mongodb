@@ -33,6 +33,7 @@ default[:mongodb][:auto_configure][:replicaset] = true
 default[:mongodb][:auto_configure][:sharding] = true
 
 default[:mongodb][:enable_rest] = false
+default[:mongodb][:smallfiles] = false
 
 default[:mongodb][:user] = "mongodb"
 default[:mongodb][:group] = "mongodb"
