@@ -12,6 +12,7 @@ DAEMON_OPTS="$DAEMON_OPTS --bind_ip <%= @bind_ip %>"
 <%= @port ? "DAEMON_OPTS=\"$DAEMON_OPTS --port #{@port}\"" : "" %>
 <%= @dbpath ? "DAEMON_OPTS=\"$DAEMON_OPTS --dbpath #{@dbpath}\"" : "" %>
 <%= @logpath ? "DAEMON_OPTS=\"$DAEMON_OPTS --logpath #{@logpath}\"" : "" %>
+<%= @auth ? "DAEMON_OPTS=\"$DAEMON_OPTS --auth\"" : "" %>
 
 <%= @config ? "DAEMON_OPTS=\"$DAEMON_OPTS --config #{@config}\"" : "" %>
 <%= @configdb ? "DAEMON_OPTS=\"$DAEMON_OPTS --configdb #{@configdb}\"" : "" %>
@@ -19,15 +20,22 @@ DAEMON_OPTS="$DAEMON_OPTS --bind_ip <%= @bind_ip %>"
 <%= @configsrv ? "DAEMON_OPTS=\"$DAEMON_OPTS --configsvr\"" : "" %>
 <%= @shardsrv ? "DAEMON_OPTS=\"$DAEMON_OPTS --shardsvr\"" : "" %>
 
+<%= @nojournal ? "DAEMON_OPTS=\"$DAEMON_OPTS --nojournal\"" : "" %>
+
 <% if @replicaset_name %>
 DAEMON_OPTS="$DAEMON_OPTS --replSet <%= @replicaset_name %>"
+<%= @keyfile ? "DAEMON_OPTS=\"$DAEMON_OPTS --keyFile #{@keyfile}\"" : "" %>
 <% end %>
 
 <% if @enable_rest %>
 DAEMON_OPTS="$DAEMON_OPTS --rest"
 <% end %>
 
-<% if %w(centos redhat fedora amazon).include? node.platform -%>
+<% if @smallfiles %>
+DAEMON_OPTS="$DAEMON_OPTS --smallfiles"
+<% end %>
+
+<% if %w( rhel fedora ).include? node.platform_family -%>
 DAEMON_OPTS="$DAEMON_OPTS --fork"
 DBPATH="<%= @dbpath %>"
 <% end -%>

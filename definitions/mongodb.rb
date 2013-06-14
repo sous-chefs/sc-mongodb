@@ -19,10 +19,11 @@
 # limitations under the License.
 #
 
-define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :start],
-    :bind_ip => nil, :port => 27017 , :logpath => "/var/log/mongodb",
-    :dbpath => "/data", :configfile => "/etc/mongodb.conf", :configserver => [],
-    :replicaset => nil, :enable_rest => false, :notifies => [] do
+define :mongodb_instance, :mongodb_type => "mongod",
+       :action => [:enable, :start], :bind_ip => nil, :port => 27017, 
+       :logpath => "/var/log/mongodb", :dbpath => "/data",
+       :configserver => [], :replicaset => nil, :enable_rest => false,
+       :smallfiles => false, :notifies => [], :auth => false do
     
   include_recipe "mongodb::default"
   
@@ -39,10 +40,15 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   
   dbpath = params[:dbpath]
   
-  configfile = params[:configfile]
+  configfile = node['mongodb']['configfile']
   configserver_nodes = params[:configserver]
+
+  auth = params[:auth]
   
   replicaset = params[:replicaset]
+
+  nojournal = node['mongodb']['nojournal']
+
   if type == "shard"
     if replicaset.nil?
       replicaset_name = nil
@@ -66,7 +72,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
       end
     end
   end
-  
+ 
   if !["mongod", "shard", "configserver", "mongos"].include?(type)
     raise "Unknown mongodb type '#{type}'"
   end
@@ -74,17 +80,39 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   if type != "mongos"
     daemon = "/usr/bin/mongod"
     configserver = nil
-    configfile = nil
   else
     daemon = "/usr/bin/mongos"
-    configfile = nil
     dbpath = nil
     configserver = configserver_nodes.collect{|n| "#{n['fqdn']}:#{n['mongodb']['port']}" }.join(",")
   end
-  
+
+  if replicaset_name and node['mongodb']['keyfile']
+    keyfile = "/etc/mongodb/#{replicaset_name}-keyfile"
+
+    directory "/etc/mongodb" do
+      group node['mongodb']['root_group']
+      owner "root"
+      mode "0755"
+      action :create
+    end
+
+    unless node['mongodb']['keyfile']
+      Chef::Application.fatal!("You must set the keyfile contents to enable auth and replication!")
+    end
+
+    template keyfile do 
+      action :create
+      source "mongodb.keyfile.erb"
+      group node['mongodb']['root_group']
+      owner "root"
+      mode "0644"
+    end
+  end
+ 
   # default file
   template "#{node['mongodb']['defaults_dir']}/#{name}" do
     action :create
+    cookbook node['mongodb']['template_cookbook']
     source "mongodb.default.erb"
     group node['mongodb']['root_group']
     owner "root"
@@ -101,11 +129,14 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
       "replicaset_name" => replicaset_name,
       "configsrv" => false, #type == "configserver", this might change the port
       "shardsrv" => false,  #type == "shard", dito.
-      "enable_rest" => params[:enable_rest]
+      "nojournal" => nojournal,
+      "enable_rest" => params[:enable_rest],
+      "smallfiles" => params[:smallfiles]
+      "auth" => auth
     )
     notifies :restart, "service[#{name}]"
   end
-  
+
   # log dir [make sure it exists]
   directory logpath do
     owner node[:mongodb][:user]
@@ -129,6 +160,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   # init script
   template "#{node['mongodb']['init_dir']}/#{name}" do
     action :create
+    cookbook node['mongodb']['template_cookbook']
     source node[:mongodb][:init_script_template]
     group node['mongodb']['root_group']
     owner "root"
@@ -141,11 +173,13 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   service name do
     supports :status => true, :restart => true
     action service_action
-    notifies service_notifies
-    if !replicaset_name.nil?
+    service_notifies.each do |service_notify|
+      notifies :run, service_notify
+    end
+    if !replicaset_name.nil? && node['mongodb']['auto_configure']['replicaset']
       notifies :create, "ruby_block[config_replicaset]"
     end
-    if type == "mongos"
+    if type == "mongos" && node['mongodb']['auto_configure']['sharding']
       notifies :create, "ruby_block[config_sharding]", :immediately
     end
     if name == "mongodb"
@@ -155,19 +189,22 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   end
   
   # replicaset
-  if !replicaset_name.nil?
-    rs_nodes = search(
-      :node,
-      "mongodb_cluster_name:#{replicaset['mongodb']['cluster_name']} AND \
-       recipes:mongodb\\:\\:replicaset AND \
-       mongodb_shard_name:#{replicaset['mongodb']['shard_name']} AND \
-       chef_environment:#{replicaset.chef_environment}"
-    )
+  if !replicaset_name.nil? && node['mongodb']['auto_configure']['replicaset']
+    if Chef::Config[:solo]
+      rs_nodes = [node]
+    else
+      rs_nodes = search(
+        :node,
+        "mongodb_cluster_name:#{replicaset['mongodb']['cluster_name']} AND \
+         mongodb_shard_name:#{replicaset['mongodb']['shard_name']} AND \
+         chef_environment:#{replicaset.chef_environment}"
+      )
+    end
   
     ruby_block "config_replicaset" do
       block do
         if not replicaset.nil?
-          MongoDB.configure_replicaset(replicaset, replicaset_name, rs_nodes)
+          Chef::MongoDB.configure_replicaset(replicaset, replicaset_name, rs_nodes)
         end
       end
       action :nothing
@@ -175,7 +212,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   end
   
   # sharding
-  if type == "mongos"
+  if type == "mongos" && node['mongodb']['auto_configure']['sharding']
     # add all shards
     # configure the sharded collections
     
@@ -189,8 +226,8 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
     ruby_block "config_sharding" do
       block do
         if type == "mongos"
-          MongoDB.configure_shards(node, shard_nodes)
-          MongoDB.configure_sharded_collections(node, node['mongodb']['sharded_collections'])
+          Chef::MongoDB.configure_shards(node, shard_nodes)
+          Chef::MongoDB.configure_sharded_collections(node, node['mongodb']['sharded_collections'])
         end
       end
       action :nothing

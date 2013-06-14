@@ -39,7 +39,17 @@ restart () {
   start
 }
 
+<% if %w{ rhel }.include? node.platform_family -%>
+ulimit -f <%= node.mongodb.ulimit.file_size %>
+ulimit -t <%= node.mongodb.ulimit.cpu_time %>
+ulimit -v <%= node.mongodb.ulimit.virtual_memory %>
+ulimit -n <%= node.mongodb.ulimit.open_files %>
+ulimit -m <%= node.mongodb.ulimit.memory_size %>
+ulimit -u <%= node.mongodb.ulimit.processes %>
+<% else -%>
 ulimit -n 12000
+<% end -%>
+
 RETVAL=0
 
 case "$1" in

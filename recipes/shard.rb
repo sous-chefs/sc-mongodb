@@ -42,4 +42,6 @@ mongodb_instance "shard" do
     replicaset    node
   end
   enable_rest node['mongodb']['enable_rest']
+  smallfiles   node['mongodb']['smallfiles']
+  auth         node['mongodb']['auth']
 end
