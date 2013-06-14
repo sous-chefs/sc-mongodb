@@ -131,7 +131,7 @@ define :mongodb_instance, :mongodb_type => "mongod",
       "shardsrv" => false,  #type == "shard", dito.
       "nojournal" => nojournal,
       "enable_rest" => params[:enable_rest],
-      "smallfiles" => params[:smallfiles]
+      "smallfiles" => params[:smallfiles],
       "auth" => auth
     )
     notifies :restart, "service[#{name}]"
