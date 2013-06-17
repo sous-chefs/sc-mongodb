@@ -28,7 +28,7 @@ class Chef
       # lazy require, to move loading this modules to runtime of the cookbook
       require 'rubygems'
       require 'mongo'
-      
+
       if members.length == 0
         if Chef::Config[:solo]
           abort("Cannot configure replicaset '#{name}', no member nodes found")
@@ -37,36 +37,35 @@ class Chef
           return
         end
       end
-      
+
       connection = get_connection('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
-      
+
       # Want the node originating the connection to be included in the replicaset
-      members << node unless members.include?(node)
+      members << node unless members.any? {|m| m.name == node.name }
       members.sort!{ |x,y| x.name <=> y.name }
       rs_members = []
       members.each_index do |n|
         port = members[n]['mongodb']['port']
         rs_members << {"_id" => n, "host" => "#{members[n]['fqdn']}:#{port}"}
       end
-  
-      
+
+
       Chef::Log.info(
         "Configuring replicaset with members #{members.collect{ |n| n['hostname'] }.join(', ')}"
       )
-      
+
       rs_member_ips = []
-  
-     if node['mongodb']['replicaset_members'] != nil and Chef::Config[:solo]
-       node.set['mongodb']['replicaset_members'] << node['mongodb']['bind_ip'] unless node['mongodb']['replicaset_members'].include?(node['mongodb']['bind_ip'])
-     end
-  
+
+      if node['mongodb']['replicaset_members'] != nil and Chef::Config[:solo]
+        node.set['mongodb']['replicaset_members'] << node['mongodb']['bind_ip'] unless node['mongodb']['replicaset_members'].include?(node['mongodb']['bind_ip'])
+      end
+
       if not Chef::Config[:solo]
         members.each_index do |n|
           port = members[n]['mongodb']['port']
           fqdn_interface_ip = ''
           if members[n]['mongodb']['fqdn_interface']
             members[n][:network][:interfaces][:eth1][:addresses].each do |key, info|
-              p key
               if info['family'] == 'inet'
                 fqdn_interface_ip = key
               end
@@ -86,30 +85,35 @@ class Chef
           end
         end
       end
-  
+
       if node['mongodb']['use_fqdn'] == false
         rs_members = rs_member_ips
       end
-  
+
       if node['mongodb']['replicaset_members'] != nil or not Chef::Config['solo']
         admin = connection['admin']
+
         cmd = BSON::OrderedHash.new
         cmd['replSetInitiate'] = {
             "_id" => name,
             "members" => node['mongodb']['use_fqdn'] == false ? rs_member_ips : rs_members
         }
-        
+
         begin
           result = admin.command(cmd, :check_response => false)
         rescue Mongo::OperationTimeout
-          Chef::Log.info("Started configuring the replicaset, this will take some time, 
-  		        another run should run smoothly")
+          Chef::Log.info("Started configuring the replicaset, this will take some time, another run should run smoothly")
           return
         end
         if result.fetch("ok", nil) == 1
           # everything is fine, do nothing
-        elsif result.fetch("errmsg", nil) == "already initialized"
-          "In elsif statment. result.fetch returned already initialized."
+        elsif result.fetch("errmsg", nil) =~ %r/(\S+) is already initiated/ || (result.fetch("errmsg", nil) == "already initialized")
+          server,port = $1.nil? ? ['localhost',node['mongodb']['port']] : $1.split(":")
+          begin
+            connection = Mongo::Connection.new(server, port, :op_timeout => 5, :slave_ok => true)
+          rescue
+            abort("Could not connect to database: '#{server}:#{port}'")
+          end
           # check if both configs are the same
           config = connection['local']['system']['replset'].find_one({"_id" => name})
           if config['_id'] == name and (config['members'] == rs_members or config['members'] == rs_member_ips)
@@ -121,23 +125,24 @@ class Chef
             rs_member_ips.collect!{ |member| member['host'] }
             config['version'] += 1
             old_members = config['members'].collect{ |member| member['host'] }
-            members_delete = old_members - rs_members        
+            members_delete = old_members - rs_members
             config['members'] = config['members'].delete_if{ |m| members_delete.include?(m['host']) }
             members_add = rs_members - old_members
             members_add.each do |m|
               max_id += 1
               config['members'] << {"_id" => max_id, "host" => m}
             end
-  
-            
-            # rs_connection = Mongo::ReplSetConnection.new( *old_members.collect{ |m| m.split(":") })
-            rs_connection = Mongo::ReplSetConnection.new( *old_members.collect{ |m| m.split("%") })
+
+            rs_connection = nil
+            rescue_connection_failure do
+              rs_connection = Mongo::ReplSetConnection.new(old_members)
+              rs_connection.database_names #check connection
+            end
+
             admin = rs_connection['admin']
-            
             cmd = BSON::OrderedHash.new
             cmd['replSetReconfig'] = config
-            puts "cmd = #{cmd}"
-            
+
             result = nil
             begin
               result = admin.command(cmd, :check_response => false)
@@ -148,22 +153,22 @@ class Chef
               Chef::Log.info("New config successfully applied: #{config.inspect}")
             end
             if !result.nil?
-              Chef::Log.error("configuring replicaset returned: #{result.inspect}")
+              Chef::Log.info("configuring replicaset returned: #{result.inspect}")
             end
           end
         elsif !result.fetch("errmsg", nil).nil?
-          Chef::Log.error("Failed to configure replicaset, reason: #{result.inspect}")
+           Chef::Log.error("Failed to configure replicaset, reason: #{result.inspect}")
         end
       end
     end
-    
+
     def self.configure_shards(node, shard_nodes)
       # lazy require, to move loading this modules to runtime of the cookbook
       require 'rubygems'
       require 'mongo'
-      
+
       shard_groups = Hash.new{|h,k| h[k] = []}
-      
+
       shard_nodes.each do |n|
         if n['recipes'].include?('mongodb::replicaset')
           key = "rs_#{n['mongodb']['shard_name']}"
@@ -173,7 +178,7 @@ class Chef
         shard_groups[key] << "#{n['fqdn']}:#{n['mongodb']['port']}"
       end
       Chef::Log.info(shard_groups.inspect)
-      
+
       shard_members = []
       shard_groups.each do |name, members|
         if name == "_single"
@@ -183,11 +188,11 @@ class Chef
         end
       end
       Chef::Log.info(shard_members.inspect)
-      
+
       connection = get_connection('localhost', node['mongodb']['port'], :op_timeout => 5)
-      
+
       admin = connection['admin']
-      
+
       shard_members.each do |shard|
         cmd = BSON::OrderedHash.new
         cmd['addShard'] = shard
@@ -199,19 +204,20 @@ class Chef
         Chef::Log.info(result.inspect)
       end
     end
-    
+
+
     def self.configure_sharded_collections(node, sharded_collections)
       # lazy require, to move loading this modules to runtime of the cookbook
       require 'rubygems'
       require 'mongo'
-      
+
       connection = get_connection('localhost', node['mongodb']['port'], :op_timeout => 5)
-      
+
       admin = connection['admin']
-      
+
       databases = sharded_collections.keys.collect{ |x| x.split(".").first}.uniq
       Chef::Log.info("enable sharding for these databases: '#{databases.inspect}'")
-      
+
       databases.each do |db_name|
         cmd = BSON::OrderedHash.new
         cmd['enablesharding'] = db_name
@@ -233,7 +239,7 @@ class Chef
           Chef::Log.info("Enabled sharding for database '#{db_name}'")
         end
       end
-      
+
       sharded_collections.each do |name, key|
         cmd = BSON::OrderedHash.new
         cmd['shardcollection'] = name
@@ -251,17 +257,30 @@ class Chef
           else
             Chef::Log.error("Failed to shard collection #{name}, result was: #{result.inspect}")
           end
+
         else
           # success
           Chef::Log.info("Sharding for collection '#{result['collectionsharded']}' enabled")
         end
       end
-    
+
     end
-    
+
+    # Ensure retry upon failure
+    def self.rescue_connection_failure(max_retries=30)
+      retries = 0
+      begin
+        yield
+      rescue Mongo::ConnectionFailure => ex
+        retries += 1
+        raise ex if retries > max_retries
+        sleep(0.5)
+        retry
+      end
+    end
+
     def self.configure_user(node, username, password, database, delete = false)
       connection = get_connection('localhost', node['mongodb']['port'], :op_timeout => 5)
-  
       database = connection.db(database)
       if delete
         database.remove_user(username)
@@ -279,15 +298,15 @@ class Chef
         false
       end
     end
-  
+
     private
-  
+
     def self.get_connection(host, port, opts = {})
       require 'mongo'
       op_timeout      = opts[:op_timeout] || 5
       slave_ok        = opts[:slave_ok] || false
       connect_timeout = opts[:connect_timeout] || nil
-  
+
       begin
         Mongo::Connection.new(host, port, :op_timeout => op_timeout, :slave_ok => slave_ok, :connect_timeout => connect_timeout)
       rescue Exception => e
@@ -295,5 +314,6 @@ class Chef
         return
       end
     end
+
   end
 end

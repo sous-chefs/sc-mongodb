@@ -19,10 +19,11 @@
 # limitations under the License.
 #
 
-define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :start],
-    :bind_ip => nil, :port => 27017 , :logpath => "/var/log/mongodb",
-    :dbpath => "/data", :configfile => nil, :configserver => [],
-    :replicaset => nil, :enable_rest => false, :notifies => [], :auth => false do
+define :mongodb_instance, :mongodb_type => "mongod",
+       :action => [:enable, :start], :bind_ip => nil, :port => 27017, 
+       :logpath => "/var/log/mongodb", :dbpath => "/data",
+       :configserver => [], :replicaset => nil, :enable_rest => false,
+       :smallfiles => false, :notifies => [], :auth => false do
     
   include_recipe "mongodb::default"
   
@@ -39,7 +40,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   
   dbpath = params[:dbpath]
   
-  configfile = params[:configfile]
+  configfile = node['mongodb']['configfile']
   configserver_nodes = params[:configserver]
 
   auth = params[:auth]
@@ -111,6 +112,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   # default file
   template "#{node['mongodb']['defaults_dir']}/#{name}" do
     action :create
+    cookbook node['mongodb']['template_cookbook']
     source "mongodb.default.erb"
     group node['mongodb']['root_group']
     owner "root"
@@ -129,6 +131,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
       "shardsrv" => false,  #type == "shard", dito.
       "nojournal" => nojournal,
       "enable_rest" => params[:enable_rest],
+      "smallfiles" => params[:smallfiles],
       "auth" => auth
     )
     notifies :restart, "service[#{name}]"
@@ -157,6 +160,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   # init script
   template "#{node['mongodb']['init_dir']}/#{name}" do
     action :create
+    cookbook node['mongodb']['template_cookbook']
     source node[:mongodb][:init_script_template]
     group node['mongodb']['root_group']
     owner "root"
@@ -185,7 +189,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   end
   
   # replicaset
-  if !replicaset_name.nil?
+  if !replicaset_name.nil? && node['mongodb']['auto_configure']['replicaset']
     if Chef::Config[:solo]
       rs_nodes = [node]
     else

@@ -39,6 +39,7 @@ default[:mongodb][:auto_configure][:replicaset] = true
 default[:mongodb][:auto_configure][:sharding] = true
 
 default[:mongodb][:enable_rest] = false
+default[:mongodb][:smallfiles] = false
 
 default[:mongodb][:user] = "mongodb"
 default[:mongodb][:group] = "mongodb"
@@ -80,3 +81,4 @@ end
 
 default[:mongodb][:package_version] = nil
 default[:mongodb][:nojournal] = false
+default[:mongodb][:template_cookbook] = "mongodb"
