@@ -20,7 +20,11 @@ SUBSYS_LOCK_FILE=/var/lock/subsys/<%= @provides %>
 start()
 {
   echo -n $"Starting <%= @provides %>: "
+<% if @emits_pid %>
+  daemon --user "$MONGO_USER" --pidfile "$DBPATH"/mongod.lock $DAEMON $DAEMON_OPTS
+<% else %>
   daemon --user "$MONGO_USER" $DAEMON $DAEMON_OPTS
+<% end %>
   RETVAL=$?
   echo
   [ $RETVAL -eq 0 ] && touch $SUBSYS_LOCK_FILE
@@ -71,7 +75,11 @@ case "$1" in
     [ -f $SUBSYS_LOCK_FILE ] && restart || :
     ;;
   status)
+<% if @emits_pid %>
+    status -p "$DBPATH"/mongod.lock $DAEMON
+<% else %>
     status $DAEMON
+<% end %>
     RETVAL=$?
     ;;
   *)
