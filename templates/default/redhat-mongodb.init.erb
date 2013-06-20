@@ -11,27 +11,32 @@
 . /etc/rc.d/init.d/functions
 
 SYSCONFIG="/etc/sysconfig/<%= @provides %>"
-DAEMON=/usr/bin/mongod
 MONGO_USER=mongod
+
+SUBSYS_LOCK_FILE=/var/lock/subsys/<%= @provides %>
 
 . "$SYSCONFIG" || true
 
 start()
 {
-  echo -n $"Starting mongod: "
+  echo -n $"Starting <%= @provides %>: "
   daemon --user "$MONGO_USER" $DAEMON $DAEMON_OPTS
   RETVAL=$?
   echo
-  [ $RETVAL -eq 0 ] && touch /var/lock/subsys/mongod
+  [ $RETVAL -eq 0 ] && touch $SUBSYS_LOCK_FILE
 }
 
 stop()
 {
-  echo -n $"Stopping mongod: "
-  killproc -p "$DBPATH"/mongod.lock -d 300 /usr/bin/mongod
+  echo -n $"Stopping <%= @provides %>: "
+<% if @emits_pid %>
+  killproc -p "$DBPATH"/mongod.lock -d 300 $DAEMON
+<% else %>
+  killproc -d 300 $DAEMON
+<% end %>
   RETVAL=$?
   echo
-  [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/mongod
+  [ $RETVAL -eq 0 ] && rm -f $SUBSYS_LOCK_FILE
 }
 
 restart () {
@@ -63,7 +68,7 @@ case "$1" in
     restart
     ;;
   condrestart)
-    [ -f /var/lock/subsys/mongod ] && restart || :
+    [ -f $SUBSYS_LOCK_FILE ] && restart || :
     ;;
   status)
     status $DAEMON
