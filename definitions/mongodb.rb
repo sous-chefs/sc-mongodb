@@ -197,7 +197,7 @@ define :mongodb_instance, :mongodb_type => "mongod",
         :node,
         "mongodb_cluster_name:#{replicaset['mongodb']['cluster_name']} AND \
          mongodb_shard_name:#{replicaset['mongodb']['shard_name']} AND \
-         chef_environment:#{replicaset.chef_environment}"
+         recipes:mongodb* AND chef_environment:#{replicaset.chef_environment}"
       )
     end
   
