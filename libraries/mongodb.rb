@@ -133,7 +133,7 @@ class Chef::ResourceDefinitionList::MongoDB
           config = connection['local']['system']['replset'].find_one({"_id" => name})
           Chef::Log.info("New config successfully applied: #{config.inspect}")
         end
-        if !result.nil?
+        if !result.fetch("errmsg", nil).nil?
           Chef::Log.error("configuring replicaset returned: #{result.inspect}")
         end
       else
@@ -170,7 +170,7 @@ class Chef::ResourceDefinitionList::MongoDB
           config = connection['local']['system']['replset'].find_one({"_id" => name})
           Chef::Log.info("New config successfully applied: #{config.inspect}")
         end
-        if !result.nil?
+        if !result.fetch("errmsg", nil).nil?
           Chef::Log.error("configuring replicaset returned: #{result.inspect}")
         end
       end
