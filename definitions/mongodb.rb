@@ -22,35 +22,45 @@
 define :mongodb_instance,
     :mongodb_type => "mongod",
     :action => [:enable, :start],
-    :bind_ip => nil,
-    :port => 27017,
     :logpath => "/var/log/mongodb",
     :dbpath => "/data",
     :configserver => [],
     :replicaset => nil,
-    :enable_rest => false,
-    :smallfiles => false,
     :notifies => [] do
 
   include_recipe "mongodb::default"
 
-  name = params[:name]
-  type = params[:mongodb_type]
-  service_action = params[:action]
-  service_notifies = params[:notifies]
+  name                       = params[:name]
+  configserver_nodes         = params[:configserver]
+  dbpath                     = params[:dbpath]
+  logpath                    = params[:logpath]
+  replicaset                 = params[:replicaset]
+  service_action             = params[:action]
+  service_notifies           = params[:notifies]
+  type                       = params[:mongodb_type]
 
-  bind_ip = params[:bind_ip]
-  port = params[:port]
+  # TODO(jh): parameterize so we can make a resource provider
+  auto_configure_replicaset  = node['mongodb']['auto_configure']['replicaset']
+  auto_configure_sharding    = node['mongodb']['auto_configure']['sharding']
+  cluster_name               = node['mongodb']['cluster_name']
+  dbconfig_file              = node['mongodb']['dbconfig_file']
+  dbconfig_file_template     = node['mongodb']['dbconfig_file_template']
+  init_dir                   = node['mongodb']['init_dir']
+  init_script_template       = node['mongodb']['init_script_template']
+  mongodb_group              = node['mongodb']['group']
+  mongodb_user               = node['mongodb']['user']
+  root_group                 = node['mongodb']['root_group']
+  sharded_collections        = node['mongodb']['sharded_collections']
+  sysconfig_file             = node['mongodb']['sysconfig_file']
+  sysconfig_file_template    = node['mongodb']['sysconfig_file_template']
+  sysconfig_vars             = node['mongodb']['sysconfig']
+  template_cookbook          = node['mongodb']['template_cookbook']
 
-  logpath = params[:logpath]
-
-  dbpath = params[:dbpath]
-
-  configserver_nodes = params[:configserver]
-
-  replicaset = params[:replicaset]
-
-  nojournal = node['mongodb']['nojournal']
+  if node['mongodb']['apt_repo'] == "ubuntu-upstart" then
+    init_file = File.join(node['mongodb']['init_dir'], "#{name}.conf")
+  else
+    init_file = File.join(node['mongodb']['init_dir'], "#{name}")
+  end
 
   if type == "shard"
     if replicaset.nil?
@@ -90,31 +100,33 @@ define :mongodb_instance,
   end
 
   # default file
-  template node['mongodb']['sysconfig_file'] do
-    cookbook node['mongodb']['template_cookbook']
-    source node['mongodb']['sysconfig_file_template']
-    group node['mongodb']['root_group']
+  template sysconfig_file do
+    action :create
+    cookbook template_cookbook
+    source sysconfig_file_template
+    group root_group
     owner "root"
     mode "0644"
-    action :create
+    variables(
+      "sysconfig" => sysconfig_vars
+    )
     notifies :restart, "service[#{name}]"
   end
 
   # config file
-  template node['mongodb']['dbconfig_file'] do
-    cookbook node['mongodb']['template_cookbook']
-    source node['mongodb']['dbconfig_file_template']
-    group node['mongodb']['root_group']
+  template dbconfig_file do
+    cookbook template_cookbook
+    source dbconfig_file_template
+    group root_group
     owner "root"
     mode "0644"
     action :create
-    notifies :restart, "service[#{name}]"
-  end
+
 
   # log dir [make sure it exists]
   directory logpath do
-    owner node[:mongodb][:user]
-    group node[:mongodb][:group]
+    owner mongodb_user
+    group mongodb_group
     mode "0755"
     action :create
     recursive true
@@ -123,8 +135,8 @@ define :mongodb_instance,
   if type != "mongos"
     # dbpath dir [make sure it exists]
     directory dbpath do
-      owner node[:mongodb][:user]
-      group node[:mongodb][:group]
+      owner mongodb_user
+      group mongodb_group
       mode "0755"
       action :create
       recursive true
@@ -132,15 +144,10 @@ define :mongodb_instance,
   end
 
   # init script
-  if node['mongodb']['apt_repo'] == "ubuntu-upstart" then
-      init_file = File.join(node['mongodb']['init_dir'], "#{name}.conf")
-  else
-      init_file = File.join(node['mongodb']['init_dir'], "#{name}")
-  end
   template init_file do
-    cookbook node['mongodb']['template_cookbook']
-    source node[:mongodb][:init_script_template]
-    group node['mongodb']['root_group']
+    cookbook template_cookbook
+    source init_script_template
+    group root_group
     owner "root"
     mode "0755"
     variables({
@@ -156,10 +163,10 @@ define :mongodb_instance,
     service_notifies.each do |service_notify|
       notifies :run, service_notify
     end
-    if !replicaset_name.nil? && node['mongodb']['auto_configure']['replicaset']
+    if !replicaset_name.nil? && auto_configure_replicaset
       notifies :create, "ruby_block[config_replicaset]"
     end
-    if type == "mongos" && node['mongodb']['auto_configure']['sharding']
+    if type == "mongos" && auto_configure_sharding
       notifies :create, "ruby_block[config_sharding]", :immediately
     end
     if name == "mongodb"
@@ -169,7 +176,7 @@ define :mongodb_instance,
   end
 
   # replicaset
-  if !replicaset_name.nil? && node['mongodb']['auto_configure']['replicaset']
+  if !replicaset_name.nil? && auto_configure_replicaset
     rs_nodes = search(
       :node,
       "mongodb_cluster_name:#{replicaset['mongodb']['cluster_name']} AND \
@@ -194,13 +201,13 @@ define :mongodb_instance,
   end
 
   # sharding
-  if type == "mongos" && node['mongodb']['auto_configure']['sharding']
+  if type == "mongos" && auto_configure_sharding
     # add all shards
     # configure the sharded collections
 
     shard_nodes = search(
       :node,
-      "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
+      "mongodb_cluster_name:#{cluster_name} AND \
        recipes:mongodb\\:\\:shard AND \
        chef_environment:#{node.chef_environment}"
     )
@@ -209,7 +216,7 @@ define :mongodb_instance,
       block do
         if type == "mongos"
           MongoDB.configure_shards(node, shard_nodes)
-          MongoDB.configure_sharded_collections(node, node['mongodb']['sharded_collections'])
+          MongoDB.configure_sharded_collections(node, sharded_collections)
         end
       end
       action :nothing
