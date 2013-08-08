@@ -28,6 +28,10 @@ define :mongodb_instance,
     :replicaset => nil,
     :notifies => [] do
 
+  if !["mongod", "shard", "configserver", "mongos"].include?(params[:mongodb_type])
+    raise ArgumentError, ":mongodb_type must be 'mongod', 'shard', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
+  end
+
   include_recipe "mongodb::default"
 
   name                       = params[:name]
@@ -84,10 +88,6 @@ define :mongodb_instance,
         replicaset_name = nil
       end
     end
-  end
-
-  if !["mongod", "shard", "configserver", "mongos"].include?(type)
-    raise "Unknown mongodb type '#{type}'"
   end
 
   if type != "mongos"
