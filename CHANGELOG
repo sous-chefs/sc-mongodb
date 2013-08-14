@@ -2,7 +2,16 @@
 chef cookbooks Changelog
 ========================
 
-Version 0.1.0, UNRELEASED
+
+Version 0.13.1, UNRELEASED
+---------------------------
+Add keyfileSupport
+
+Version 0.13.0, UNRELEASED
+---------------------------
+Bunch of stuff...
+
+Version 0.1.0
 ----------------------------
 Initial release of the cookbooks for the chef configuration management system
 developed at edelight GmbH.
