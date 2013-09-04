@@ -3,6 +3,7 @@
     "chef_version": "11.4.4",
     "ami": [
         "ami-e7582d8e", // Ubuntu 12.04
+        "ami-d0f89fb9", // Ubuntu 12.04 32 bit
         "ami-8eadd0e7" // Ubuntu 10.04
     ],
     "run_list": [
