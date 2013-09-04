@@ -28,8 +28,7 @@ needs_mongo_gem = (node.recipes.include?("mongodb::replicaset") or node.recipes.
 
 # install the mongo ruby gem at compile time to make it globally available
 if needs_mongo_gem
-  current_version = Gem::Version.new(Chef::VERSION)
-  if(current_version < Gem::Version.new('10.12.0'))
+  if(Gem.const_defined?("Version") and Gem::Version.new(Chef::VERSION) < Gem::Version.new('10.12.0'))
     gem_package 'mongo' do
       action :nothing
     end.run_action(:install)
