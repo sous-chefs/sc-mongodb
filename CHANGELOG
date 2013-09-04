@@ -2,6 +2,9 @@
 chef cookbooks Changelog
 ========================
 
+Version 0.13.2, UNRELEASED
+---------------------------
+add support for chef_gem on newer versions of chef
 
 Version 0.13.1, UNRELEASED
 ---------------------------
