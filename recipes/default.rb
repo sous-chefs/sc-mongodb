@@ -38,9 +38,13 @@ end
 
 
 # configure default instance
-recipe = 'mongodb::replicaset'
-new_chef = Chef::Version.new(Chef::VERSION).major >= 11
-if new_chef ? !node.run_context.loaded_recipe?(recipe) : !node.recipe?(recipe)
+replicaset_recipe = 'mongodb::replicaset'
+configured_as_replicaset = case Chef::Version.new(Chef::VERSION).major
+  when 0..10 then node.recipe?(replicaset_recipe)
+  else node.run_context.loaded_recipe?(replicaset_recipe)
+end
+
+unless configured_as_replicaset
   mongodb_instance node['mongodb']['instance_name'] do
     mongodb_type "mongod"
     bind_ip      node['mongodb']['bind_ip']
