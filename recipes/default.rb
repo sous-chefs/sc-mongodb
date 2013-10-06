@@ -38,12 +38,16 @@ end
 
 
 # configure default instance
-mongodb_instance node['mongodb']['instance_name'] do
-  mongodb_type "mongod"
-  bind_ip      node['mongodb']['bind_ip']
-  port         node['mongodb']['port']
-  logpath      node['mongodb']['logpath']
-  dbpath       node['mongodb']['dbpath']
-  enable_rest  node['mongodb']['enable_rest']
-  smallfiles   node['mongodb']['smallfiles']
+recipe = 'mongodb::replicaset'
+new_chef = Chef::Version.new(Chef::VERSION).major >= 11
+if new_chef ? !node.run_context.loaded_recipe?(recipe) : !node.recipe?(recipe)
+  mongodb_instance node['mongodb']['instance_name'] do
+    mongodb_type "mongod"
+    bind_ip      node['mongodb']['bind_ip']
+    port         node['mongodb']['port']
+    logpath      node['mongodb']['logpath']
+    dbpath       node['mongodb']['dbpath']
+    enable_rest  node['mongodb']['enable_rest']
+    smallfiles   node['mongodb']['smallfiles']
+  end
 end
