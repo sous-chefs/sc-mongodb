@@ -151,7 +151,13 @@ class Chef::ResourceDefinitionList::MongoDB
           # reconfiguring destroys exisiting connections, reconnect
           connection = Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
           config = connection['local']['system']['replset'].find_one({"_id" => name})
-          Chef::Log.info("New config successfully applied: #{config.inspect}")
+		  		  # Validate configuration change 
+		  if config['members'] == rs_members
+			Chef::Log.info("New config successfully applied: #{config.inspect}")
+		  else
+			Chef::Log.error("Failed to apply new config. Current config: #{config.inspect} Target config #{rs_members}")
+			return
+		  end
         end
         if !result.fetch("errmsg", nil).nil?
           Chef::Log.error("configuring replicaset returned: #{result.inspect}")
@@ -192,7 +198,13 @@ class Chef::ResourceDefinitionList::MongoDB
           # reconfiguring destroys exisiting connections, reconnect
           connection = Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
           config = connection['local']['system']['replset'].find_one({"_id" => name})
-          Chef::Log.info("New config successfully applied: #{config.inspect}")
+          # Validate configuration change
+          if config['members'] == rs_members
+            Chef::Log.info("New config successfully applied: #{config.inspect}")
+          else
+            Chef::Log.error("Failed to apply new config. Current config: #{config.inspect} Target config #{rs_members}")
+            return
+          end
         end
         unless result.nil? or result.fetch("errmsg", nil).nil?
           Chef::Log.error("configuring replicaset returned: #{result.inspect}")
