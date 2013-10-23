@@ -1,3 +1,5 @@
 build
 .kitchen/
 .kitchen.local.yml
+
+Berksfile.lock
