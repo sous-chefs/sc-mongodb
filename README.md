@@ -1,3 +1,5 @@
+[![Build Status](https://recipe-tester.com/repo/edelight/chef-mongodb/badge.png)](https://recipe-tester.com/repo/edelight/chef-mongodb/)
+
 # DESCRIPTION:
 
 Installs and configures MongoDB, supporting:

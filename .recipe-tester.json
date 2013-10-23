@@ -1,0 +1,19 @@
+{
+    "type": "chef-solo",
+    "chef_version": "11.4.4",
+    "ami": [
+        "ami-e7582d8e", // Ubuntu 12.04
+        "ami-d0f89fb9", // Ubuntu 12.04 32 bit
+        "ami-7d317314", // Ubuntu 13.04
+        "ami-bab10ad3", // Ubuntu 11.04
+        "ami-8eadd0e7", // Ubuntu 10.04
+    ],
+    "run_list": [
+        "recipe[mongodb::10gen_repo]",
+        "recipe[mongodb::default]"
+    ],
+    "node_attributes": {
+        "dbpath": "/var/log/mongodb"
+    }
+}
+
