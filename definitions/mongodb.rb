@@ -80,7 +80,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   else
     daemon = "/usr/bin/mongos"
     dbpath = nil
-    configserver = configserver_nodes.collect{|n| "#{n['fqdn']}:#{n['mongodb']['port']}" }.sort.join(",")
+    configserver = configserver_nodes.collect{|n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['port']}" }.sort.join(",")
   end
 
   # default file
