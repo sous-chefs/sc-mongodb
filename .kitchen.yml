@@ -4,24 +4,35 @@ driver_config:
   require_chef_omnibus: true
 
 platforms:
+
 - name: ubuntu-12.04
   driver_config:
     box: opscode-ubuntu-12.04
     box_url: https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box
   run_list:
   - "recipe[apt]"
+
 - name: ubuntu-10.04
   driver_config:
     box: opscode-ubuntu-10.04
     box_url: https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-10.04_provisionerless.box
   run_list:
   - "recipe[apt]"
+
+- name: debian-7.1.0
+  driver_config:
+    box: opscode-debian-7.1.0
+    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_debian-7.1.0_provisionerless.box
+  run_list:
+  - "recipe[apt]"
+
 - name: centos-6.4
   driver_config:
     box: opscode-centos-6.4
     box_url: https://opscode-vm.s3.amazonaws.com/vagrant/opscode_centos-6.4_provisionerless.box
   run_list:
   - "recipe[yum]"
+
 - name: centos-5.9
   driver_config:
     box: opscode-centos-5.9
@@ -29,8 +40,22 @@ platforms:
   run_list:
   - "recipe[yum]"
 
+# not going to try until
+# https://jira.mongodb.org/browse/SERVER-7285 is closed
+#- name: fedora-19
+  #driver_config:
+    #box: opscode-fedora-19
+    #box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode-fedora-19_provisionerless.box
+  #run_list:
+  #- "recipe[yum]"
+
 suites:
 - name: default
+  run_list:
+  - "recipe[mongodb]"
+  attributes: {}
+
+- name: default_10gen
   run_list:
   - "recipe[mongodb::10gen_repo]"
   - "recipe[mongodb]"
