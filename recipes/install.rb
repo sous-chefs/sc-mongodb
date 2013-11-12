@@ -2,9 +2,20 @@ if node['mongodb']['install_method'] == "10gen" or node.run_list.recipes.include
     include_recipe "mongodb::10gen_repo"
 end
 
-# update defaults
+# prevent-install defaults, but don't overwrite
 file node['mongodb']['sysconfig_file'] do
     content "ENABLE_MONGODB=no"
+    group node['mongodb']['root_group']
+    owner "root"
+    mode 0644
+    action :create_if_missing
+end
+
+# just-in-case config file drop
+template node['mongodb']['dbconfig_file'] do
+    cookbook node['mongodb']['template_cookbook']
+    source node['mongodb']['dbconfig_file_template']
+    group node['mongodb']['root_group']
     owner "root"
     mode 0644
     action :create_if_missing
@@ -26,7 +37,7 @@ template template_file do
     variables({
         :provides => node['mongodb']['type'],
     })
-    action :create
+    action :create_if_missing
 end
 
 packager_opts = ""
