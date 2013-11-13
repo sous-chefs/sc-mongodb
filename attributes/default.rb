@@ -51,10 +51,10 @@ default[:mongodb][:sysconfig_file] = "/etc/default/mongodb"
 default[:mongodb][:sysconfig_file_template] = "mongodb.sysconfig.erb"
 default[:mongodb][:dbconfig_file] = node[:mongodb][:configfile] or "/etc/mongodb.conf"
 default[:mongodb][:dbconfig_file_template] = "mongodb.conf.erb"
-default[:mongodb][:package_name] = "mongo-10gen-server"
+default[:mongodb][:package_name] = "mongodb"
 
+default[:mongodb][:default_init_name] = "mongodb"
 default[:mongodb][:instance_name] = "mongodb"
-default[:mongodb][:type] = "mongodb"
 
 # this option can be "distro" or "10gen"
 default[:mongodb][:install_method] = "distro"
@@ -74,8 +74,8 @@ when "rhel","fedora"
   default[:mongodb][:user] = "mongod"
   default[:mongodb][:group] = "mongod"
   default[:mongodb][:init_script_template] = "redhat-mongodb.init.erb"
+  default[:mongodb][:default_init_name] = "mongod"
   default[:mongodb][:instance_name] = "mongod"
-  default[:mongodb][:type] = "mongod"
   # then there is this guy
   if node['platform'] == 'centos' then
       Chef::Log.warn("CentOS doesn't provide mongodb, forcing use of 10gen repo")
@@ -94,7 +94,6 @@ else
   else
     default[:mongodb][:apt_repo] = "debian-sysvinit"
   end
-  default[:mongodb][:package_name] = "mongodb"
 end
 
 

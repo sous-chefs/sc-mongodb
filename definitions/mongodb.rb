@@ -35,7 +35,6 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   port = params[:port]
 
   logpath = params[:logpath]
-  logfile = "#{logpath}/#{name}.log"
 
   dbpath = params[:dbpath]
 
@@ -125,7 +124,12 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   end
 
   # init script
-  template "#{node['mongodb']['init_dir']}/#{name}" do
+  if node['mongodb']['apt_repo'] == "ubuntu-upstart" then
+      init_file = file.join(node['mongodb']['init_dir'], "#{name}.conf")
+  else
+      init_file = file.join(node['mongodb']['init_dir'], "#{name}")
+  end
+  template init_file do
     action :create
     cookbook node['mongodb']['template_cookbook']
     source node[:mongodb][:init_script_template]

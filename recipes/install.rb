@@ -23,19 +23,18 @@ end
 
 # and we install our own init file
 if node['mongodb']['apt_repo'] == "ubuntu-upstart" then
-    template_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['type']}.conf")
+    init_file = file.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}.conf")
 else
-    template_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['type']}")
+    init_file = file.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}")
 end
-
-template template_file do
+template init_file do
     cookbook node['mongodb']['template_cookbook']
     source node['mongodb']['init_script_template']
     group node['mongodb']['root_group']
     owner "root"
     mode "0755"
     variables({
-        :provides => node['mongodb']['type'],
+        :provides => 'mongod'
     })
     action :create_if_missing
 end
