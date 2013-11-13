@@ -59,6 +59,8 @@ For examples see the USAGE section below.
 * `mongodb[:replicaset_name]` - Define name of replicatset
 * `mongodb[:mms_agent][:api_key]` - MMS Agent API Key
 * `mongodb[:mms_agent][:secret_key]` - MMS Agent API Key
+* `mongodb[:mms_agent][:install_dir]` - Location to install the agent
+* `mongodb[:mms_agent][:log_dir]` - Location to write the agent logfile. If this is a relative path, it's relative to where the service is run (via runit), e.g. set to './main'
 
 # USAGE:
 
