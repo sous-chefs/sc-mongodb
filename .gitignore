@@ -4,3 +4,5 @@ build
 
 Berksfile.lock
 Gemfile.lock
+
+metadata.json
