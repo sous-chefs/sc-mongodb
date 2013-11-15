@@ -125,9 +125,9 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
 
   # init script
   if node['mongodb']['apt_repo'] == "ubuntu-upstart" then
-      init_file = file.join(node['mongodb']['init_dir'], "#{name}.conf")
+      init_file = File.join(node['mongodb']['init_dir'], "#{name}.conf")
   else
-      init_file = file.join(node['mongodb']['init_dir'], "#{name}")
+      init_file = File.join(node['mongodb']['init_dir'], "#{name}")
   end
   template init_file do
     action :create

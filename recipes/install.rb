@@ -23,9 +23,9 @@ end
 
 # and we install our own init file
 if node['mongodb']['apt_repo'] == "ubuntu-upstart" then
-    init_file = file.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}.conf")
+    init_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}.conf")
 else
-    init_file = file.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}")
+    init_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}")
 end
 template init_file do
     cookbook node['mongodb']['template_cookbook']
