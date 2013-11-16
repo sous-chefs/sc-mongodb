@@ -56,7 +56,6 @@ For examples see the USAGE section below.
 * `mongodb[:replica_tags]` - Node [tags](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].tags).
 * `mongodb[:replica_votes]` - Number of [votes](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].votes) node will cast in an election.
 * `mongodb[:package_version]` - Version of the MongoDB package to install, default is nil
-* `mongodb[:replicaset_name]` - Define name of replicatset
 * `mongodb[:mms_agent][:api_key]` - MMS Agent API Key
 * `mongodb[:mms_agent][:secret_key]` - MMS Agent API Key
 * `mongodb[:mms_agent][:install_dir]` - Location to install the agent
