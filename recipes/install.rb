@@ -34,7 +34,7 @@ template init_file do
     owner "root"
     mode "0755"
     variables({
-        :provides => 'mongod'
+        :provides => "mongod"
     })
     action :create_if_missing
 end

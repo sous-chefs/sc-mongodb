@@ -73,10 +73,10 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   end
 
   if type != "mongos"
-    daemon = "/usr/bin/mongod"
+    provider = "mongod"
     configserver = nil
   else
-    daemon = "/usr/bin/mongos"
+    provider = "mongos"
     dbpath = nil
     configserver = configserver_nodes.collect{|n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['port']}" }.sort.join(",")
   end
@@ -130,14 +130,15 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
       init_file = File.join(node['mongodb']['init_dir'], "#{name}")
   end
   template init_file do
-    action :create
     cookbook node['mongodb']['template_cookbook']
     source node[:mongodb][:init_script_template]
     group node['mongodb']['root_group']
     owner "root"
     mode "0755"
-    variables :provides => name, :emits_pid => type != "mongos"
-    notifies :restart, "service[#{name}]"
+    variables({
+        :provides => provider
+    })
+    action :create
   end
 
   # service

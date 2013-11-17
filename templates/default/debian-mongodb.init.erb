@@ -48,13 +48,13 @@
 #                    functionality are the goals for the project.
 ### END INIT INFO
 #
+NAME=<%= @provides %>
+
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DESC=database
 PIDFILE=/var/run/$NAME.pid
 ENABLE_MONGODB=yes
 SYSCONFIG=<%= node['mongodb']['sysconfig_file'] %>
-
-NAME=<%= @provides %>
 
 # this should get removed at some point for more shell agnostic init script
 ulimit -f <%= node.mongodb.ulimit.fsize %>
