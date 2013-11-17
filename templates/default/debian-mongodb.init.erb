@@ -48,13 +48,13 @@
 #                    functionality are the goals for the project.
 ### END INIT INFO
 #
+NAME=<%= @provides %>
+
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DESC=database
 PIDFILE=/var/run/$NAME.pid
 ENABLE_MONGODB=yes
 SYSCONFIG=<%= node['mongodb']['sysconfig_file'] %>
-
-NAME=<%= @provides %>
 
 # this should get removed at some point for more shell agnostic init script
 ulimit -f <%= node.mongodb.ulimit.fsize %>
@@ -98,7 +98,7 @@ DIETIME=10                  # Time to wait for the server to die, in seconds
                             # let some servers to die gracefully and
                             # 'restart' will not work
 
-DAEMONUSER=${DAEMONUSER:-mongodb}
+DAEMON_USER=${DAEMON_USER:-mongodb}
 
 # debugging
 echo "** Running $NAME ($DAEMON $DAEMON_OPTS)"
@@ -137,7 +137,7 @@ running() {
 start_server() {
 # Start the process using the wrapper
             start-stop-daemon --background --start --quiet --pidfile $PIDFILE \
-                        --make-pidfile --chuid $DAEMONUSER \
+                        --make-pidfile --chuid $DAEMON_USER \
                         --exec $NUMACTL $DAEMON $DAEMON_OPTS
             errcode=$?
     return $errcode
@@ -147,7 +147,7 @@ stop_server() {
 # Stop the process using the wrapper
             start-stop-daemon --stop --quiet --pidfile $PIDFILE \
                         --retry 300 \
-                        --user $DAEMONUSER \
+                        --user $DAEMON_USER \
                         --exec $DAEMON
             errcode=$?
     return $errcode

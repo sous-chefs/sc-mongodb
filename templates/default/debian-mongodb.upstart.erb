@@ -13,6 +13,7 @@ start on runlevel [2345]
 stop on runlevel [06]
 
 script
+  NAME=<%= @provides %>
   ENABLE_MONGODB="yes"
   if [ -f <%= node['mongodb']['sysconfig_file'] %> ]; then
     . <%= node['mongodb']['sysconfig_file'] %>;
