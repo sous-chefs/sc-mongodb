@@ -5,7 +5,7 @@
 
 default['mongodb']['config']['port'] = node['mongodb']['port'] or 27017
 default['mongodb']['config']['bind_ip'] = node['mongodb']['bind_ip'] or "0.0.0.0"
-default['mongodb']['config']['logpath'] = File.join(node['mongodb']['logpath'], "#{node['mongodb']['type']}.log")
+default['mongodb']['config']['logpath'] = File.join(node['mongodb']['logpath'], "mongodb.log")
 default['mongodb']['config']['logappend'] = true
 if node.platform_family?("rhel", "fedora") then
     default['mongodb']['config']['fork'] = true
