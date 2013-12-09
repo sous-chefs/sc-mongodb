@@ -12,21 +12,26 @@ require 'fileutils'
 chef_gem 'rubyzip'
 
 # munin-node for hardware info
-package 'munin-node'
+package node.mongodb.mms_agent.munin_package do
+  action :install
+  only_if { node.mongodb.mms_agent.install_munin }
+end
 # python dependencies
 python_pip 'pymongo'
 
 # download, and unzip if it's changed
 package 'unzip'
-remote_file '/tmp/10gen-mms-agent.zip' do
-  source 'https://mms.10gen.com/settings/10gen-mms-agent.zip'
+remote_file "#{Chef::Config[:file_cache_path]}/mms-monitoring-agent.zip" do
+  source node.mongodb.mms_agent.install_url
   # irrelevant because of https://jira.mongodb.org/browse/MMSSUPPORT-2258
   checksum node.mongodb.mms_agent.checksum if node.mongodb.mms_agent.key?(:checksum)
-  notifies :run, "bash[unzip 10gen-mms-agent]", :immediately
+  notifies :run, "bash[unzip mms-monitoring-agent]", :immediately
 end
-bash 'unzip 10gen-mms-agent' do
-  cwd '/tmp/'
-  code "rm -rf #{node.mongodb.mms_agent.install_dir} && unzip -o -d #{node.mongodb.mms_agent.install_dir} /tmp/10gen-mms-agent.zip"
+directory "#{node.mongodb.mms_agent.install_dir}/.." do
+  recursive true
+end
+bash 'unzip mms-monitoring-agent' do
+  code "rm -rf #{node.mongodb.mms_agent.install_dir} && unzip -o -d #{Pathname.new(node.mongodb.mms_agent.install_dir).parent} #{Chef::Config[:file_cache_path]}/mms-monitoring-agent.zip"
   action :nothing
   only_if {
     def checksum_zip_contents(zipfile)
@@ -37,7 +42,7 @@ bash 'unzip 10gen-mms-agent' do
       content = files.map{|f| f.get_input_stream.read}.join
       Digest::SHA256.hexdigest content
     end
-    new_checksum = checksum_zip_contents('/tmp/10gen-mms-agent.zip')
+    new_checksum = checksum_zip_contents("#{Chef::Config[:file_cache_path]}/mms-monitoring-agent.zip")
     existing_checksum = node.mongodb.mms_agent.key?(:checksum) ? node.mongodb.mms_agent.checksum : 'NONE'
     Chef::Log.debug "new checksum = #{new_checksum}, expected = #{existing_checksum}"
 
@@ -70,16 +75,17 @@ ruby_block 'modify settings.py' do
     Chef::Log.warn "Found empty mms_agent.api_key or mms_agent.secret_key attributes" if node.mongodb.mms_agent.api_key.empty? || node.mongodb.mms_agent.secret_key.empty?
 
     orig_s = ''
-    open("#{node.mongodb.mms_agent.install_dir}/mms-agent/settings.py") { |f|
+    open("#{node.mongodb.mms_agent.install_dir}/settings.py") { |f|
       orig_s = f.read
     }
     s = orig_s
-    s = s.gsub(/mms\.10gen\.com/, 'mms.10gen.com')
-    s = s.gsub(/mms_key = ".*"/, "mms_key = \"#{node['mongodb']['mms_agent']['api_key']}\"")
-    s = s.gsub(/secret_key = ".*"/, "secret_key = \"#{node['mongodb']['mms_agent']['secret_key']}\"")
+    s = s.gsub(/mms_key = ".*"/, "mms_key = \"#{node.mongodb.mms_agent.api_key}\"")
+    s = s.gsub(/secret_key = ".*"/, "secret_key = \"#{node.mongodb.mms_agent.secret_key}\"")
+    # python uses True/False not true/false
+    s = s.gsub(/enableMunin = .*/, "enableMunin = #{node.mongodb.mms_agent.enable_munin ? "True" : "False"}")
     if s != orig_s
       Chef::Log.debug "Settings changed, overwriting and restarting service"
-      open("#{node.mongodb.mms_agent.install_dir}/mms-agent/settings.py", 'w') { |f|
+      open("#{node.mongodb.mms_agent.install_dir}/settings.py", 'w') { |f|
         f.puts(s)
       }
 
