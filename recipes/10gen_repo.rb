@@ -36,7 +36,7 @@ when "debian"
   end
   node.force_override['mongodb']['package_name'] = "mongodb-10gen"
 
-when "rhel","fedora"
+when "rhel","fedora","amazon"
   yum_repository "10gen" do
     description "10gen RPM Repository"
     url "http://downloads-distro.mongodb.org/repo/redhat/os/#{node['kernel']['machine']  =~ /x86_64/ ? 'x86_64' : 'i686'}"

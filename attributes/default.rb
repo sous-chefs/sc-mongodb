@@ -65,7 +65,7 @@ when "freebsd"
   default[:mongodb][:sysconfig_file] = "/etc/rc.conf.d/mongodb"
   default[:mongodb][:init_dir] = "/usr/local/etc/rc.d"
   default[:mongodb][:root_group] = "wheel"
-when "rhel","fedora"
+when "rhel","fedora","amazon"
   # determine the package name
   # from http://rpm.pbone.net/index.php3?stat=3&limit=1&srodzaj=3&dl=40&search=mongodb
   # verified for RHEL5,6 Fedora 18,19
@@ -77,7 +77,7 @@ when "rhel","fedora"
   default[:mongodb][:default_init_name] = "mongod"
   default[:mongodb][:instance_name] = "mongod"
   # then there is this guy
-  if node['platform'] == 'centos' then
+  if node['platform'] == 'centos' || node['platform'] == 'amazon' then
       Chef::Log.warn("CentOS doesn't provide mongodb, forcing use of 10gen repo")
       default[:mongodb][:install_method] = "10gen"
       default[:mongodb][:package_name] = "mongo-10gen-server"
