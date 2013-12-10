@@ -127,7 +127,7 @@ running() {
     pid=`cat $PIDFILE`
     running_pid $pid $DAEMON || return 1
     for i in `seq 1 20`; do
-      nc -z <%= node['mongodb']['dbconfig']['bind_ip'] || "localhost" %> <%= node['mongodb']['dbconfig']['port'] %> && return 0
+      nc -z <%= node['mongodb']['config']['bind_ip'] || "localhost" %> <%= node['mongodb']['config']['port'] %> && return 0
       echo -n "."
       sleep 15
     done
