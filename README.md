@@ -22,10 +22,10 @@ This cookbook depends on these external cookbooks
 
 ## Platform:
 
-The cookbook aims to be platform independant, but is best tested on debian squeeze systems.
+The cookbook aims to be platform independent, but is best tested on debian squeeze systems.
 
 The `10gen_repo` recipe configures the package manager to use 10gen's
-official package reposotories on Debian, Ubuntu, Redhat, CentOS, Fedora, and
+official package repositories on Debian, Ubuntu, Redhat, CentOS, Fedora, and
 Amazon linux distributions.
 
 # DEFINITIONS:
@@ -41,7 +41,7 @@ For examples see the USAGE section below.
 * `mongodb[:dbpath]` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
 * `mongodb[:logpath]` - Path for the logfiles, default is "/var/log/mongodb"
 * `mongodb[:port]` - Port the mongod listens on, default is 27017
-* `mongodb[:client_role]` - Role identifing all external clients which should have access to a mongod instance
+* `mongodb[:client_role]` - Role identifying all external clients which should have access to a mongod instance
 * `mongodb[:cluster_name]` - Name of the cluster, all members of the cluster must
     reference to the same name, as this name is used internally to identify all
     members of a cluster.
