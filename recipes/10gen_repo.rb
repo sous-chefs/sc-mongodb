@@ -34,7 +34,7 @@ when "debian"
     key "7F0CEB10"
     action :add
   end
-  node.force_override['mongodb']['package_name'] = "mongodb-10gen"
+  node.override['mongodb']['package_name'] = "mongodb-10gen"
 
 when "rhel","fedora","amazon"
   yum_repository "10gen" do
@@ -42,7 +42,7 @@ when "rhel","fedora","amazon"
     url "http://downloads-distro.mongodb.org/repo/redhat/os/#{node['kernel']['machine']  =~ /x86_64/ ? 'x86_64' : 'i686'}"
     action :add
   end
-  node.force_override['mongodb']['package_name'] = "mongo-10gen-server"
+  node.override['mongodb']['package_name'] = "mongo-10gen-server"
 
 else
     # pssst build from source
