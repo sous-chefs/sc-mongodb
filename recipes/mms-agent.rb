@@ -26,12 +26,13 @@ remote_file "#{Chef::Config[:file_cache_path]}/mms-monitoring-agent.zip" do
   # irrelevant because of https://jira.mongodb.org/browse/MMSSUPPORT-2258
   checksum node.mongodb.mms_agent.checksum if node.mongodb.mms_agent.key?(:checksum)
   notifies :run, "bash[unzip mms-monitoring-agent]", :immediately
+  ignore_failure node.mongodb.mms_agent.ignore_failure_on_install
 end
-directory "#{node.mongodb.mms_agent.install_dir}/.." do
+directory File.dirname(node.mongodb.mms_agent.install_dir) do
   recursive true
 end
 bash 'unzip mms-monitoring-agent' do
-  code "rm -rf #{node.mongodb.mms_agent.install_dir} && unzip -o -d #{Pathname.new(node.mongodb.mms_agent.install_dir).parent} #{Chef::Config[:file_cache_path]}/mms-monitoring-agent.zip"
+  code "rm -rf #{node.mongodb.mms_agent.install_dir} && unzip -o -d #{File.dirname(node.mongodb.mms_agent.install_dir)} #{Chef::Config[:file_cache_path]}/mms-monitoring-agent.zip"
   action :nothing
   only_if {
     def checksum_zip_contents(zipfile)
@@ -51,6 +52,7 @@ bash 'unzip mms-monitoring-agent' do
     node.default.mongodb.mms_agent.checksum = new_checksum
     should_install
   }
+  ignore_failure node.mongodb.mms_agent.ignore_failure_on_install
 end
 
 # runit and agent logging
@@ -67,6 +69,7 @@ mms_agent_service = runit_service 'mms-agent' do
     :mms_agent_log_dir => node.mongodb.mms_agent.log_dir
   })
   action :nothing
+  ignore_failure node.mongodb.mms_agent.ignore_failure_on_install
 end
 
 # update settings.py and restart the agent if there were any key changes
@@ -97,4 +100,6 @@ ruby_block 'modify settings.py' do
       notifies :restart, mms_agent_service, :delayed
     end
   end
+  only_if { File.exists?("#{node.mongodb.mms_agent.install_dir}/settings.py") }
+  ignore_failure node.mongodb.mms_agent.ignore_failure_on_install
 end

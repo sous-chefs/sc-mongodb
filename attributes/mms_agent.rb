@@ -11,3 +11,6 @@ default[:mongodb][:mms_agent][:install_munin] = true
 # this is the debian package name
 default[:mongodb][:mms_agent][:munin_package] = 'munin-node'
 default[:mongodb][:mms_agent][:enable_munin] = true
+
+# don't abort the chef run if there was a problem during install, e.g. downloading the archive
+default[:mongodb][:mms_agent][:ignore_failure_on_install] = true
