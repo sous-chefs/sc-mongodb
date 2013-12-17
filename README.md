@@ -60,6 +60,9 @@ For examples see the USAGE section below.
 * `mongodb[:mms_agent][:secret_key]` - MMS Agent API Key
 * `mongodb[:mms_agent][:install_dir]` - Location to install the agent
 * `mongodb[:mms_agent][:log_dir]` - Location to write the agent logfile. If this is a relative path, it's relative to where the service is run (via runit), e.g. set to './main'
+* `mongodb[:enable_rest]` - Enable the ReST interface of the webserver
+* `mongodb[:smallfiles]` - Modify MongoDB to use a smaller default data file size
+* `mongodb[:oplog_size]` - Specifies a maximum size in megabytes for the replication operation log
 
 # USAGE:
 
