@@ -41,6 +41,9 @@ For examples see the USAGE section below.
 * `mongodb[:dbpath]` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
 * `mongodb[:logpath]` - Path for the logfiles, default is "/var/log/mongodb"
 * `mongodb[:port]` - Port the mongod listens on, default is 27017
+* `mongodb[:enable_rest]` - Enable the ReST interface of the webserver
+* `mongodb[:smallfiles]` - Modify MongoDB to use a smaller default data file size
+* `mongodb[:oplog_size]` - Specifies a maximum size in megabytes for the replication operation log
 * `mongodb[:client_role]` - Role identifying all external clients which should have access to a mongod instance
 * `mongodb[:cluster_name]` - Name of the cluster, all members of the cluster must
     reference to the same name, as this name is used internally to identify all
