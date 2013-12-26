@@ -9,35 +9,42 @@ platforms:
 - name: ubuntu-12.04
   driver_config:
     box: opscode-ubuntu-12.04
-    box_url: https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box
+    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-12.04_chef-provisionerless.box
   run_list:
   - "recipe[apt]"
 
 - name: ubuntu-10.04
   driver_config:
     box: opscode-ubuntu-10.04
-    box_url: https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-10.04_provisionerless.box
+    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-10.04_chef-provisionerless.box
   run_list:
   - "recipe[apt]"
 
-- name: debian-7.1.0
+- name: debian-7.2.0
   driver_config:
-    box: opscode-debian-7.1.0
-    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_debian-7.1.0_provisionerless.box
+    box: opscode-debian-7.2.0
+    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_debian-7.2.0_chef-provisionerless.box
   run_list:
   - "recipe[apt]"
 
-- name: centos-6.4
+- name: debian-6.0.8
   driver_config:
-    box: opscode-centos-6.4
-    box_url: https://opscode-vm.s3.amazonaws.com/vagrant/opscode_centos-6.4_provisionerless.box
+    box: opscode-debian-6.0.8
+    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_debian-6.0.8_chef-provisionerless.box
+  run_list:
+  - "recipe[apt]"
+
+- name: centos-6.5
+  driver_config:
+    box: opscode-centos-6.5
+    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-6.5_chef-provisionerless.box
   run_list:
   - "recipe[yum]"
 
-- name: centos-5.9
+- name: centos-5.10
   driver_config:
-    box: opscode-centos-5.9
-    box_url: https://opscode-vm.s3.amazonaws.com/vagrant/opscode_centos-5.9_provisionerless.box
+    box: opscode-centos-5.10
+    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-5.10_chef-provisionerless.box
   run_list:
   - "recipe[yum]"
 
@@ -46,7 +53,22 @@ platforms:
 #- name: fedora-19
   #driver_config:
     #box: opscode-fedora-19
-    #box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode-fedora-19_provisionerless.box
+    #box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_fedora-19_chef-provisionerless.box
+  #run_list:
+  #- "recipe[yum]"
+
+ #- name: fedora-20
+  #driver_config:
+    #box: opscode-fedora-20
+    #box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_fedora-20_chef-provisionerless.box
+  #run_list:
+  #- "recipe[yum]"
+
+# maybe again oneday
+ #- name: freebsd-9.2
+  #driver_config:
+    #box: opscode-freebsd-9.2
+    #box_url: http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_freebsd-9.2_chef-provisionerless.box
   #run_list:
   #- "recipe[yum]"
 
