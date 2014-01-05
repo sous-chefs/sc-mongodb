@@ -1,9 +1,10 @@
 #
 # Cookbook Name:: mongodb
-# Definition:: mongodb
+# Resource:: instance
 #
 # Copyright 2011, edelight GmbH
 # Authors:
+#       Joseph Holsten <joseph@josephholsten.com>
 #       Markus Korn <markus.korn@edelight.de>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,78 +20,97 @@
 # limitations under the License.
 #
 
-define :mongodb_instance,
-       :action        => [:enable, :start],
-       :logpath       => '/var/log/mongodb/mongodb.log',
-       :dbpath        => '/data',
-       :configservers => [],
-       :replicaset    => nil,
-       :notifies      => [] do
+class Chef
+  class Resource::MongodbInstance < Resource
+    include Poise
+    actions(:enable)
 
-  # Make changes to node['mongodb']['config'] before copying to new_resource. Chef 11 appears to resolve the attributes
-  # with precedence while Chef 10 copies to not (TBD: find documentation to support observed behavior).
-  if node['mongodb']['is_mongos']
-    provider = 'mongos'
-    # mongos will fail to start if dbpath is set
-    node.default['mongodb']['config']['dbpath'] = nil
-    unless node['mongodb']['config']['configdb']
-      node.default['mongodb']['config']['configdb'] = params[:configservers].map do |n|
-        "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}"
-      end.sort.join(',')
+    attribute(:logpath,                                       kind_of: String, default: '/var/log/mongodb/mongodb.log')
+    attribute(:dbpath,                                       kind_of: String, default: '/data')
+    attribute(:configserver_nodes,                                       kind_of: Array, default: [])
+    attribute(:replicaset,                                       kind_of: [Array, NilClass], default: nil)
+    attribute(:service_action,                                       kind_of: Array, default: [:enable, :start])
+    attribute(:service_notifies,                                       kind_of: Array, default: [])
+
+    # This table is painfully wide, but it's really easiest to visually scan this way
+    attribute(:auto_configure_replicaset,  kind_of: [TrueClass, FalseClass],  default: lazy { node['mongodb']['auto_configure']['replicaset'] })
+    attribute(:auto_configure_sharding,    kind_of: [TrueClass, FalseClass],  default: lazy { node['mongodb']['auto_configure']['sharding'] })
+    attribute(:bind_ip,                    kind_of: String,                   default: lazy { node['mongodb']['config']['bind_ip']})
+    attribute(:cluster_name,               kind_of: String,                   default: lazy { node['mongodb']['cluster_name'] })
+    attribute(:config,                     kind_of: String,                   default: lazy { node['mongodb']['config'] })
+    attribute(:dbconfig_file,              kind_of: String,                   default: lazy { node['mongodb']['dbconfig_file'] })
+    attribute(:dbconfig_file_template,     kind_of: String,                   default: lazy { node['mongodb']['dbconfig_file_template'] })
+    attribute(:init_dir,                   kind_of: String,                   default: lazy { node['mongodb']['init_dir'] })
+    attribute(:init_script_template,       kind_of: String,                   default: lazy { node['mongodb']['init_script_template'] })
+    attribute(:is_configserver,            kind_of: String,                   default: lazy { node['mongodb']['is_configserver'] })
+    attribute(:is_mongos,                  kind_of: String,                   default: lazy { node['mongodb']['is_mongos'] })
+    attribute(:is_replicaset,              kind_of: String,                   default: lazy { node['mongodb']['is_replicaset'] })
+    attribute(:is_shard,                   kind_of: String,                   default: lazy { node['mongodb']['is_shard'] })
+    attribute(:mongodb_group,              kind_of: String,                   default: lazy { node['mongodb']['group'] })
+    attribute(:mongodb_user,               kind_of: String,                   default: lazy { node['mongodb']['user'] })
+    attribute(:port,                       kind_of: Integer,                  default: lazy { node['mongodb']['config']['port']})
+    attribute(:reload_action,              kind_of: String,                   default: lazy { node['mongodb']['reload_action'] })
+    attribute(:replicaset_name,            kind_of: String,                   default: lazy { node['mongodb']['config']['replSet'] })
+    attribute(:root_group,                 kind_of: String,                   default: lazy { node['mongodb']['root_group'] })
+    attribute(:shard_name,                 kind_of: String,                   default: lazy { node['mongodb']['shard_name'] })
+    attribute(:sharded_collections,        kind_of: String,                   default: lazy { node['mongodb']['sharded_collections'] })
+    attribute(:sysconfig_file,             kind_of: String,                   default: lazy { node['mongodb']['sysconfig_file'] })
+    attribute(:sysconfig_file_template,    kind_of: String,                   default: lazy { node['mongodb']['sysconfig_file_template'] })
+    attribute(:sysconfig_vars,             kind_of: Hash,                     default: lazy { node['mongodb']['sysconfig'] })
+    attribute(:template_cookbook,          kind_of: String,                   default: lazy { node['mongodb']['template_cookbook'] })
+    attribute(:ulimit,                     kind_of: String,                   default: lazy { node['mongodb']['ulimit'] })
+
+    # XXX None of the config munging has been ported from the define impl
+
+    def init_file
+      if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
+        init_file = File.join(node['mongodb']['init_dir'], '#{name}.conf')
+      else
+        init_file = File.join(node['mongodb']['init_dir'], name)
+      end
+      return init_file
     end
-  else
-    provider = 'mongod'
+
+    def init_file_mode
+      if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
+        mode = '0644'
+      else
+        mode = '0755'
+      end
+      return mode
+    end
+
+    def provides
+      if is_mongos
+        'mongos'
+      else
+        'mongod'
+      end
+    end
+
+    def configserver
+      if is_mongos
+        configserver_nodes.collect do |n|
+          hostname = n['mongodb']['configserver_url'] || n['fqdn']
+          port = n['mongodb']['port']
+          "#{hostname}:#{port}"
+        end.sort.join(",")
+      end
+    end
   end
 
-  node.default['mongodb']['config']['configsvr'] = true if node['mongodb']['is_configserver']
+  class Provider::MongodbInstance < Provider
+    include Poise::Provider
+    def action_enable
+      converge_by("enable mongodb instance #{new_resource.name}") do
+        notifying_block do
 
-  require 'ostruct'
+# XXX INDENTATION TO MIMIC DEFINE IMPL
 
-  new_resource = OpenStruct.new
+  # TODO: move into resource impl
+  def replicaset_name
 
-  new_resource.name                       = params[:name]
-  new_resource.dbpath                     = params[:dbpath]
-  new_resource.logpath                    = params[:logpath]
-  new_resource.replicaset                 = params[:replicaset]
-  new_resource.service_action             = params[:action]
-  new_resource.service_notifies           = params[:notifies]
-
-  # TODO(jh): parameterize so we can make a resource provider
-  new_resource.auto_configure_replicaset  = node['mongodb']['auto_configure']['replicaset']
-  new_resource.auto_configure_sharding    = node['mongodb']['auto_configure']['sharding']
-  new_resource.bind_ip                    = node['mongodb']['config']['bind_ip']
-  new_resource.cluster_name               = node['mongodb']['cluster_name']
-  new_resource.config                     = node['mongodb']['config']
-  new_resource.dbconfig_file              = node['mongodb']['dbconfig_file']
-  new_resource.dbconfig_file_template     = node['mongodb']['dbconfig_file_template']
-  new_resource.init_dir                   = node['mongodb']['init_dir']
-  new_resource.init_script_template       = node['mongodb']['init_script_template']
-  new_resource.is_replicaset              = node['mongodb']['is_replicaset']
-  new_resource.is_shard                   = node['mongodb']['is_shard']
-  new_resource.is_configserver            = node['mongodb']['is_configserver']
-  new_resource.is_mongos                  = node['mongodb']['is_mongos']
-  new_resource.mongodb_group              = node['mongodb']['group']
-  new_resource.mongodb_user               = node['mongodb']['user']
-  new_resource.replicaset_name            = node['mongodb']['config']['replSet']
-  new_resource.port                       = node['mongodb']['config']['port']
-  new_resource.root_group                 = node['mongodb']['root_group']
-  new_resource.shard_name                 = node['mongodb']['shard_name']
-  new_resource.sharded_collections        = node['mongodb']['sharded_collections']
-  new_resource.sysconfig_file             = node['mongodb']['sysconfig_file']
-  new_resource.sysconfig_file_template    = node['mongodb']['sysconfig_file_template']
-  new_resource.sysconfig_vars             = node['mongodb']['sysconfig']
-  new_resource.template_cookbook          = node['mongodb']['template_cookbook']
-  new_resource.ulimit                     = node['mongodb']['ulimit']
-  new_resource.reload_action              = node['mongodb']['reload_action']
-
-  if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
-    new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
-    mode = '0644'
-  else
-    new_resource.init_file = File.join(node['mongodb']['init_dir'], new_resource.name)
-    mode = '0755'
-  end
-
+  # XXX METHOD INDENTATION TO MIMIC DEFINE IMPL
   # TODO(jh): reimplement using polymorphism
   if new_resource.is_replicaset
     if new_resource.replicaset_name
@@ -115,6 +135,11 @@ define :mongodb_instance,
     # not a replicaset, so no name
     replicaset_name = nil
   end
+
+  # XXX END METHOD INDENTATION TO MIMIC DEFINE IMPL
+    return replicaset_name
+  end
+
 
   # default file
   template new_resource.sysconfig_file do
@@ -176,9 +201,9 @@ define :mongodb_instance,
     source new_resource.init_script_template
     group new_resource.root_group
     owner 'root'
-    mode mode
+    mode new_resource.init_file_mode
     variables(
-      :provides =>       provider,
+      :provides =>       new_resource.provides, # XXX DIFF
       :dbconfig_file  => new_resource.dbconfig_file,
       :sysconfig_file => new_resource.sysconfig_file,
       :ulimit =>         new_resource.ulimit,
@@ -248,6 +273,14 @@ define :mongodb_instance,
         MongoDB.configure_sharded_collections(node, new_resource.sharded_collections)
       end
       action :nothing
+    end
+  end
+end
+
+# XXX END INDENTATION TO MIMIC DEFINE IMPL
+
+
+      end
     end
   end
 end
