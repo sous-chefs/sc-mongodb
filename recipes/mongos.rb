@@ -19,6 +19,7 @@
 # limitations under the License.
 #
 
+# ensure these are stored by using node.set, not merely node.default
 node.set['mongodb']['is_mongos'] = true
 node.set['mongodb']['shard_name'] = node['mongodb']['shard_name']
 node.override['mongodb']['instance_name'] = 'mongos'
@@ -51,11 +52,10 @@ if configsrvs.length != 1 && configsrvs.length != 3
 end
 
 mongodb_instance node['mongodb']['instance_name'] do
-  mongodb_type 'mongos'
-  port         node['mongodb']['config']['port']
-  logpath      node['mongodb']['config']['logpath']
-  dbpath       node['mongodb']['config']['dbpath']
-  configservers configsrvs
-  enable_rest  node['mongodb']['config']['rest']
-  smallfiles   node['mongodb']['config']['smallfiles']
+  is_mongos      true
+  shard_name     node['mongodb']['shard_name']
+  port           node['mongodb']['config']['port']
+  logpath        node['mongodb']['config']['logpath']
+  dbpath         node['mongodb']['config']['dbpath']
+  configservers  configsrvs
 end
