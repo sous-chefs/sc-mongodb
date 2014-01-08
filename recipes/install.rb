@@ -45,6 +45,10 @@ when "debian"
     # this options lets us bypass complaint of pre-existing init file
     # necessary until upstream fixes ENABLE_MONGOD/DB flag
     packager_opts = '-o Dpkg::Options::="--force-confold"'
+when "rhel"
+    # Add --nogpgcheck option when package is signed
+    # see: https://jira.mongodb.org/browse/SERVER-8770
+    packager_opts = "--nogpgcheck"
 end
 
 # Create keyFile if specified
