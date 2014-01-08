@@ -3,6 +3,8 @@
 # dump anything into default['mongodb']['config'][<setting>] = <value>
 # these options are in the order of mongodb docs
 
+include_attribute "mongodb::default"
+
 default['mongodb']['config']['port'] = node['mongodb']['port'] || 27017
 default['mongodb']['config']['bind_ip'] = node['mongodb']['bind_ip'] || "0.0.0.0"
 default['mongodb']['config']['logpath'] = File.join(node['mongodb']['logpath'] || "/var/log/mongodb", "mongodb.log")
