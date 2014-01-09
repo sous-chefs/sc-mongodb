@@ -69,7 +69,7 @@ when "freebsd"
   default[:mongodb][:sysconfig_file] = "/etc/rc.conf.d/mongodb"
   default[:mongodb][:init_dir] = "/usr/local/etc/rc.d"
   default[:mongodb][:root_group] = "wheel"
-when "rhel","fedora","amazon"
+when "rhel","fedora"
   # determine the package name
   # from http://rpm.pbone.net/index.php3?stat=3&limit=1&srodzaj=3&dl=40&search=mongodb
   # verified for RHEL5,6 Fedora 18,19

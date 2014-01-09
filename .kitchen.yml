@@ -27,13 +27,6 @@ platforms:
   run_list:
   - "recipe[apt]"
 
-- name: debian-6.0.8
-  driver_config:
-    box: opscode-debian-6.0.8
-    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_debian-6.0.8_chef-provisionerless.box
-  run_list:
-  - "recipe[apt]"
-
 - name: centos-6.5
   driver_config:
     box: opscode-centos-6.5
