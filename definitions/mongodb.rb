@@ -71,11 +71,11 @@ define :mongodb_instance,
   end
 
   if new_resource.type == "shard"
-    if replicaset.nil?
+    if new_resource.replicaset.nil?
       replicaset_name = nil
     else
       # for replicated shards we autogenerate the replicaset name for each shard
-      replicaset_name = "rs_#{replicaset['mongodb']['shard_name']}"
+      replicaset_name = "rs_#{new_resource.replicaset['mongodb']['shard_name']}"
     end
   else
     # if there is a predefined replicaset name we use it,
