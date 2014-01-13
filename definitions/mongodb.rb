@@ -160,6 +160,9 @@ define :mongodb_instance,
 
   # service
   service new_resource.name do
+    if node['mongodb']['apt_repo'] == "ubuntu-upstart" then
+      provider Chef::Provider::Service::Upstart
+    end
     supports :status => true, :restart => true
     action new_resource.service_action
     new_resource.service_notifies.each do |service_notify|
