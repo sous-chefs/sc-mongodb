@@ -11,7 +11,8 @@ default['mongodb']['config']['logpath'] = File.join(node['mongodb']['logpath'] |
 default['mongodb']['config']['logappend'] = true
 # The platform_family? syntax in attributes files was added in Chef 11
 # if node.platform_family?("rhel", "fedora") then
-if node['platform_family'] == "rhel" || node['platform_family'] == "fedora" then
+case node['platform_family']
+when "rhel", "fedora"
     default['mongodb']['config']['fork'] = true
 else
     default['mongodb']['config']['fork'] = false
