@@ -64,10 +64,12 @@ define :mongodb_instance,
   new_resource.sysconfig_vars             = node['mongodb']['sysconfig']
   new_resource.template_cookbook          = node['mongodb']['template_cookbook']
 
-  if node['mongodb']['apt_repo'] == "ubuntu-upstart" then
+  if node['mongodb']['apt_repo'] == "ubuntu-upstart"
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
+    mode = "0644"
   else
     new_resource.init_file = File.join(node['mongodb']['init_dir'], new_resource.name)
+    mode = "0755"
   end
 
   if new_resource.type == "shard"
@@ -151,7 +153,7 @@ define :mongodb_instance,
     source new_resource.init_script_template
     group new_resource.root_group
     owner "root"
-    mode "0755"
+    mode mode
     variables({
         :provides => provider
     })
