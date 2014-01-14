@@ -9,7 +9,9 @@ default['mongodb']['config']['port'] = node['mongodb']['port'] || 27017
 default['mongodb']['config']['bind_ip'] = node['mongodb']['bind_ip'] || "0.0.0.0"
 default['mongodb']['config']['logpath'] = File.join(node['mongodb']['logpath'] || "/var/log/mongodb", "mongodb.log")
 default['mongodb']['config']['logappend'] = true
-if node.platform_family?("rhel", "fedora") then
+# The platform_family? syntax in attributes files was added in Chef 11
+# if node.platform_family?("rhel", "fedora") then
+if node['platform_family'] == "rhel" || node['platform_family'] == "fedora" then
     default['mongodb']['config']['fork'] = true
 else
     default['mongodb']['config']['fork'] = false
