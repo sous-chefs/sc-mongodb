@@ -9,8 +9,12 @@ RSpec::Core::RakeTask.new do |t|
   t.rspec_opts = '--default_path test/unit'
 end
 
-require 'kitchen/rake_tasks'
-Kitchen::RakeTasks.new
+begin
+  require 'kitchen/rake_tasks'
+  Kitchen::RakeTasks.new
+rescue LoadError
+  warn 'Could not load kitchen rake tasks, skipping'
+end
 
 # aliases
 task :test => :spec
