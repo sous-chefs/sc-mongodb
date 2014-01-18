@@ -63,6 +63,9 @@ define :mongodb_instance,
   new_resource.sysconfig_file_template    = node['mongodb']['sysconfig_file_template']
   new_resource.sysconfig_vars             = node['mongodb']['sysconfig']
   new_resource.template_cookbook          = node['mongodb']['template_cookbook']
+  new_resource.ulimit                     = node['mongodb']['ulimit']
+  new_resource.bind_ip                    = node['mongodb']['config']['bind_ip']
+  new_resource.port                       = node['mongodb']['config']['port']
 
   if node['mongodb']['apt_repo'] == "ubuntu-upstart" then
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
@@ -152,9 +155,13 @@ define :mongodb_instance,
     group new_resource.root_group
     owner "root"
     mode "0755"
-    variables({
-        :provides => provider
-    })
+    variables(
+      provides:        provider,
+      sysconfig_file:  new_resource.sysconfig_file,
+      ulimit:          new_resource.ulimit,
+      bind_ip:         new_resource.bind_ip,
+      port:            new_resource.port
+    )
     notifies :restart, "service[#{new_resource.name}]"
   end
 
