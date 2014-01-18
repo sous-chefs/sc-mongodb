@@ -174,7 +174,7 @@ define :mongodb_instance,
     new_resource.service_notifies.each do |service_notify|
       notifies :run, service_notify
     end
-    if !replicaset_name.nil? && new_resource.auto_configure_replicaset
+    if new_resource.is_replicaset && new_resource.auto_configure_replicaset
       notifies :create, "ruby_block[config_replicaset]"
     end
     if new_resource.type == "mongos" && new_resource.auto_configure_sharding
@@ -187,7 +187,7 @@ define :mongodb_instance,
   end
 
   # replicaset
-  if !replicaset_name.nil? && new_resource.auto_configure_replicaset
+  if new_resource.is_replicaset && new_resource.auto_configure_replicaset
     rs_nodes = search(
       :node,
       "mongodb_cluster_name:#{new_resource.replicaset['mongodb']['cluster_name']} AND \
