@@ -18,6 +18,9 @@ template node['mongodb']['dbconfig_file'] do
     group node['mongodb']['root_group']
     owner "root"
     mode 0644
+    variables(
+      config: node['mongodb']['config']
+    )
     action :create_if_missing
 end
 
