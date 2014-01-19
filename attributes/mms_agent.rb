@@ -1,5 +1,6 @@
 include_attribute "mongodb::default"
 
+default[:mongodb][:mms_agent][:mms_server] = "https://mms.mongodb.com"
 default[:mongodb][:mms_agent][:api_key] = ""
 
 # shouldn't need to changed, but configurable anyways

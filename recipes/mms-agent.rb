@@ -79,7 +79,7 @@ ruby_block 'modify settings.py' do
       orig_s = f.read
     }
     s = orig_s
-    s = s.gsub(/@MMS_SERVER@/, "#{node.mongodb.mms_agent.api_key}")
+    s = s.gsub(/@MMS_SERVER@/, "#{node.mongodb.mms_agent.mms_server}")
     s = s.gsub(/@API_KEY@/, "#{node.mongodb.mms_agent.api_key}")
     # python uses True/False not true/false
     s = s.gsub(/enableMunin = .*/, "enableMunin = #{node.mongodb.mms_agent.enable_munin ? "True" : "False"}")
