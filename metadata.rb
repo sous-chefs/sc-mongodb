@@ -100,8 +100,11 @@ attribute "mongodb/mms_agent",
 attribute "mongodb/mms_agent/api_key",
   :display_name => "MMS Agent API Key"
 
-attribute "mongodb/mms_agent/secret_key",
-  :display_name => "MMS Agent Secret Key"
+attribute "mongodb/mms_agent/mm_server",
+  :display_name => "MMS Server"
+
+attribute "mongodb/mms_agent/require_valid_server_cert",
+  :display_name => "Require valid certificate from server"
 
 attribute "mongodb/oplog_size",
   :display_name => "oplogSize",

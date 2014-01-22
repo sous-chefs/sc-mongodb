@@ -60,7 +60,8 @@ For examples see the USAGE section below.
 * `mongodb[:replica_votes]` - Number of [votes](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].votes) node will cast in an election.
 * `mongodb[:package_version]` - Version of the MongoDB package to install, default is nil
 * `mongodb[:mms_agent][:api_key]` - MMS Agent API Key
-* `mongodb[:mms_agent][:secret_key]` - MMS Agent API Key
+* `mongodb[:mms_agent][:mms_server]` - MMS Server (default: `https://mms.mongodb.com`)
+* `mongodb[:mms_agent][:require_valid_server_cert]` - Require valid server certificate (default: `false`)
 * `mongodb[:mms_agent][:install_dir]` - Location to install the agent
 * `mongodb[:mms_agent][:log_dir]` - Location to write the agent logfile. If this is a relative path, it's relative to where the service is run (via runit), e.g. set to './main'
 * `mongodb[:mms_agent][:install_munin]` - If enabled, installs the munin daemon.
@@ -179,8 +180,7 @@ production MongoDB deployments.
 
 
 To setup MMS, simply set your keys in
-`node['mongodb']['mms_agent']['api_key']` and
-`node['mongodb']['mms_agent']['secret_key']`, then add the
+`node['mongodb']['mms_agent']['api_key']` and then add the
 `mongodb::mms-agent` recipe to your run list. Your current keys should
 be available at your {MMS Settings page}[https://mms.10gen.com/settings].
 

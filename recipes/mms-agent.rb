@@ -72,7 +72,7 @@ end
 # update settings.py and restart the agent if there were any key changes
 ruby_block 'modify settings.py' do
   block do
-    Chef::Log.warn "Found empty mms_agent.api_key or mms_agent.secret_key attributes" if node.mongodb.mms_agent.api_key.empty? || node.mongodb.mms_agent.secret_key.empty?
+    Chef::Log.warn "Found empty mms_agent.api_key attribute" if node.mongodb.mms_agent.api_key.empty?
 
     orig_s = ''
     open("#{node.mongodb.mms_agent.install_dir}/settings.py") { |f|
