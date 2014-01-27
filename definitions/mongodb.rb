@@ -34,8 +34,6 @@ define :mongodb_instance,
 
   require 'ostruct'
 
-  include_recipe "mongodb::default"
-
   new_resource = OpenStruct.new
 
   new_resource.name                       = params[:name]
@@ -107,11 +105,11 @@ define :mongodb_instance,
 
   if new_resource.type != "mongos"
     provider = "mongod"
-    configserver = nil
   else
     provider = "mongos"
-    dbpath = nil
-    configserver = new_resource.configserver_nodes.collect{|n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(",")
+    # mongos will fail to start if dbpath is set
+    node[:mongodb][:config].delete('dbpath')
+    node[:mongodb][:config][:configdb] = new_resource.configserver_nodes.collect{|n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(",") unless node[:mongodb][:config][:configdb]
   end
   # default file
   template new_resource.sysconfig_file do
