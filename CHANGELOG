@@ -1,16 +1,31 @@
 ========================
-chef cookbooks Changelog
+Chef-MongoDB Cookbook Changelog
+Last-Update: Mon Jan 27 05:28:54 PST 2014
 ========================
 
-Version 0.13.2, UNRELEASED
+Version 0.15.0 1.0.0-rc1
+---------------------------
+* TBA
+
+Version 0.14.X DEVELOPMENTAL RELEASES
+---------------------------
+* Split out install into separate recipe
+* Adds more testing
+* Fixes mms-agent installation/runtime
+* Preliminary Work being done to convert completely to Resource style
+* patches to Replicaset
+* patches to fix upstart service
+* patches to configserver install
+
+Version 0.13.2, RELEASED
 ---------------------------
 add support for chef_gem on newer versions of chef
 
-Version 0.13.1, UNRELEASED
+Version 0.13.1, RELEASED
 ---------------------------
 Add keyfileSupport
 
-Version 0.13.0, UNRELEASED
+Version 0.13.0, RELEASED
 ---------------------------
 Bunch of stuff...
 
