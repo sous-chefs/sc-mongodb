@@ -1,11 +1,18 @@
 ========================
 Chef-MongoDB Cookbook Changelog
-Last-Update: Mon Jan 27 05:28:54 PST 2014
+Last-Update: Mon Jan 27 14:14:26 PST 2014
 ========================
 
 Version 0.15.0 1.0.0-rc1
 ---------------------------
 * TBA
+
+Version 0.14.6 DEVELOPMENTAL RELEASE
+---------------------------
+* try to autoconfigure 'configsrv' from configserver_nodes
+* remove `include 'mongodb::default'` from definition
+* allow chef-run without restarting mongo
+* comment cleanup
 
 Version 0.14.X DEVELOPMENTAL RELEASES
 ---------------------------
