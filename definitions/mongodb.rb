@@ -120,9 +120,9 @@ define :mongodb_instance,
     group new_resource.root_group
     owner "root"
     mode "0644"
-    variables(
-      "sysconfig" => new_resource.sysconfig_vars
-    )
+    variables({
+      :sysconfig => new_resource.sysconfig_vars
+    })
     notifies :restart, "service[#{new_resource.name}]"
   end
 
@@ -132,9 +132,9 @@ define :mongodb_instance,
     source new_resource.dbconfig_file_template
     group new_resource.root_group
     owner "root"
-    variables(
-      config: new_resource.config
-    )
+    variables({
+      :config => new_resource.config
+    })
     mode "0644"
   end
 
@@ -166,13 +166,13 @@ define :mongodb_instance,
     group new_resource.root_group
     owner "root"
     mode mode
-    variables(
-      provides:        provider,
-      sysconfig_file:  new_resource.sysconfig_file,
-      ulimit:          new_resource.ulimit,
-      bind_ip:         new_resource.bind_ip,
-      port:            new_resource.port
-    )
+    variables({
+      :provides =>       provider,
+      :sysconfig_file => new_resource.sysconfig_file,
+      :ulimit =>         new_resource.ulimit,
+      :bind_ip =>        new_resource.bind_ip,
+      :port =>           new_resource.port
+    })
     notifies :restart, "service[#{new_resource.name}]"
   end
 
