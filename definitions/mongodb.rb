@@ -69,14 +69,7 @@ define :mongodb_instance,
   new_resource.sysconfig_vars             = node['mongodb']['sysconfig']
   new_resource.template_cookbook          = node['mongodb']['template_cookbook']
   new_resource.ulimit                     = node['mongodb']['ulimit']
-
-  KNOWN_RELOAD_ACTIONS = %w(restart nothing)
-  if KNOWN_RELOAD_ACTIONS.include?(action = node['mongodb']['reload_action'].to_s)
-    new_resource.reload_action = action
-  else
-    Chef::Log.info "Unknown mongodb.reload_action #{action}, should be 'restart' or 'nothing'. Defaulting to 'nothing'"
-    new_resource.reload_action = 'nothing'
-  end
+  new_resource.reload_action              = node['mongodb']['reload_action']
 
   if node['mongodb']['apt_repo'] == "ubuntu-upstart"
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
