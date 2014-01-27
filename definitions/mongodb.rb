@@ -50,7 +50,9 @@ define :mongodb_instance,
   # TODO(jh): parameterize so we can make a resource provider
   new_resource.auto_configure_replicaset  = node['mongodb']['auto_configure']['replicaset']
   new_resource.auto_configure_sharding    = node['mongodb']['auto_configure']['sharding']
+  new_resource.bind_ip                    = node['mongodb']['config']['bind_ip']
   new_resource.cluster_name               = node['mongodb']['cluster_name']
+  new_resource.config                     = node['mongodb']['config']
   new_resource.dbconfig_file              = node['mongodb']['dbconfig_file']
   new_resource.dbconfig_file_template     = node['mongodb']['dbconfig_file_template']
   new_resource.init_dir                   = node['mongodb']['init_dir']
@@ -60,6 +62,7 @@ define :mongodb_instance,
   new_resource.mongodb_group              = node['mongodb']['group']
   new_resource.mongodb_user               = node['mongodb']['user']
   new_resource.replicaset_name            = node['mongodb']['replicaset_name']
+  new_resource.port                       = node['mongodb']['config']['port']
   new_resource.root_group                 = node['mongodb']['root_group']
   new_resource.shard_name                 = node['mongodb']['shard_name']
   new_resource.sharded_collections        = node['mongodb']['sharded_collections']
@@ -67,6 +70,7 @@ define :mongodb_instance,
   new_resource.sysconfig_file_template    = node['mongodb']['sysconfig_file_template']
   new_resource.sysconfig_vars             = node['mongodb']['sysconfig']
   new_resource.template_cookbook          = node['mongodb']['template_cookbook']
+  new_resource.ulimit                     = node['mongodb']['ulimit']
 
   if node['mongodb']['apt_repo'] == "ubuntu-upstart"
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
@@ -107,7 +111,7 @@ define :mongodb_instance,
   else
     provider = "mongos"
     dbpath = nil
-    configserver = new_resource.configserver_nodes.collect{|n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['port']}" }.sort.join(",")
+    configserver = new_resource.configserver_nodes.collect{|n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(",")
   end
   # default file
   template new_resource.sysconfig_file do
@@ -128,6 +132,9 @@ define :mongodb_instance,
     source new_resource.dbconfig_file_template
     group new_resource.root_group
     owner "root"
+    variables(
+      config: new_resource.config
+    )
     mode "0644"
   end
 
@@ -159,9 +166,13 @@ define :mongodb_instance,
     group new_resource.root_group
     owner "root"
     mode mode
-    variables({
-        :provides => provider
-    })
+    variables(
+      provides:        provider,
+      sysconfig_file:  new_resource.sysconfig_file,
+      ulimit:          new_resource.ulimit,
+      bind_ip:         new_resource.bind_ip,
+      port:            new_resource.port
+    )
     notifies :restart, "service[#{new_resource.name}]"
   end
 
