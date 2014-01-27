@@ -76,3 +76,16 @@ suites:
   - "recipe[mongodb::10gen_repo]"
   - "recipe[mongodb]"
   attributes: {}
+
+- name: configserver
+  run_list:
+  - "recipe[mongodb::configserver]"
+  attributes: {}
+
+- name: mongos
+  run_list:
+  - "recipe[chef-solo-search]"
+  - "recipe[mongodb::mongos]"
+  attributes:
+    mongodb:
+      cluster_name: default

@@ -11,6 +11,15 @@ file node['mongodb']['sysconfig_file'] do
     action :create_if_missing
 end
 
+if node['mongodb']['replicaset_name'].nil? && node.mongodb.is_replicaset
+  if node.mongodb.is_shard
+    node.default['mongodb']['config']['replSet'] = "rs_#{node['mongodb']['shard_name']}"
+  else
+    node.default['mongodb']['config']['replSet'] = 'rs_default'
+  end
+end
+
+
 # just-in-case config file drop
 template node['mongodb']['dbconfig_file'] do
     cookbook node['mongodb']['template_cookbook']
@@ -18,6 +27,9 @@ template node['mongodb']['dbconfig_file'] do
     group node['mongodb']['root_group']
     owner "root"
     mode 0644
+    variables({
+      :config => node['mongodb']['config']
+    })
     action :create_if_missing
 end
 
@@ -37,7 +49,11 @@ template init_file do
     owner "root"
     mode mode
     variables({
-        :provides => "mongod"
+      :provides =>       "mongod",
+      :sysconfig_file => node['mongodb']['sysconfig_file'],
+      :ulimit =>         node['mongodb']['ulimit'],
+      :bind_ip =>        node['mongodb']['config']['bind_ip'],
+      :port =>           node['mongodb']['config']['port']
     })
     action :create_if_missing
 end
@@ -54,6 +70,13 @@ when "rhel"
     packager_opts = "--nogpgcheck"
 end
 
+# install
+package node[:mongodb][:package_name] do
+    options packager_opts
+    action :install
+    version node[:mongodb][:package_version]
+end
+
 # Create keyFile if specified
 if node[:mongodb][:key_file_content] then
   file node[:mongodb][:config][:keyFile] do
@@ -63,11 +86,4 @@ if node[:mongodb][:key_file_content] then
     backup false
     content node[:mongodb][:key_file_content]
   end
-end
-
-# install
-package node[:mongodb][:package_name] do
-    options packager_opts
-    action :install
-    version node[:mongodb][:package_version]
 end
