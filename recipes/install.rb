@@ -54,6 +54,13 @@ when "rhel"
     packager_opts = "--nogpgcheck"
 end
 
+# install
+package node[:mongodb][:package_name] do
+    options packager_opts
+    action :install
+    version node[:mongodb][:package_version]
+end
+
 # Create keyFile if specified
 if node[:mongodb][:key_file_content] then
   file node[:mongodb][:config][:keyFile] do
@@ -63,11 +70,4 @@ if node[:mongodb][:key_file_content] then
     backup false
     content node[:mongodb][:key_file_content]
   end
-end
-
-# install
-package node[:mongodb][:package_name] do
-    options packager_opts
-    action :install
-    version node[:mongodb][:package_version]
 end
