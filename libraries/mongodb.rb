@@ -58,10 +58,11 @@ class Chef::ResourceDefinitionList::MongoDB
   #    tags:          {}
   #    votes:         1
   class ReplicasetMember
-    attr_accessor :node
+    attr_accessor :node, :id
 
-    def initialize(node)
+    def initialize(node, id = nil)
       @node = node
+      @id = id
     end
 
     def fqdn
@@ -113,7 +114,7 @@ class Chef::ResourceDefinitionList::MongoDB
     end
 
     def to_h
-      {
+      hash = {
         'host' =>          host,
         'arbiterOnly' =>   arbiter_only,
         'buildIndexes' =>  build_indexes,
@@ -123,6 +124,8 @@ class Chef::ResourceDefinitionList::MongoDB
         'tags' =>          tags,
         'votes' =>         votes
       }
+      hash['_id'] = id if id
+      hash
     end
 
     private
@@ -163,10 +166,10 @@ class Chef::ResourceDefinitionList::MongoDB
     rs_members = []
     rs_options = {}
     members.each_index do |n|
-      member = ReplicasetMember.new(members[n])
+      member = ReplicasetMember.new(members[n], n)
       host = member.host
       rs_options[host] = member.to_h
-      rs_members << { '_id' => n, 'host' => host }.merge(rs_options[host])
+      rs_members << rs_options[host]
     end
 
     Chef::Log.info(

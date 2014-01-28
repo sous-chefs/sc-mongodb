@@ -36,4 +36,31 @@ describe 'ReplicasetMember' do
     }
     expect(member.to_h).to eq(expected)
   end
+  it 'should convert to hash with id when given' do
+    raw = {
+      'fqdn' => 'a.b.c',
+      'mongodb' => {
+        'port' => 27_017,
+        'replica_arbiter_only' => 'true',
+        'replica_slave_delay' => 5,
+        'replica_tags' => {},
+        'replica_votes' => 1,
+        'replica_build_indexes' => true,
+        'replica_hidden' => true,
+      }
+    }
+    member = Chef::ResourceDefinitionList::MongoDB::ReplicasetMember.new raw, 5
+    expected = {
+      'host' => 'a.b.c:27017',
+      'arbiterOnly' => true,
+      'buildIndexes' => true,
+      'hidden' => true,
+      'slaveDelay' => 5,
+      'priority' => 0,
+      'tags' => {},
+      'votes' => 1,
+      '_id' => 5,
+    }
+    expect(member.to_h).to eq(expected)
+  end
 end
