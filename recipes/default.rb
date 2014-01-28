@@ -19,7 +19,7 @@
 # limitations under the License.
 #
 
-include_recipe "mongodb::install"
+include_recipe 'mongodb::install'
 
 # configure default instance
 replicaset_recipe = 'mongodb::replicaset'
@@ -30,7 +30,7 @@ end
 
 unless configured_as_replicaset
   mongodb_instance node['mongodb']['instance_name'] do
-    mongodb_type "mongod"
+    mongodb_type 'mongod'
     bind_ip      node['mongodb']['bind_ip']
     port         node['mongodb']['port']
     logpath      node['mongodb']['logpath']
