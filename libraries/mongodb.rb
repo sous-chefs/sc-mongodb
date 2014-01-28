@@ -22,13 +22,17 @@
 require 'json'
 
 # helper to cast any object to a boolean
-def Boolean(obj)
+def Boolean(obj) # rubocop:disable MethodName
   obj ? true : false
 end
 
+# ensure parents exist
 class Chef
-class ResourceDefinitionList
-class MongoDB
+  class ResourceDefinitionList
+  end
+end
+
+class Chef::ResourceDefinitionList::MongoDB
   # ReplicasetMember is a support class to convert a node object into a
   # MongoDB replicaset member document.
   #
@@ -122,7 +126,6 @@ class MongoDB
     end
 
     private
-
 
     def mongodb
       node['mongodb']
@@ -429,6 +432,4 @@ class MongoDB
       retry
     end
   end
-end
-end
 end

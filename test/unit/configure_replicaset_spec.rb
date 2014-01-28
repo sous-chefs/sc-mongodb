@@ -1,5 +1,4 @@
 require 'rspec'
-$LOAD_PATH << '.'
 require_relative '../../libraries/mongodb'
 
 describe 'configure_replicaset' do
@@ -14,7 +13,7 @@ describe 'ReplicasetMember' do
       'fqdn' => 'a.b.c',
       'mongodb' => {
         'config' => {
-          'port' => 27017
+          'port' => 27_017
         },
         'replica_arbiter_only' => 'true',
         'replica_slave_delay' => 5,
