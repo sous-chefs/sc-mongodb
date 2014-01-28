@@ -21,7 +21,114 @@
 
 require 'json'
 
-class Chef::ResourceDefinitionList::MongoDB
+# helper to cast any object to a boolean
+def Boolean(obj)
+  obj ? true : false
+end
+
+class Chef
+class ResourceDefinitionList
+class MongoDB
+  # ReplicasetMember is a support class to convert a node object into a
+  # MongoDB replicaset member document.
+  #
+  # This implementation maps document keys onto values from the node
+  # object, and requires each to exist:
+  #
+  #    host:          "{node.fqdn}:{node.mongodb.config.port}"
+  #    arbiterOnly:   node.mongodb.replica_arbiter_only
+  #    buildIndexes:  node.mongodb.replica_build_indexes
+  #    hidden:        node.mongodb.replica_hidden
+  #    slaveDelay:    node.mongodb.replica_slave_delay
+  #    priority:      node.mongodb.replica_priority
+  #    tags:          node.mongodb.replica_tags
+  #    votes:         node.mongodb.replica_votes
+  #
+  # Originally this would not send entries if they matched the defaults:
+  #
+  #    arbiterOnly:   false
+  #    buildIndexes:  true
+  #    hidden:        false
+  #    slaveDelay:    0
+  #    priority:      1
+  #    tags:          {}
+  #    votes:         1
+  class ReplicasetMember
+    attr_accessor :node
+
+    def initialize(node)
+      @node = node
+    end
+
+    def fqdn
+      node['fqdn']
+    end
+
+    def mongodb_port
+      mongodb['config']['port']
+    end
+
+    def host
+      "#{fqdn}:#{mongodb_port}"
+    end
+
+    def arbiter_only
+      Boolean(mongodb['replica_arbiter_only'])
+    end
+
+    def build_indexes
+      Boolean(mongodb['replica_build_indexes'])
+    end
+
+    def hidden
+      Boolean(mongodb['replica_hidden'])
+    end
+
+    def slave_delay
+      Integer(mongodb['replica_slave_delay'])
+    end
+
+    # priority must be 0 if the member lacks buildIndexes, is hidden or
+    # has slaveDelay
+    def priority
+      if !build_indexes || hidden || slave_delay
+        # must not become primary
+        priority = 0
+      else
+        priority = mongodb['replica_priority']
+      end
+      priority
+    end
+
+    def tags
+      mongodb['replica_tags'].to_hash
+    end
+
+    def votes
+      Integer(mongodb['replica_votes'])
+    end
+
+    def to_h
+      {
+        'host' =>          host,
+        'arbiterOnly' =>   arbiter_only,
+        'buildIndexes' =>  build_indexes,
+        'hidden' =>        hidden,
+        'slaveDelay' =>    slave_delay,
+        'priority' =>      priority,
+        'tags' =>          tags,
+        'votes' =>         votes
+      }
+    end
+
+    private
+
+
+    def mongodb
+      node['mongodb']
+    end
+  end
+
   def self.configure_replicaset(node, name, members)
     # lazy require, to move loading this modules to runtime of the cookbook
     require 'rubygems'
@@ -53,23 +160,9 @@ class Chef::ResourceDefinitionList::MongoDB
     rs_members = []
     rs_options = {}
     members.each_index do |n|
-      host = "#{members[n]['fqdn']}:#{members[n]['mongodb']['config']['port']}"
-      rs_options[host] = {}
-      rs_options[host]['arbiterOnly'] = true if members[n]['mongodb']['replica_arbiter_only']
-      rs_options[host]['buildIndexes'] = false unless members[n]['mongodb']['replica_build_indexes']
-      rs_options[host]['hidden'] = true if members[n]['mongodb']['replica_hidden']
-      slave_delay = members[n]['mongodb']['replica_slave_delay']
-      rs_options[host]['slaveDelay'] = slave_delay if slave_delay > 0
-      if rs_options[host]['buildIndexes'] == false || rs_options[host]['hidden'] || rs_options[host]['slaveDelay']
-        priority = 0
-      else
-        priority = members[n]['mongodb']['replica_priority']
-      end
-      rs_options[host]['priority'] = priority unless priority == 1
-      tags = members[n]['mongodb']['replica_tags'].to_hash
-      rs_options[host]['tags'] = tags unless tags.empty?
-      votes = members[n]['mongodb']['replica_votes']
-      rs_options[host]['votes'] = votes unless votes == 1
+      member = ReplicasetMember.new(members[n])
+      host = member.host
+      rs_options[host] = member.to_h
       rs_members << { '_id' => n, 'host' => host }.merge(rs_options[host])
     end
 
@@ -336,4 +429,6 @@ class Chef::ResourceDefinitionList::MongoDB
       retry
     end
   end
+end
+end
 end
