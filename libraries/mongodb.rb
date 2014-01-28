@@ -42,7 +42,7 @@ class Chef::ResourceDefinitionList::MongoDB
         connection = Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
         connection.database_names # check connection
       end
-    rescue Exception => e
+    rescue => e
       Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['port']}', reason: #{e}")
       return
     end
@@ -60,7 +60,7 @@ class Chef::ResourceDefinitionList::MongoDB
       rs_options[host]['hidden'] = true if members[n]['mongodb']['replica_hidden']
       slave_delay = members[n]['mongodb']['replica_slave_delay']
       rs_options[host]['slaveDelay'] = slave_delay if slave_delay > 0
-      if rs_options[host]['buildIndexes'] == false or rs_options[host]['hidden'] or rs_options[host]['slaveDelay']
+      if rs_options[host]['buildIndexes'] == false || rs_options[host]['hidden'] || rs_options[host]['slaveDelay']
         priority = 0
       else
         priority = members[n]['mongodb']['replica_priority']
@@ -98,7 +98,7 @@ class Chef::ResourceDefinitionList::MongoDB
     end
     if result.fetch('ok', nil) == 1
       # everything is fine, do nothing
-    elsif result.fetch('errmsg', nil) =~ %r/(\S+) is already initiated/ || (result.fetch('errmsg', nil) == 'already initialized')
+    elsif result.fetch('errmsg', nil) =~ /(\S+) is already initiated/ || (result.fetch('errmsg', nil) == 'already initialized')
       server, port = Regexp.last_match[1].nil? ? ['localhost', node['mongodb']['port']] : Regexp.last_match[1].split(':')
       begin
         connection = Mongo::Connection.new(server, port, :op_timeout => 5, :slave_ok => true)
@@ -109,10 +109,10 @@ class Chef::ResourceDefinitionList::MongoDB
       # check if both configs are the same
       config = connection['local']['system']['replset'].find_one('_id' => name)
 
-      if config['_id'] == name and config['members'] == rs_members
+      if config['_id'] == name && config['members'] == rs_members
         # config is up-to-date, do nothing
         Chef::Log.info("Replicaset '#{name}' already configured")
-      elsif config['_id'] == name and config['members'] == rs_member_ips
+      elsif config['_id'] == name && config['members'] == rs_member_ips
         # config is up-to-date, but ips are used instead of hostnames, change config to hostnames
         Chef::Log.info("Need to convert ips to hostnames for replicaset '#{name}'")
         old_members = config['members'].map { |m| m['host'] }
@@ -120,9 +120,7 @@ class Chef::ResourceDefinitionList::MongoDB
         rs_member_ips.each do |mem_h|
           members.each do |n|
             ip, prt = mem_h['host'].split(':')
-            if ip == n['ipaddress']
-              mapping["#{ip}:#{prt}"] = "#{n['fqdn']}:#{prt}"
-            end
+            mapping["#{ip}:#{prt}"] = "#{n['fqdn']}:#{prt}" if ip == n['ipaddress']
           end
         end
         config['members'].map! do |m|
@@ -147,17 +145,15 @@ class Chef::ResourceDefinitionList::MongoDB
           # reconfiguring destroys exisiting connections, reconnect
           connection = Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
           config = connection['local']['system']['replset'].find_one('_id' => name)
-		  		  # Validate configuration change
-		  if config['members'] == rs_members
-			Chef::Log.info("New config successfully applied: #{config.inspect}")
-		  else
-			Chef::Log.error("Failed to apply new config. Current config: #{config.inspect} Target config #{rs_members}")
-			return
-		  end
+          # Validate configuration change
+          if config['members'] == rs_members
+            Chef::Log.info("New config successfully applied: #{config.inspect}")
+          else
+            Chef::Log.error("Failed to apply new config. Current config: #{config.inspect} Target config #{rs_members}")
+            return
+          end
         end
-        if !result.fetch('errmsg', nil).nil?
-          Chef::Log.error("configuring replicaset returned: #{result.inspect}")
-        end
+        Chef::Log.error("configuring replicaset returned: #{result.inspect}") unless result.fetch('errmsg', nil).nil?
       else
         # remove removed members from the replicaset and add the new ones
         max_id = config['members'].map { |member| member['_id'] }.max
@@ -202,9 +198,7 @@ class Chef::ResourceDefinitionList::MongoDB
             return
           end
         end
-        unless result.nil? or result.fetch('errmsg', nil).nil?
-          Chef::Log.error("configuring replicaset returned: #{result.inspect}")
-        end
+        Chef::Log.error("configuring replicaset returned: #{result.inspect}") unless result.nil? || result.fetch('errmsg', nil).nil?
       end
     elsif !result.fetch('errmsg', nil).nil?
       Chef::Log.error("Failed to configure replicaset, reason: #{result.inspect}")
@@ -243,7 +237,7 @@ class Chef::ResourceDefinitionList::MongoDB
 
     begin
       connection = Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5)
-    rescue Exception => e
+    rescue => e
       Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['port']}', reason #{e}")
       return
     end
@@ -269,7 +263,7 @@ class Chef::ResourceDefinitionList::MongoDB
 
     begin
       connection = Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5)
-    rescue Exception => e
+    rescue => e
       Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['port']}', reason #{e}")
       return
     end

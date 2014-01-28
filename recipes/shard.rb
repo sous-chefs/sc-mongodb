@@ -31,9 +31,7 @@ mongodb_instance node['mongodb']['instance_name'] do
   port         node['mongodb']['port']
   logpath      node['mongodb']['logpath']
   dbpath       node['mongodb']['dbpath']
-  if node.mongodb.is_replicaset
-    replicaset    node
-  end
-  enable_rest node['mongodb']['enable_rest']
+  replicaset   node if node.mongodb.is_replicaset
+  enable_rest  node['mongodb']['enable_rest']
   smallfiles   node['mongodb']['smallfiles']
 end

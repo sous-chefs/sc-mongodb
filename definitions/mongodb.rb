@@ -28,7 +28,7 @@ define :mongodb_instance,
        :replicaset    => nil,
        :notifies      => [] do
 
-  if !['mongod', 'shard', 'configserver', 'mongos'].include?(params[:mongodb_type])
+  unless %w[mongod shard configserver mongos].include?(params[:mongodb_type])
     fail ArgumentError, ":mongodb_type must be 'mongod', 'shard', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
   end
 
@@ -107,11 +107,8 @@ define :mongodb_instance,
 
   if new_resource.type != 'mongos'
     provider = 'mongod'
-    configserver = nil
   else
     provider = 'mongos'
-    dbpath = nil
-    configserver = new_resource.configserver_nodes.map { |n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(',')
   end
   # default file
   template new_resource.sysconfig_file do
@@ -177,24 +174,16 @@ define :mongodb_instance,
 
   # service
   service new_resource.name do
-    if node['mongodb']['apt_repo'] == 'ubuntu-upstart' then
-      provider Chef::Provider::Service::Upstart
-    end
+    provider Chef::Provider::Service::Upstart if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
     supports :status => true, :restart => true
     action new_resource.service_action
     new_resource.service_notifies.each do |service_notify|
       notifies :run, service_notify
     end
-    if new_resource.is_replicaset && new_resource.auto_configure_replicaset
-      notifies :create, 'ruby_block[config_replicaset]'
-    end
-    if new_resource.type == 'mongos' && new_resource.auto_configure_sharding
-      notifies :create, 'ruby_block[config_sharding]', :immediately
-    end
-    if new_resource.name == 'mongodb'
+    notifies :create, 'ruby_block[config_replicaset]' if new_resource.is_replicaset && new_resource.auto_configure_replicaset
+    notifies :create, 'ruby_block[config_sharding]', :immediately if new_resource.type == 'mongos' && new_resource.auto_configure_sharding
       # we don't care about a running mongodb service in these cases, all we need is stopping it
-      ignore_failure true
-    end
+    ignore_failure true if new_resource.name == 'mongodb'
   end
 
   # replicaset
@@ -209,9 +198,7 @@ define :mongodb_instance,
 
     ruby_block 'config_replicaset' do
       block do
-        if not new_resource.replicaset.nil?
-          MongoDB.configure_replicaset(new_resource.replicaset, replicaset_name, rs_nodes)
-        end
+        MongoDB.configure_replicaset(new_resource.replicaset, replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
       end
       action :nothing
     end

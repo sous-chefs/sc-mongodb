@@ -81,17 +81,15 @@ when 'rhel', 'fedora'
   default[:mongodb][:default_init_name] = 'mongod'
   default[:mongodb][:instance_name] = 'mongod'
   # then there is this guy
-  if node['platform'] == 'centos' || node['platform'] == 'amazon' then
-      Chef::Log.warn("CentOS doesn't provide mongodb, forcing use of 10gen repo")
-      default[:mongodb][:install_method] = '10gen'
-      default[:mongodb][:package_name] = 'mongo-10gen-server'
+  if node['platform'] == 'centos' || node['platform'] == 'amazon'
+    Chef::Log.warn("CentOS doesn't provide mongodb, forcing use of 10gen repo")
+    default[:mongodb][:install_method] = '10gen'
+    default[:mongodb][:package_name] = 'mongo-10gen-server'
   end
 # when "debian"
 else
-  if node['platform_family'] != 'debian' then
-    Chef::Log.warn("Unknown Platform Family defaulting to 'debian' for [#{node['platform_family']}]")
-  end
-  if node['platform'] == 'ubuntu' then
+  Chef::Log.warn("Unknown Platform Family defaulting to 'debian' for [#{node['platform_family']}]") unless node['platform_family'] == 'debian'
+  if node['platform'] == 'ubuntu'
     default[:mongodb][:apt_repo] = 'ubuntu-upstart'
     default[:mongodb][:init_dir] = '/etc/init/'
     default[:mongodb][:init_script_template] = 'debian-mongodb.upstart.erb'
@@ -104,7 +102,7 @@ default[:mongodb][:package_version] = nil
 default[:mongodb][:template_cookbook] = 'mongodb'
 
 # These options are being deprecated (see dbconfig.rb)
-default[:mongodb][:port] = 27017
+default[:mongodb][:port] = 27_017
 default[:mongodb][:bind_ip] = nil
 default[:mongodb][:logpath] = '/var/log/mongodb'
 default[:mongodb][:dbpath] = '/var/lib/mongodb'

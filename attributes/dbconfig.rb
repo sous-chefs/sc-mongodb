@@ -5,7 +5,7 @@
 
 include_attribute 'mongodb::default'
 
-default['mongodb']['config']['port'] = node['mongodb']['port'] || 27017
+default['mongodb']['config']['port'] = node['mongodb']['port'] || 27_017
 default['mongodb']['config']['bind_ip'] = node['mongodb']['bind_ip'] || '0.0.0.0'
 default['mongodb']['config']['logpath'] = File.join(node['mongodb']['logpath'] || '/var/log/mongodb', 'mongodb.log')
 default['mongodb']['config']['logappend'] = true
@@ -13,9 +13,9 @@ default['mongodb']['config']['logappend'] = true
 # if node.platform_family?("rhel", "fedora") then
 case node['platform_family']
 when 'rhel', 'fedora'
-    default['mongodb']['config']['fork'] = true
+  default['mongodb']['config']['fork'] = true
 else
-    default['mongodb']['config']['fork'] = false
+  default['mongodb']['config']['fork'] = false
 end
 default['mongodb']['config']['dbpath'] = node['mongodb']['dbpath'] || '/var/lib/mongodb'
 default['mongodb']['config']['nojournal'] = node['mongodb']['nojournal'] || false
@@ -24,6 +24,4 @@ default['mongodb']['config']['smallfiles'] = node['mongodb']['smallfiles'] || fa
 default['mongodb']['config']['oplogSize'] = node['mongodb']['oplog_size'] || nil
 
 default['mongodb']['config']['replSet'] = node['mongodb']['replicaset_name'] || nil
-if node['mongodb']['key_file'] then
-    default['mongodb']['config']['keyFile'] = '/etc/mongodb.key'
-end
+default['mongodb']['config']['keyFile'] = '/etc/mongodb.key' if node['mongodb']['key_file']
