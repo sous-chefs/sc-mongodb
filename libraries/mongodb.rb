@@ -229,16 +229,9 @@ class Chef::ResourceDefinitionList::MongoDB
     # sort by name to ensure member ids are the same between runs
     members.sort! { |x, y| x.name <=> y.name }
 
-    rs_members = []
-    rs_member_ips = []
-    rs_options = {}
     replicaset_config = ReplicasetConfig.new name
     members.each_index do |n|
       member = ReplicasetMember.new(members[n], n)
-      host = member.host
-      rs_options[host] = member.to_h
-      rs_members << rs_options[host]
-      rs_member_ips << member.to_h_with_ipaddress
       replicaset_config << member
     end
 
@@ -298,10 +291,10 @@ class Chef::ResourceDefinitionList::MongoDB
           connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
           config = connection['local']['system']['replset'].find_one('_id' => name)
           # Validate configuration change
-          if config['members'] == rs_members
+          if config['members'] == replicaset_config.member_list
             Chef::Log.info("New config successfully applied: #{config.inspect}")
           else
-            Chef::Log.error("Failed to apply new config. Current config: #{config.inspect} Target config #{rs_members}")
+            Chef::Log.error("Failed to apply new config. Current config: #{config.inspect} Target config #{replicaset_config.member_list}")
             return
           end
         end
@@ -309,19 +302,19 @@ class Chef::ResourceDefinitionList::MongoDB
       else
         # remove removed members from the replicaset and add the new ones
         max_id = config['members'].map { |member| member['_id'] }.max
-        rs_members.map! { |member| member['host'] }
+        rs_member_hosts = replicaset_config.member_list.map { |member| member['host'] }
         config['version'] += 1
         old_members = config['members'].map { |member| member['host'] }
-        members_delete = old_members - rs_members
+        members_delete = old_members - rs_member_hosts
         config['members'] = config['members'].delete_if { |m| members_delete.include?(m['host']) }
         config['members'].map! do |m|
           host = m['host']
-          { '_id' => m['_id'], 'host' => host }.merge(rs_options[host])
+          { '_id' => m['_id'], 'host' => host }.merge(replicaset_config.members[host])
         end
-        members_add = rs_members - old_members
+        members_add = rs_member_hosts - old_members
         members_add.each do |m|
           max_id += 1
-          config['members'] << { '_id' => max_id, 'host' => m }.merge(rs_options[m])
+          config['members'] << { '_id' => max_id, 'host' => m }.merge(replicaset_config.members[m])
         end
 
         rs_connection = nil
@@ -343,10 +336,10 @@ class Chef::ResourceDefinitionList::MongoDB
           connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
           config = connection['local']['system']['replset'].find_one('_id' => name)
           # Validate configuration change
-          if config['members'] == rs_members
+          if config['members'] == rs_member_hosts
             Chef::Log.info("New config successfully applied: #{config.inspect}")
           else
-            Chef::Log.error("Failed to apply new config. Current config: #{config.inspect} Target config #{rs_members}")
+            Chef::Log.error("Failed to apply new config. Current config: #{config.inspect} Target config #{rs_member_hosts}")
             return
           end
         end
