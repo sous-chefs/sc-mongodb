@@ -112,6 +112,9 @@ define :mongodb_instance,
     node[:mongodb][:config].delete('dbpath')
     node[:mongodb][:config][:configdb] = new_resource.configserver_nodes.collect{|n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(",") unless node[:mongodb][:config][:configdb]
   end
+
+  node[:mongodb][:config][:configsvr] = true if new_resource.type == "configserver"
+
   # default file
   template new_resource.sysconfig_file do
     cookbook new_resource.template_cookbook

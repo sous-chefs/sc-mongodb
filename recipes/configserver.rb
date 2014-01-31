@@ -23,9 +23,9 @@ node.set[:mongodb][:is_configserver] = true
 
 include_recipe "mongodb::install"
 
-# we are not starting the configserver service with the --configsvr
-# commandline option because right now this only changes the port it's
-# running on, and we are overwriting this port anyway.
+# mongodb_instance will set configsvr = true in the config file.
+# http://docs.mongodb.org/manual/reference/configuration-options/#sharded-cluster-options
+# we still explicitly set the port and small files.
 mongodb_instance node['mongodb']['instance_name'] do
   mongodb_type "configserver"
   port         node['mongodb']['port']
