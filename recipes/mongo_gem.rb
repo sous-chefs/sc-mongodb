@@ -1,4 +1,5 @@
 # install the mongo and bson_ext ruby gems at compile time to make them globally available
+# TODO: remove bson_ext once mongo gem supports bson >= 2
 gems = 'mongo', 'bson_ext'
 
 gems.each do |g|
