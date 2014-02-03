@@ -59,7 +59,7 @@ define :mongodb_instance,
   new_resource.is_shard                   = node['mongodb']['is_shard']
   new_resource.mongodb_group              = node['mongodb']['group']
   new_resource.mongodb_user               = node['mongodb']['user']
-  new_resource.replicaset_name            = node['mongodb']['replicaset_name']
+  new_resource.replicaset_name            = node['mongodb']['config']['replSet']
   new_resource.port                       = node['mongodb']['config']['port']
   new_resource.root_group                 = node['mongodb']['root_group']
   new_resource.shard_name                 = node['mongodb']['shard_name']
