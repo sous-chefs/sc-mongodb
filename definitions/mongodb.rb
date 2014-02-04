@@ -22,7 +22,7 @@
 define :mongodb_instance,
        :mongodb_type  => 'mongod',
        :action        => [:enable, :start],
-       :logpath       => '/var/log/mongodb',
+       :logpath       => '/var/log/mongodb/mongodb.log',
        :dbpath        => '/data',
        :configserver  => [],
        :replicaset    => nil,
@@ -144,7 +144,7 @@ define :mongodb_instance,
   end
 
   # log dir [make sure it exists]
-  directory new_resource.logpath do
+  directory File.dirname(new_resource.logpath) do
     owner new_resource.mongodb_user
     group new_resource.mongodb_group
     mode '0755'
