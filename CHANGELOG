@@ -1,11 +1,17 @@
 ========================
 Chef-MongoDB Cookbook Changelog
-Last-Update: Mon Jan 27 14:14:26 PST 2014
+Last-Update: Wed Feb  5 07:22:30 PST 2014
 ========================
 
-Version 0.15.0 1.0.0-rc1
+Version 0.14.8 DEVELOPMENTAL RELEASE
 ---------------------------
-* TBA
+* Rubocop (cherry pick of #220)
+
+Version 0.14.7 DEVELOPMENTAL RELEASE
+---------------------------
+* Automatically install bson_ext gem
+* Add check/protection for empty shard
+* Force node['mongodb']['config']['configsrv'] == true when set as configserver
 
 Version 0.14.6 DEVELOPMENTAL RELEASE
 ---------------------------
