@@ -89,3 +89,11 @@ suites:
   attributes:
     mongodb:
       cluster_name: default
+
+- name: mms_agent
+  run_list:
+  - "recipe[mongodb::mms-agent]"
+  attributes:
+    mongodb:
+      mms_agent:
+        api_key: "random key"
