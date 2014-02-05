@@ -19,12 +19,12 @@
 
 node.set[:mongodb][:is_replicaset] = true
 
-include_recipe "mongodb::install"
-include_recipe "mongodb::mongo_gem"
+include_recipe 'mongodb::install'
+include_recipe 'mongodb::mongo_gem'
 
 unless node.mongodb.is_shard
   mongodb_instance node['mongodb']['instance_name'] do
-    mongodb_type "mongod"
+    mongodb_type 'mongod'
     port         node['mongodb']['port']
     logpath      node['mongodb']['logpath']
     dbpath       node['mongodb']['dbpath']

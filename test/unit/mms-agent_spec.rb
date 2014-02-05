@@ -2,12 +2,12 @@ require 'chefspec'
 require 'chefspec/berkshelf'
 
 describe 'mongodb::mms-agent' do
-  let(:chef_run) {
+  let(:chef_run) do
     stub_command("/usr/bin/python -c 'import setuptools'").and_return(true)
-    ChefSpec::Runner.new(platform: 'ubuntu', version: '12.04') do |n|
+    ChefSpec::Runner.new(:platform => 'ubuntu', :version => '12.04') do |n|
       n.set.mongodb.mms_agent.install_dir = '/usr/local/share'
     end
-  }
+  end
 
   it 'installs munin by default' do
     chef_run.converge(described_recipe)
@@ -24,7 +24,7 @@ describe 'mongodb::mms-agent' do
     xit 'does not clobber anything else' do
       # add some files to install_dir
       expected_file = "#{chef_run.node.mongodb.mms_agent.install_dir}/f.txt"
-      expected_string = "hello mongodb"
+      expected_string = 'hello mongodb'
       File.open(expected_file, 'w') { |f| f.write(expected_string) }
 
       # converge and check the file and string are still there

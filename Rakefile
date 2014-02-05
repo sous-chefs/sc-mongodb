@@ -9,6 +9,16 @@ RSpec::Core::RakeTask.new do |t|
   t.rspec_opts = '--default_path test/unit'
 end
 
+require 'rubocop/rake_task'
+desc 'Run RuboCop to check style'
+Rubocop::RakeTask.new(:rubocop) do |task|
+  task.patterns = ['**/*.rb']
+  # only show the files with failures
+  #task.formatters = ['files']
+  # don't abort rake on failure
+  task.fail_on_error = true
+end
+
 begin
   require 'kitchen/rake_tasks'
   Kitchen::RakeTasks.new
@@ -18,5 +28,6 @@ end
 
 # aliases
 task :test => :spec
-task :default => [:test]
+task :lint => [:rubocop]
+task :default => [:lint, :test]
 task :all => [:test, 'kitchen:all']

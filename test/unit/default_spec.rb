@@ -4,7 +4,7 @@ require 'fauxhai'
 
 describe 'mongodb::default' do
   before do
-    runner = ChefSpec::Runner.new(platform: 'ubuntu', version: '12.04')
+    runner = ChefSpec::Runner.new(:platform => 'ubuntu', :version => '12.04')
     @chef_run = runner.converge(described_recipe)
   end
   subject { @chef_run }

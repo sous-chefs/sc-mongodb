@@ -20,16 +20,16 @@
 #
 
 define :mongodb_instance,
-    :mongodb_type  => "mongod",
-    :action        => [:enable, :start],
-    :logpath       => "/var/log/mongodb",
-    :dbpath        => "/data",
-    :configserver  => [],
-    :replicaset    => nil,
-    :notifies      => [] do
+       :mongodb_type  => 'mongod',
+       :action        => [:enable, :start],
+       :logpath       => '/var/log/mongodb',
+       :dbpath        => '/data',
+       :configserver  => [],
+       :replicaset    => nil,
+       :notifies      => [] do
 
-  if !["mongod", "shard", "configserver", "mongos"].include?(params[:mongodb_type])
-    raise ArgumentError, ":mongodb_type must be 'mongod', 'shard', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
+  unless %w[mongod shard configserver mongos].include?(params[:mongodb_type])
+    fail ArgumentError, ":mongodb_type must be 'mongod', 'shard', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
   end
 
   require 'ostruct'
@@ -71,12 +71,12 @@ define :mongodb_instance,
   new_resource.ulimit                     = node['mongodb']['ulimit']
   new_resource.reload_action              = node['mongodb']['reload_action']
 
-  if node['mongodb']['apt_repo'] == "ubuntu-upstart"
+  if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
-    mode = "0644"
+    mode = '0644'
   else
     new_resource.init_file = File.join(node['mongodb']['init_dir'], new_resource.name)
-    mode = "0755"
+    mode = '0755'
   end
 
   # TODO(jh): reimplement using polymorphism
@@ -104,27 +104,27 @@ define :mongodb_instance,
     replicaset_name = nil
   end
 
-  if new_resource.type != "mongos"
-    provider = "mongod"
+  if new_resource.type != 'mongos'
+    provider = 'mongod'
   else
-    provider = "mongos"
+    provider = 'mongos'
     # mongos will fail to start if dbpath is set
-    node[:mongodb][:config].delete('dbpath')
-    node[:mongodb][:config][:configdb] = new_resource.configserver_nodes.collect{|n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(",") unless node[:mongodb][:config][:configdb]
+    node['mongodb']['config'].delete('dbpath')
+    node['mongodb']['config']['configdb'] = new_resource.configserver_nodes.collect{|n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(",") unless node['mongodb']['config']['configdb']
   end
 
-  node[:mongodb][:config][:configsvr] = true if new_resource.type == "configserver"
+  node['mongodb']['config']['configsvr'] = true if new_resource.type == 'configserver'
 
   # default file
   template new_resource.sysconfig_file do
     cookbook new_resource.template_cookbook
     source new_resource.sysconfig_file_template
     group new_resource.root_group
-    owner "root"
-    mode "0644"
-    variables({
+    owner 'root'
+    mode '0644'
+    variables(
       :sysconfig => new_resource.sysconfig_vars
-    })
+    )
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
   end
 
@@ -133,11 +133,11 @@ define :mongodb_instance,
     cookbook new_resource.template_cookbook
     source new_resource.dbconfig_file_template
     group new_resource.root_group
-    owner "root"
-    variables({
+    owner 'root'
+    variables(
       :config => new_resource.config
-    })
-    mode "0644"
+    )
+    mode '0644'
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
   end
 
@@ -145,17 +145,17 @@ define :mongodb_instance,
   directory new_resource.logpath do
     owner new_resource.mongodb_user
     group new_resource.mongodb_group
-    mode "0755"
+    mode '0755'
     action :create
     recursive true
   end
 
-  if new_resource.type != "mongos"
+  if new_resource.type != 'mongos'
     # dbpath dir [make sure it exists]
     directory new_resource.dbpath do
       owner new_resource.mongodb_user
       group new_resource.mongodb_group
-      mode "0755"
+      mode '0755'
       action :create
       recursive true
     end
@@ -166,38 +166,30 @@ define :mongodb_instance,
     cookbook new_resource.template_cookbook
     source new_resource.init_script_template
     group new_resource.root_group
-    owner "root"
+    owner 'root'
     mode mode
-    variables({
+    variables(
       :provides =>       provider,
       :sysconfig_file => new_resource.sysconfig_file,
       :ulimit =>         new_resource.ulimit,
       :bind_ip =>        new_resource.bind_ip,
       :port =>           new_resource.port
-    })
+    )
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
   end
 
   # service
   service new_resource.name do
-    if node['mongodb']['apt_repo'] == "ubuntu-upstart" then
-      provider Chef::Provider::Service::Upstart
-    end
+    provider Chef::Provider::Service::Upstart if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
     supports :status => true, :restart => true
     action new_resource.service_action
     new_resource.service_notifies.each do |service_notify|
       notifies :run, service_notify
     end
-    if new_resource.is_replicaset && new_resource.auto_configure_replicaset
-      notifies :create, "ruby_block[config_replicaset]"
-    end
-    if new_resource.type == "mongos" && new_resource.auto_configure_sharding
-      notifies :create, "ruby_block[config_sharding]", :immediately
-    end
-    if new_resource.name == "mongodb"
+    notifies :create, 'ruby_block[config_replicaset]' if new_resource.is_replicaset && new_resource.auto_configure_replicaset
+    notifies :create, 'ruby_block[config_sharding]', :immediately if new_resource.type == 'mongos' && new_resource.auto_configure_sharding
       # we don't care about a running mongodb service in these cases, all we need is stopping it
-      ignore_failure true
-    end
+    ignore_failure true if new_resource.name == 'mongodb'
   end
 
   # replicaset
@@ -210,23 +202,21 @@ define :mongodb_instance,
        chef_environment:#{new_resource.replicaset.chef_environment}"
     )
 
-    ruby_block "config_replicaset" do
+    ruby_block 'config_replicaset' do
       block do
-        if not new_resource.replicaset.nil?
-          MongoDB.configure_replicaset(new_resource.replicaset, replicaset_name, rs_nodes)
-        end
+        MongoDB.configure_replicaset(new_resource.replicaset, replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
       end
       action :nothing
     end
 
-    ruby_block "run_config_replicaset" do
+    ruby_block 'run_config_replicaset' do
       block {}
-      notifies :create, "ruby_block[config_replicaset]"
+      notifies :create, 'ruby_block[config_replicaset]'
     end
   end
 
   # sharding
-  if new_resource.type == "mongos" && new_resource.auto_configure_sharding
+  if new_resource.type == 'mongos' && new_resource.auto_configure_sharding
     # add all shards
     # configure the sharded collections
 
@@ -237,9 +227,9 @@ define :mongodb_instance,
        chef_environment:#{node.chef_environment}"
     )
 
-    ruby_block "config_sharding" do
+    ruby_block 'config_sharding' do
       block do
-        if new_resource.type == "mongos"
+        if new_resource.type == 'mongos'
           MongoDB.configure_shards(node, shard_nodes)
           MongoDB.configure_sharded_collections(node, new_resource.sharded_collections)
         end

@@ -21,13 +21,13 @@
 
 node.set[:mongodb][:is_configserver] = true
 
-include_recipe "mongodb::install"
+include_recipe 'mongodb::install'
 
 # mongodb_instance will set configsvr = true in the config file.
 # http://docs.mongodb.org/manual/reference/configuration-options/#sharded-cluster-options
 # we still explicitly set the port and small files.
 mongodb_instance node['mongodb']['instance_name'] do
-  mongodb_type "configserver"
+  mongodb_type 'configserver'
   port         node['mongodb']['port']
   logpath      node['mongodb']['logpath']
   dbpath       node['mongodb']['dbpath']
