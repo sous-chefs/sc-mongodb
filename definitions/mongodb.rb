@@ -111,11 +111,11 @@ define :mongodb_instance,
     # mongos will fail to start if dbpath is set
     node['mongodb']['config'].delete('dbpath')
     unless node['mongodb']['config']['configdb']
-      node['mongodb']['config']['configdb'] = new_resource.configserver_nodes.map { |n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(',')
+      node.default['mongodb']['config']['configdb'] = new_resource.configserver_nodes.map { |n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(',')
     end
   end
 
-  node['mongodb']['config']['configsvr'] = true if new_resource.type == 'configserver'
+  node.default['mongodb']['config']['configsvr'] = true if new_resource.type == 'configserver'
 
   # default file
   template new_resource.sysconfig_file do
