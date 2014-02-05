@@ -104,7 +104,7 @@ default[:mongodb][:package_version] = nil
 default[:mongodb][:template_cookbook] = 'mongodb'
 
 # These options are being deprecated (see dbconfig.rb)
-default[:mongodb][:port] = 27_017
+default[:mongodb][:port] = 27017
 default[:mongodb][:bind_ip] = nil
 default[:mongodb][:logpath] = '/var/log/mongodb'
 default[:mongodb][:dbpath] = '/var/lib/mongodb'
