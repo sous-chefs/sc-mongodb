@@ -37,8 +37,8 @@ attribute 'mongodb/config/port',
           :description => 'Port the mongodb instance is running on',
           :default => '27017'
 
-attribute 'mongodb/reload_action'
-          :display_name => 'Reload'  ,
+attribute 'mongodb/reload_action',
+          :display_name => 'Reload',
           :description => 'Action to take when MongoDB config files are modified',
           :default => 'restart'
 
