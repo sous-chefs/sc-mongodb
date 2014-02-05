@@ -258,10 +258,10 @@ class Chef::ResourceDefinitionList::MongoDB
 
   def self.configure_sharded_collections(node, sharded_collections)
     if sharded_collections.nil? || sharded_collections.empty?
-      Chef::Log.warn("No sharded collections configured, doing nothing")
+      Chef::Log.warn('No sharded collections configured, doing nothing')
       return
     end
-    
+
     # lazy require, to move loading this modules to runtime of the cookbook
     require 'rubygems'
     require 'mongo'

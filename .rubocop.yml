@@ -2,13 +2,13 @@ HashSyntax:
   EnforcedStyle: hash_rockets
 
 LineLength:
-  Max: 186 # TODO: reduce to 80
+  Max: 200 # TODO: reduce to 80
 
 MethodLength:
   Max: 155 # TODO: reduce to 10
 
 ClassLength:
-  Max: 260 # TODO: reduce to 100
+  Max: 264 # TODO: reduce to 100
 
 BlockNesting:
   Max: 4 # TODO: reduce to 3
@@ -21,3 +21,6 @@ Documentation:
 
 NumericLiterals:
   MinDigits: 6
+
+Encoding:
+  Enabled: false # TODO: enable (?)

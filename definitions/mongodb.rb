@@ -110,7 +110,9 @@ define :mongodb_instance,
     provider = 'mongos'
     # mongos will fail to start if dbpath is set
     node['mongodb']['config'].delete('dbpath')
-    node['mongodb']['config']['configdb'] = new_resource.configserver_nodes.collect{|n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(",") unless node['mongodb']['config']['configdb']
+    unless node['mongodb']['config']['configdb']
+      node['mongodb']['config']['configdb'] = new_resource.configserver_nodes.map { |n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(',')
+    end
   end
 
   node['mongodb']['config']['configsvr'] = true if new_resource.type == 'configserver'

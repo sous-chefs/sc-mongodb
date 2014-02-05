@@ -3,7 +3,7 @@
 gems = %{mongo bson_ext}
 
 gems.each do |g|
-  if Gem.const_defined?('Version') and Gem::Version.new(Chef::VERSION) < Gem::Version.new('10.12.0')
+  if Gem.const_defined?('Version') && Gem::Version.new(Chef::VERSION) < Gem::Version.new('10.12.0')
     gem_package g do
       action :nothing
     end.run_action(:install)
