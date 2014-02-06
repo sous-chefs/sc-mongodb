@@ -32,12 +32,26 @@ define :mongodb_instance,
     fail ArgumentError, ":mongodb_type must be 'mongod', 'shard', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
   end
 
+  # Make changes to node['mongodb']['config'] before copying to new_resource. Chef 11 appears to resolve the attributes
+  # with precedence while Chef 10 copies to not (TBD: find documentation to support observed behavior).
+  if params[:mongodb_type] != 'mongos'
+    provider = 'mongod'
+  else
+    provider = 'mongos'
+    # mongos will fail to start if dbpath is set
+    node.default['mongodb']['config']['dbpath'] = nil
+    unless node['mongodb']['config']['configdb']
+      node.default['mongodb']['config']['configdb'] = configservers.map { |n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(',')
+    end
+  end
+
+  node.default['mongodb']['config']['configsvr'] = true if params[:mongodb_type] == 'configserver'
+
   require 'ostruct'
 
   new_resource = OpenStruct.new
 
   new_resource.name                       = params[:name]
-  new_resource.configserver_nodes         = params[:configservers]
   new_resource.dbpath                     = params[:dbpath]
   new_resource.logpath                    = params[:logpath]
   new_resource.replicaset                 = params[:replicaset]
@@ -103,19 +117,6 @@ define :mongodb_instance,
     # not a replicaset, so no name
     replicaset_name = nil
   end
-
-  if new_resource.type != 'mongos'
-    provider = 'mongod'
-  else
-    provider = 'mongos'
-    # mongos will fail to start if dbpath is set
-    node.default['mongodb']['config']['dbpath'] = nil
-    unless node['mongodb']['config']['configdb']
-      node.default['mongodb']['config']['configdb'] = new_resource.configserver_nodes.map { |n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(',')
-    end
-  end
-
-  node.default['mongodb']['config']['configsvr'] = true if new_resource.type == 'configserver'
 
   # default file
   template new_resource.sysconfig_file do
