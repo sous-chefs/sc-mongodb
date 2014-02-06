@@ -24,7 +24,7 @@ define :mongodb_instance,
        :action        => [:enable, :start],
        :logpath       => '/var/log/mongodb',
        :dbpath        => '/data',
-       :configserver  => [],
+       :configservers => [],
        :replicaset    => nil,
        :notifies      => [] do
 
@@ -37,7 +37,7 @@ define :mongodb_instance,
   new_resource = OpenStruct.new
 
   new_resource.name                       = params[:name]
-  new_resource.configserver_nodes         = params[:configserver]
+  new_resource.configserver_nodes         = params[:configservers]
   new_resource.dbpath                     = params[:dbpath]
   new_resource.logpath                    = params[:logpath]
   new_resource.replicaset                 = params[:replicaset]
