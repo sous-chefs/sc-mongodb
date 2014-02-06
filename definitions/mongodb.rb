@@ -39,9 +39,11 @@ define :mongodb_instance,
   else
     provider = 'mongos'
     # mongos will fail to start if dbpath is set
-    node.force_override['mongodb']['config']['dbpath'] = nil
+    node.default['mongodb']['config']['dbpath'] = nil
     unless node['mongodb']['config']['configdb']
-      node.default['mongodb']['config']['configdb'] = configservers.map { |n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(',')
+      node.default['mongodb']['config']['configdb'] = params[:configservers].map { |n|
+        "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}"
+      }.sort.join(',')
     end
   end
 
