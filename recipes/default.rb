@@ -23,7 +23,7 @@ include_recipe 'mongodb::install'
 
 # configure default instance
 replicaset_recipe = 'mongodb::replicaset'
-configured_as_replicaset = case Chef::Version.new(Chef::VERSION).major
+configured_as_replicaset = case Chef::VERSION.split('.').first.to_i
                            when 0..10 then node.recipe?(replicaset_recipe)
                            else node.run_context.loaded_recipe?(replicaset_recipe)
                            end
