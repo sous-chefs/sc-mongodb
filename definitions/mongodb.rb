@@ -109,7 +109,7 @@ define :mongodb_instance,
   else
     provider = 'mongos'
     # mongos will fail to start if dbpath is set
-    node['mongodb']['config'].delete('dbpath')
+    node.default['mongodb']['config']['dbpath'] = nil
     unless node['mongodb']['config']['configdb']
       node.default['mongodb']['config']['configdb'] = new_resource.configserver_nodes.map { |n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}" }.sort.join(',')
     end
