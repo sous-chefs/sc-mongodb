@@ -41,9 +41,9 @@ define :mongodb_instance,
     # mongos will fail to start if dbpath is set
     node.default['mongodb']['config']['dbpath'] = nil
     unless node['mongodb']['config']['configdb']
-      node.default['mongodb']['config']['configdb'] = params[:configservers].map { |n|
+      node.default['mongodb']['config']['configdb'] = params[:configservers].map do |n|
         "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}"
-      }.sort.join(',')
+      end.sort.join(',')
     end
   end
 
