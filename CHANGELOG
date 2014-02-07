@@ -1,7 +1,14 @@
 ========================
 Chef-MongoDB Cookbook Changelog
-Last-Update: Wed Feb  5 07:22:30 PST 2014
+Last-Update: Fri Feb  7 11:35:48 PST 2014
 ========================
+
+Version 0.14.10 DEVELOPMENTAL RELEASE
+---------------------------
+* Final 0.14 release
+* move node['mongodb']['config']['configsrv'] auto update to the top
+* Drop using Chef.Version as it is not rc/beta compatible
+* installs gem bson_ext
 
 Version 0.14.8 DEVELOPMENTAL RELEASE
 ---------------------------
