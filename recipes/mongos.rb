@@ -40,10 +40,10 @@ end
 
 mongodb_instance 'mongos' do
   mongodb_type 'mongos'
-  port          node['mongodb']['port']
-  logpath       node['mongodb']['logpath']
-  dbpath        node['mongodb']['dbpath']
-  configservers configsrv
-  enable_rest   node['mongodb']['enable_rest']
-  smallfiles    node['mongodb']['smallfiles']
+  port         node['mongodb']['config']['port']
+  logpath      node['mongodb']['config']['logpath']
+  dbpath       node['mongodb']['config']['dbpath']
+  configservers configsrvs
+  enable_rest  node['mongodb']['config']['rest']
+  smallfiles   node['mongodb']['config']['smallfiles']
 end
