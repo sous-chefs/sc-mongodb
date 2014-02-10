@@ -26,15 +26,15 @@ service 'mongodb' do
   action [:disable, :stop]
 end
 
-configsrv = search(
+configsrvs = search(
   :node,
   "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
    mongodb_is_configserver:true AND \
    chef_environment:#{node.chef_environment}"
 )
 
-if configsrv.length != 1 && configsrv.length != 3
-  Chef::Log.error("Found #{configsrv.length} configserver, need either one or three of them")
+if configsrvs.length != 1 && configsrvs.length != 3
+  Chef::Log.error("Found #{configsrvs.length} configserver, need either one or three of them")
   fail 'Wrong number of configserver nodes'
 end
 
