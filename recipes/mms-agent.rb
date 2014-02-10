@@ -92,7 +92,7 @@ ruby_block 'modify settings.py' do
       end
 
       # update the agent version in chef, for reference
-      /settingsAgentVersion = "(?<mms_agent_version>.*)"/ =~ s
+      mms_agent_version = /settingsAgentVersion = "(.*)"/.match(s)[1]
       node.default.mongodb.mms_agent.version = mms_agent_version
 
       notifies :enable, mms_agent_service, :delayed
