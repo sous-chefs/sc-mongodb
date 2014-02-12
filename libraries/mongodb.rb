@@ -99,7 +99,7 @@ class Chef::ResourceDefinitionList::MongoDB
     if result.fetch('ok', nil) == 1
       # everything is fine, do nothing
     elsif result.fetch('errmsg', nil) =~ /(\S+) is already initiated/ || (result.fetch('errmsg', nil) == 'already initialized')
-      server, port = Regexp.last_match[1].nil? ? ['localhost', node['mongodb']['config']['port']] : Regexp.last_match[1].split(':')
+      server, port = Regexp.last_match.nil? || Regexp.last_match.length < 2 ? ['localhost', node['mongodb']['port']] : Regexp.last_match[1].split(':')
       begin
         connection = Mongo::Connection.new(server, port, :op_timeout => 5, :slave_ok => true)
       rescue
