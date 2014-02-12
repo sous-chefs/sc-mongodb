@@ -130,7 +130,7 @@ The result is a new system service with
 
 ## Replicasets
 
-Add `mongodb::replicaset` to the node's run_list. Also choose a name for your
+Add `mongodb::replicaset` (instead of `mongodb::default`) to the node's run_list. Also choose a name for your
 replicaset cluster and set the value of `node[:mongodb][:cluster_name]` for each
 member to this name.
 
