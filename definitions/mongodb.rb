@@ -22,7 +22,7 @@
 define :mongodb_instance,
        :mongodb_type  => 'mongod',
        :action        => [:enable, :start],
-       :logpath       => '/var/log/mongodb',
+       :logpath       => '/var/log/mongodb/mongodb.log',
        :dbpath        => '/data',
        :configservers => [],
        :replicaset    => nil,
@@ -41,9 +41,9 @@ define :mongodb_instance,
     # mongos will fail to start if dbpath is set
     node.default['mongodb']['config']['dbpath'] = nil
     unless node['mongodb']['config']['configdb']
-      node.default['mongodb']['config']['configdb'] = params[:configservers].map { |n|
+      node.default['mongodb']['config']['configdb'] = params[:configservers].map do |n|
         "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}"
-      }.sort.join(',')
+      end.sort.join(',')
     end
   end
 
@@ -75,7 +75,7 @@ define :mongodb_instance,
   new_resource.is_shard                   = node['mongodb']['is_shard']
   new_resource.mongodb_group              = node['mongodb']['group']
   new_resource.mongodb_user               = node['mongodb']['user']
-  new_resource.replicaset_name            = node['mongodb']['replicaset_name']
+  new_resource.replicaset_name            = node['mongodb']['config']['replSet']
   new_resource.port                       = node['mongodb']['config']['port']
   new_resource.root_group                 = node['mongodb']['root_group']
   new_resource.shard_name                 = node['mongodb']['shard_name']
@@ -147,7 +147,7 @@ define :mongodb_instance,
   end
 
   # log dir [make sure it exists]
-  directory new_resource.logpath do
+  directory File.dirname(new_resource.logpath) do
     owner new_resource.mongodb_user
     group new_resource.mongodb_group
     mode '0755'
