@@ -19,6 +19,8 @@
 # limitations under the License.
 #
 
+node.set[:mongodb][:is_mongos] = true
+
 include_recipe 'mongodb::install'
 include_recipe 'mongodb::mongo_gem'
 
