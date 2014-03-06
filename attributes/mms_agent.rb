@@ -16,3 +16,6 @@ default[:mongodb][:mms_agent][:munin_package] = 'munin-node'
 default[:mongodb][:mms_agent][:enable_munin] = true
 
 default[:mongodb][:mms_agent][:require_valid_server_cert] = false
+
+default[:mongodb][:mms_agent][:user] = 'mmsagent'
+default[:mongodb][:mms_agent][:group] = 'mmsagent'
