@@ -76,14 +76,11 @@ Basically all settings defined in the Configuration File Options documentation p
 
 
 ## MMS Agent attributes
-* `mongodb[:mms_agent][:api_key]` - MMS Agent API Key
-* `mongodb[:mms_agent][:mms_server]` - MMS Server (default: `https://mms.mongodb.com`)
-* `mongodb[:mms_agent][:require_valid_server_cert]` - Require valid server certificate (default: `false`)
-* `mongodb[:mms_agent][:install_dir]` - Location to install the agent
-* `mongodb[:mms_agent][:log_dir]` - Location to write the agent logfile. If this is a relative path, it's relative to where the service is run (via runit), e.g. set to './main'
-* `mongodb[:mms_agent][:install_munin]` - If enabled, installs the munin daemon.
-* `mongodb[:mms_agent][:munin_package]` - The name of the munin package to install (if enabled). The default is debian's package name 'munin-node'.
-* `mongodb[:mms_agent][:enable_munin]` - Enable MMS Agent integration with munin.
+* `mongodb[:mms_agent][:api_key]` - MMS Agent API Key. Required.
+* `mongodb[:mms_agent][:monitoring][:version]` - Version of the MongoDB MMS Monitoring Agent package to download and install. Required.
+* `mongodb[:mms_agent][:monitoring][:<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.  
+* `mongodb[:mms_agent][:backup][:version]` - Version of the MongoDB MMS Backup Agent package to download and install. Required. 
+* `mongodb[:mms_agent][:backup][:<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.  
 
 # USAGE:
 
