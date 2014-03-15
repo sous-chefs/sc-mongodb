@@ -30,21 +30,20 @@ end
 
 ruby_block 'update monitoring-agent.config' do
   block do
-    orig_s = ''
+    config = ''
     open('/etc/mongodb-mms/monitoring-agent.config') do |f|
-      orig_s = f.read
+      config = f.read
     end
-    s = orig_s
-    s = s.gsub(/^mmsApiKey=.*$/, "mmsApiKey=#{node[:mongodb][:mms_agent][:api_key]}")
+    changed = !!config.gsub!(/^mmsApiKey\s?=.*$/, "mmsApiKey=#{node[:mongodb][:mms_agent][:api_key]}")
 
     node[:mongodb][:mms_agent][:monitoring].each do |key, value|
-      s = s.gsub(/^#{key}\s?=.*$/, "#{key}=#{value}") unless key == 'version'
+      (changed = !!config.gsub!(/^#{key}\s?=.*$/, "#{key}=#{value}") || changed) unless key == 'version'
     end
 
-    if s != orig_s
+    if changed
       Chef::Log.debug 'Settings changed, overwriting and restarting service'
       open('/etc/mongodb-mms/monitoring-agent.config', 'w') do |f|
-        f.puts s
+        f.puts config
       end
 
       notifies :restart, resources(:service => 'mongodb-mms-monitoring-agent'), :delayed
