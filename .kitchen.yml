@@ -110,6 +110,7 @@ suites:
   excludes:
     - ubuntu-10.04
     - debian-7.2.0
+    - centos-5.10
     
 - name: mms_backup_agent
   run_list:
@@ -123,3 +124,4 @@ suites:
   excludes:
     - ubuntu-10.04
     - debian-7.2.0
+    - centos-5.10
