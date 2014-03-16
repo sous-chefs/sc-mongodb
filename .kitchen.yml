@@ -107,6 +107,8 @@ suites:
         api_key: "random key"
         monitoring:
           sslRequireValidServerCertificates: false
+  excludes:
+    - ubuntu-10.04
 
 - name: mms_backup_agent
   run_list:
@@ -117,3 +119,5 @@ suites:
         api_key: "random key"
         backup:
           sslRequireValidServerCertificates: false
+  excludes:
+    - ubuntu-10.04
