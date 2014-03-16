@@ -24,7 +24,8 @@ end
 
 service 'mongodb-mms-monitoring-agent' do
   provider Chef::Provider::Service::Upstart if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
-  supports :restart => true
+  # restart is broken on rhel (MMS-1597)
+  supports :restart => true if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
   action [:start, :enable]
 end
 
@@ -34,10 +35,11 @@ ruby_block 'update monitoring-agent.config' do
     open('/etc/mongodb-mms/monitoring-agent.config') do |f|
       config = f.read
     end
-    changed = !!config.gsub!(/^mmsApiKey\s?=.*$/, "mmsApiKey=#{node[:mongodb][:mms_agent][:api_key]}")
+    api_key = "#{node[:mongodb][:mms_agent][:api_key]}"
+    changed = !!config.gsub!(/^mmsApiKey\s?=(?!#{api_key})$/, "mmsApiKey=#{api_key}")
 
     node[:mongodb][:mms_agent][:monitoring].each do |key, value|
-      (changed = !!config.gsub!(/^#{key}\s?=.*$/, "#{key}=#{value}") || changed) unless key == 'version'
+      (changed = !!config.gsub!(/^#{key}\s?=(?!#{value}).*$/, "#{key}=#{value}") || changed) unless key == 'version'
     end
 
     if changed
