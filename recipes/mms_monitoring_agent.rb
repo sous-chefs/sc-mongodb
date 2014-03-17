@@ -1,11 +1,12 @@
 arch = node[:kernel][:machine]
 package = 'https://mms.mongodb.com/download/agent/monitoring/mongodb-mms-monitoring-agent'
 
-if node.platform_family?('debian')
+case node.platform_family
+when 'debian'
   arch = 'amd64' if arch == 'x86_64'
   package = "#{package}_#{node[:mongodb][:mms_agent][:monitoring][:version]}_#{arch}.deb"
   provider = Chef::Provider::Package::Dpkg
-elsif node.platform_family?('rhel') then
+when 'rhel'
   package = "#{package}-#{node[:mongodb][:mms_agent][:monitoring][:version]}.#{arch}.rpm"
   provider = Chef::Provider::Package::Rpm
 else
@@ -35,10 +36,12 @@ ruby_block 'update monitoring-agent.config' do
     open('/etc/mongodb-mms/monitoring-agent.config') do |f|
       config = f.read
     end
-    api_key = "#{node[:mongodb][:mms_agent][:api_key]}"
+    api_key = node[:mongodb][:mms_agent][:api_key]
+    # replace mmsApiKey, optionally followed by a space, followed by an equal sign, and not followed by the api_key
     changed = !!config.gsub!(/^mmsApiKey\s?=(?!#{api_key})$/, "mmsApiKey=#{api_key}")
 
     node[:mongodb][:mms_agent][:monitoring].each do |key, value|
+      # replace key, optionally followed by a space, followed by an equal sign, and not followed by the value
       (changed = !!config.gsub!(/^#{key}\s?=(?!#{value}).*$/, "#{key}=#{value}") || changed) unless key == 'version'
     end
 
