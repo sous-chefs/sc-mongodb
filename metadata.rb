@@ -115,7 +115,7 @@ attribute 'mongodb/mms_agent/monitoring',
 attribute 'mongodb/mms_agent/monitoring/version',
           :display_name => 'MMS Monitoring Agent version',
           :description => 'Version of MMS Monitoring Agent to install',
-          :default => nil
+          :default => '2.0.0.17-1'
 
 attribute 'mongodb/mms_agent/backup',
           :display_name => 'MMS Backup Agent',
@@ -125,7 +125,7 @@ attribute 'mongodb/mms_agent/backup',
 attribute 'mongodb/mms_agent/backup/version',
           :display_name => 'MMS Backup Agent version',
           :description => 'Version of MMS Backup Agent to install',
-          :default => nil
+          :default => '1.4.3.28-1'
 
 attribute 'mongodb/oplog_size',
           :display_name => 'oplogSize',
