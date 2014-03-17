@@ -33,6 +33,7 @@ platforms:
     box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-6.5_chef-provisionerless.box
   run_list:
   - "recipe[yum]"
+  - "recipe[yum-epel]"
 
 - name: centos-5.10
   driver_config:
@@ -40,6 +41,7 @@ platforms:
     box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-5.10_chef-provisionerless.box
   run_list:
   - "recipe[yum]"
+  - "recipe[yum-epel]"
 
 # not going to try until
 # https://jira.mongodb.org/browse/SERVER-7285 is closed
@@ -97,6 +99,9 @@ suites:
     mongodb:
       mms_agent:
         api_key: "random key"
+  excludes:
+    # runit is failing to install
+    - centos-5.10
 
 - name: mms_monitoring_agent
   run_list:
@@ -108,8 +113,11 @@ suites:
         monitoring:
           sslRequireValidServerCertificates: false
   excludes:
+    # Upstart script uses setuid which is not present in this version
     - ubuntu-10.04
+    # Upstart is not present
     - debian-7.2.0
+    # Package does not create the user
     - centos-5.10
     
 - name: mms_backup_agent
@@ -122,6 +130,9 @@ suites:
         backup:
           sslRequireValidServerCertificates: false
   excludes:
+    # Upstart script uses setuid which is not present in this version
     - ubuntu-10.04
+    # Upstart is not present
     - debian-7.2.0
+    # Package does not create the user
     - centos-5.10
