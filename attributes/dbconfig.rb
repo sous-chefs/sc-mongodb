@@ -7,7 +7,7 @@ include_attribute 'mongodb::default'
 
 default['mongodb']['config']['port'] = node['mongodb']['port'] || 27017
 default['mongodb']['config']['bind_ip'] = node['mongodb']['bind_ip'] || '0.0.0.0'
-default['mongodb']['config']['logpath'] = File.join(node['mongodb']['logpath'] || '/var/log/mongodb', 'mongodb.log')
+default['mongodb']['config']['logpath'] = File.join(node['mongodb']['logpath'] || '/var/log/mongo', 'mongod.log')
 default['mongodb']['config']['logappend'] = true
 # The platform_family? syntax in attributes files was added in Chef 11
 # if node.platform_family?("rhel", "fedora") then
