@@ -17,7 +17,7 @@ when 'rhel', 'fedora'
 else
   default['mongodb']['config']['fork'] = false
 end
-default['mongodb']['config']['dbpath'] = node['mongodb']['dbpath'] || '/var/lib/mongodb'
+default['mongodb']['config']['dbpath'] = node['mongodb']['dbpath'] || '/var/lib/mongo'
 default['mongodb']['config']['nojournal'] = node['mongodb']['nojournal'] || false
 default['mongodb']['config']['rest'] = node['mongodb']['enable_rest'] || false
 default['mongodb']['config']['smallfiles'] = node['mongodb']['smallfiles'] || false

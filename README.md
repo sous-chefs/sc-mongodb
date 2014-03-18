@@ -42,7 +42,7 @@ For examples see the USAGE section below.
 
 Basically all settings defined in the Configuration File Options documentation page can be added to the `mongodb[:config][:<setting>]` attribute: http://docs.mongodb.org/manual/reference/configuration-options/
 
-* `mongodb[:config][:dbpath]` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
+* `mongodb[:config][:dbpath]` - Location for mongodb data directory, defaults to "/var/lib/mongo"
 * `mongodb[:config][:logpath]` - Path for the logfiles, default is "/var/log/mongo/mongod.log"
 * `mongodb[:config][:port]` - Port the mongod listens on, default is 27017
 * `mongodb[:config][:rest]` - Enable the ReST interface of the webserver

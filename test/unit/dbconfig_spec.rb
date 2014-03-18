@@ -12,7 +12,7 @@ describe 'mongodb::default' do
     expect(chef_run).to enable_service 'mongodb'
 
     expect(chef_run.node['mongodb']['config']['dbpath']).to eq('/disk/mongodb/data')
-    expect(chef_run.node['mongodb']['config']['dbpath']).to_not eq('/var/lib/mongodb')
+    expect(chef_run.node['mongodb']['config']['dbpath']).to_not eq('/var/lib/mongo')
 
     expect(chef_run.node['mongodb']['config']['logpath']).to eq('/logs/mongo/mongod.log')
     expect(chef_run.node['mongodb']['config']['logpath']).to_not eq('/var/log/mongo/mongod.log')
