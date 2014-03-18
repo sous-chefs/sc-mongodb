@@ -6,7 +6,7 @@
 include_attribute 'mongodb::default'
 
 default['mongodb']['config']['port'] = node['mongodb']['port'] || 27017
-default['mongodb']['config']['bind_ip'] = node['mongodb']['bind_ip'] || '0.0.0.0'
+default['mongodb']['config']['bind_ip'] = node['mongodb']['bind_ip'] || nil
 default['mongodb']['config']['logpath'] = File.join(node['mongodb']['logpath'] || '/var/log/mongo', 'mongod.log')
 default['mongodb']['config']['logappend'] = true
 # The platform_family? syntax in attributes files was added in Chef 11
@@ -18,9 +18,9 @@ else
   default['mongodb']['config']['fork'] = false
 end
 default['mongodb']['config']['dbpath'] = node['mongodb']['dbpath'] || '/var/lib/mongo'
-default['mongodb']['config']['nojournal'] = node['mongodb']['nojournal'] || false
-default['mongodb']['config']['rest'] = node['mongodb']['enable_rest'] || false
-default['mongodb']['config']['smallfiles'] = node['mongodb']['smallfiles'] || false
+default['mongodb']['config']['nojournal'] = node['mongodb']['nojournal'] || nil
+default['mongodb']['config']['rest'] = node['mongodb']['enable_rest'] || nil
+default['mongodb']['config']['smallfiles'] = node['mongodb']['smallfiles'] || nil
 default['mongodb']['config']['oplogSize'] = node['mongodb']['oplog_size'] || nil
 
 default['mongodb']['config']['replSet'] = node['mongodb']['replicaset_name'] || nil
