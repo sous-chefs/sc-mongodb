@@ -11,7 +11,7 @@ describe 'mongodb::mms-agent' do
 
   it 'creates an mmsagent user' do
     chef_run.converge(described_recipe)
-    expect(chef_run).to create_user("#{chef_run.node.mongodb.mms_agent.user}").with(home => "#{chef_run.node.mongodb.mms_agent.install_dir}")
+    expect(chef_run).to create_user("#{chef_run.node.mongodb.mms_agent.user}").with(:home => "#{chef_run.node.mongodb.mms_agent.install_dir}")
   end
 
   it 'installs munin by default' do
