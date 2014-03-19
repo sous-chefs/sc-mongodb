@@ -76,7 +76,6 @@ Basically all settings defined in the Configuration File Options documentation p
 
 
 ## MMS Agent attributes
-<<<<<<< HEAD
 
 * `mongodb[:mms_agent][:api_key]` - MMS Agent API Key. No default, required.
 * `mongodb[:mms_agent][:monitoring][:version]` - Version of the MongoDB MMS Monitoring Agent package to download and install. Default is '2.0.0.17-1', required.
