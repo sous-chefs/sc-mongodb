@@ -6,6 +6,7 @@ describe 'mongodb::mms-agent' do
     stub_command("/usr/bin/python -c 'import setuptools'").and_return(true)
     ChefSpec::Runner.new(:platform => 'ubuntu', :version => '12.04') do |n|
       n.set.mongodb.mms_agent.install_dir = '/usr/local/share'
+      n.set.mongodb.mms_agent.api_key = 'stange key'
     end
   end
 
