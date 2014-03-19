@@ -1,11 +1,34 @@
 ========================
 Chef-MongoDB Cookbook Changelog
-Last-Update: Fri Feb  7 11:35:48 PST 2014
+Last-Update: Tue Mar 18 23:46:25 PDT 2014
 ========================
 
-Version 0.15.0 DEVELOPMENTAL RELEASE
+Planned Version 0.16.0 v1.0-rc
+--------------------------
+* BREAKING CHANGE - drop support for Ruby < 1.9, Chef < 11
+
+
+Version 0.15.1 PENDING
 ---------------------------
-* Deprecates setting config values at node['mongodb'] level
+* 'potentially' BREAKING CHANGES, cookbook dependency pinned
+ - yum < 3.0
+ - runit < 1.5
+ - python < 1.4.5
+* DEPRECATION: explicitly drop support for 'unsupported' platforms
+ - must be freebsd, rhel, fedora, debian
+* DEPRECATION: recipe mms-agent.rb/mms_agent.rb
+ - see #261 for new-recipes
+* use node.set to make sure is_* attributes are available for search
+* 'key_file' -> 'key_file_content'
+* allow pinning for gems, pip packages
+* #261 new mms agent recipe based on new packaging in upstream
+* #256 Allow mms_agent to be run as non-root user
+- replSet is not set automatically
+
+Version 0.15.0
+---------------------------
+* DEPRECATION: backward compatability for dbconfig variables in node['mongodb']
+ - use node['mongodb']['config'][variable] = value
 
 Version 0.14.10 DEVELOPMENTAL RELEASE
 ---------------------------
