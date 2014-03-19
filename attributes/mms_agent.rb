@@ -1,9 +1,9 @@
-include_attribute 'mongodb::default'
-include_attribute 'mongodb::dbconfig'
+default[:mongodb][:mms_agent][:monitoring][:version] = '2.0.0.17-1'
+default[:mongodb][:mms_agent][:backup][:version] = '1.4.3.28-1'
+
+# deprecated attributes for mms_agent recipe
 
 default[:mongodb][:mms_agent][:mms_server] = 'https://mms.mongodb.com'
-default[:mongodb][:mms_agent][:api_key] = ''
-
 # shouldn't need to changed, but configurable anyways
 default[:mongodb][:mms_agent][:install_url] = 'https://mms.mongodb.com/settings/mms-monitoring-agent.zip'
 # N.B. the dir MUST be named mms-agent; this is the contents of the unarchived zip
