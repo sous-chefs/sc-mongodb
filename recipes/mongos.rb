@@ -34,7 +34,7 @@ configsrvs = search(
   :node,
   "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
    mongodb_is_configserver:true AND \
-   chef_environment:#{node['chef_environment']}"
+   chef_environment:#{node.chef_environment}"
 )
 
 if configsrvs.length != 1 && configsrvs.length != 3
