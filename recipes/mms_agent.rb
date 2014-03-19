@@ -8,7 +8,7 @@
 #
 #
 
-if node['mongodb']['mms_agent']['api_key'].blank?
+if node['mongodb']['mms_agent']['api_key'].nil?
     Chef::Log.warn 'Found empty mms_agent.api_key attribute'
 end
 
@@ -62,10 +62,10 @@ bash 'unzip mms-monitoring-agent' do
   code <<-EOS
     rm -rf #{node['mongodb']['mms_agent']['install_dir']}
     unzip -o -d #{::File.dirname(node['mongodb']['mms_agent']['install_dir'])} #{Chef::Config[:file_cache_path]}/mms-monitoring-agent.zip"
+    chown -R #{node['mongodb']['mms_agent']['user']}
+    chgrp -R #{node['mongodb']['mms_agent']['group']}
   EOS
   action :nothing
-  user node['mongodb']['mms_agent']['user']
-  group node['mongodb']['mms_agent']['group']
   only_if do
     def checksum_zip_contents(zipfile)
       require 'zip/filesystem'
