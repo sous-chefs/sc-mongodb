@@ -108,7 +108,7 @@ define :mongodb_instance,
       replicaset_name = "rs_#{new_resource.shard_name}"
     else
       # Well shoot, we don't have a predefined name and we aren't
-      # really sharded. If we want backwards compatibity, this should be:
+      # really sharded. If we want backwards compatibility, this should be:
       #   replicaset_name = "rs_#{new_resource.shard_name}"
       # which with default values defaults to:
       #   replicaset_name = 'rs_default'

@@ -3,7 +3,7 @@ maintainer        'edelight GmbH'
 maintainer_email  'markus.korn@edelight.de'
 license           'Apache 2.0'
 description       'Installs and configures mongodb'
-version           '0.15.0'
+version           '0.15.1'
 
 recipe 'mongodb', 'Installs and configures a single node mongodb instance'
 recipe 'mongodb::10gen_repo', 'Adds the 10gen repo to get the latest packages'
@@ -11,14 +11,15 @@ recipe 'mongodb::mongos', 'Installs and configures a mongos which can be used in
 recipe 'mongodb::configserver', 'Installs and configures a configserver for mongodb sharding'
 recipe 'mongodb::shard', 'Installs and configures a single shard'
 recipe 'mongodb::replicaset', 'Installs and configures a mongodb replicaset'
-recipe 'mongodb::mms-agent', 'Installs and configures a Mongo Management Service agent'
+recipe 'mongodb::mms_monitoring_agent', 'Installs and configures a MongoDB MMS Monitoring Agent'
+recipe 'mongodb::mms_backup_agent', 'Installs and configures a MongoDB MMS Backup Agent'
 
 depends 'apt', '>= 1.8.2'
-depends 'python', '>= 1.3.0'
-depends 'runit', '>= 1.1.6'
-depends 'yum'
+depends 'yum', '< 3.0'
+depends 'python', '< 1.4.6'
+depends 'runit', '< 1.5.0'
 
-%w{ ubuntu debian freebsd centos redhat fedora amazon scientific}.each do |os|
+%w{ubuntu debian freebsd centos redhat fedora amazon scientific}.each do |os|
   supports os
 end
 
@@ -103,13 +104,28 @@ attribute 'mongodb/mms_agent',
           :type => 'hash'
 
 attribute 'mongodb/mms_agent/api_key',
-          :display_name => 'MMS Agent API Key'
+          :display_name => 'MMS Agent API Key',
+          :default => nil
 
-attribute 'mongodb/mms_agent/mm_server',
-          :display_name => 'MMS Server'
+attribute 'mongodb/mms_agent/monitoring',
+          :display_name => 'MMS Monitoring Agent',
+          :description => 'Hash of MMS Monitoring Agent attributes',
+          :type => 'hash'
 
-attribute 'mongodb/mms_agent/require_valid_server_cert',
-          :display_name => 'Require valid certificate from server'
+attribute 'mongodb/mms_agent/monitoring/version',
+          :display_name => 'MMS Monitoring Agent version',
+          :description => 'Version of MMS Monitoring Agent to install',
+          :default => '2.0.0.17-1'
+
+attribute 'mongodb/mms_agent/backup',
+          :display_name => 'MMS Backup Agent',
+          :description => 'Hash of MMS Backup Agent attributes',
+          :type => 'hash'
+
+attribute 'mongodb/mms_agent/backup/version',
+          :display_name => 'MMS Backup Agent version',
+          :description => 'Version of MMS Backup Agent to install',
+          :default => '1.4.3.28-1'
 
 attribute 'mongodb/oplog_size',
           :display_name => 'oplogSize',

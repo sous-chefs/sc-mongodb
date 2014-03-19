@@ -6,7 +6,13 @@ describe 'mongodb::mms-agent' do
     stub_command("/usr/bin/python -c 'import setuptools'").and_return(true)
     ChefSpec::Runner.new(:platform => 'ubuntu', :version => '12.04') do |n|
       n.set.mongodb.mms_agent.install_dir = '/usr/local/share'
+      n.set.mongodb.mms_agent.api_key = 'stange key'
     end
+  end
+
+  it 'creates an mmsagent user' do
+    chef_run.converge(described_recipe)
+    expect(chef_run).to create_user("#{chef_run.node.mongodb.mms_agent.user}").with(:home => "#{chef_run.node.mongodb.mms_agent.install_dir}")
   end
 
   it 'installs munin by default' do
