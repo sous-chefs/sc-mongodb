@@ -88,7 +88,6 @@ when 'rhel', 'fedora'
     default[:mongodb][:package_name] = 'mongo-10gen-server'
   end
 when "debian"
-  Chef::Log.warn("Unknown Platform Family defaulting to 'debian' for [#{node['platform_family']}]") unless node['platform_family'] == 'debian'
   if node['platform'] == 'ubuntu'
     default[:mongodb][:apt_repo] = 'ubuntu-upstart'
     default[:mongodb][:init_dir] = '/etc/init/'

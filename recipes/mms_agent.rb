@@ -9,7 +9,7 @@
 #
 
 if node['mongodb']['mms_agent']['api_key'].nil?
-    Chef::Log.warn 'Found empty mms_agent.api_key attribute'
+  Chef::Log.warn 'Found empty mms_agent.api_key attribute'
 end
 
 require 'fileutils'
@@ -24,8 +24,8 @@ end
 
 # python dependencies
 python_pip 'pymongo' do
-    version node['mongodb']['mms_agent']['pymongo_version']
-    action :install
+  version node['mongodb']['mms_agent']['pymongo_version']
+  action :install
 end
 
 # download, and unzip if it's changed
