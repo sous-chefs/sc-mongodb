@@ -61,9 +61,8 @@ end
 bash 'unzip mms-monitoring-agent' do
   code <<-EOS
     rm -rf #{node['mongodb']['mms_agent']['install_dir']}
-    unzip -o -d #{::File.dirname(node['mongodb']['mms_agent']['install_dir'])} #{Chef::Config[:file_cache_path]}/mms-monitoring-agent.zip"
-    chown -R #{node['mongodb']['mms_agent']['user']}
-    chgrp -R #{node['mongodb']['mms_agent']['group']}
+    unzip -o -d #{::File.dirname(node['mongodb']['mms_agent']['install_dir'])} #{Chef::Config[:file_cache_path]}/mms-monitoring-agent.zip
+    chown -R #{node['mongodb']['mms_agent']['user']}:#{node['mongodb']['mms_agent']['group']} #{::File.dirname(node['mongodb']['mms_agent']['install_dir'])}
   EOS
   action :nothing
   only_if do
@@ -128,7 +127,7 @@ ruby_block 'modify settings.py' do
 
       # update the agent version in chef, for reference
       mms_agent_version = /settingsAgentVersion = "(.*)"/.match(s)[1]
-      node['mongodb']['mms_agent']['version']= mms_agent_version
+      node.set['mongodb']['mms_agent']['version'] = mms_agent_version
 
       notifies :enable, mms_agent_service, :delayed
       notifies :restart, mms_agent_service, :delayed
