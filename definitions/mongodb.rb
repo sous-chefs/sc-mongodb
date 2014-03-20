@@ -28,15 +28,14 @@ define :mongodb_instance,
        :replicaset    => nil,
        :notifies      => [] do
 
+  # TODO: this is the only remain use of params[:mongodb_type], is it still needed?
   unless %w[mongod shard configserver mongos].include?(params[:mongodb_type])
     fail ArgumentError, ":mongodb_type must be 'mongod', 'shard', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
   end
 
   # Make changes to node['mongodb']['config'] before copying to new_resource. Chef 11 appears to resolve the attributes
   # with precedence while Chef 10 copies to not (TBD: find documentation to support observed behavior).
-  if params[:mongodb_type] != 'mongos'
-    provider = 'mongod'
-  else
+  if node['mongodb']['is_mongos']
     provider = 'mongos'
     # mongos will fail to start if dbpath is set
     node.default['mongodb']['config']['dbpath'] = nil
@@ -45,9 +44,11 @@ define :mongodb_instance,
         "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}"
       end.sort.join(',')
     end
+  else
+    provider = 'mongod'
   end
 
-  node.default['mongodb']['config']['configsvr'] = true if params[:mongodb_type] == 'configserver'
+  node.default['mongodb']['config']['configsvr'] = true if node['mongodb']['is_configserver']
 
   require 'ostruct'
 
@@ -59,7 +60,6 @@ define :mongodb_instance,
   new_resource.replicaset                 = params[:replicaset]
   new_resource.service_action             = params[:action]
   new_resource.service_notifies           = params[:notifies]
-  new_resource.type                       = params[:mongodb_type]
 
   # TODO(jh): parameterize so we can make a resource provider
   new_resource.auto_configure_replicaset  = node['mongodb']['auto_configure']['replicaset']
@@ -73,6 +73,8 @@ define :mongodb_instance,
   new_resource.init_script_template       = node['mongodb']['init_script_template']
   new_resource.is_replicaset              = node['mongodb']['is_replicaset']
   new_resource.is_shard                   = node['mongodb']['is_shard']
+  new_resource.is_configserver            = node['mongodb']['is_configserver']
+  new_resource.is_mongos                  = node['mongodb']['is_mongos']
   new_resource.mongodb_group              = node['mongodb']['group']
   new_resource.mongodb_user               = node['mongodb']['user']
   new_resource.replicaset_name            = node['mongodb']['config']['replSet']
@@ -155,15 +157,14 @@ define :mongodb_instance,
     recursive true
   end
 
-  if new_resource.type != 'mongos'
-    # dbpath dir [make sure it exists]
-    directory new_resource.dbpath do
-      owner new_resource.mongodb_user
-      group new_resource.mongodb_group
-      mode '0755'
-      action :create
-      recursive true
-    end
+  # dbpath dir [make sure it exists]
+  directory new_resource.dbpath do
+    owner new_resource.mongodb_user
+    group new_resource.mongodb_group
+    mode '0755'
+    action :create
+    recursive true
+    not_if { new_resource.is_mongos }
   end
 
   # init script
@@ -192,7 +193,7 @@ define :mongodb_instance,
       notifies :run, service_notify
     end
     notifies :create, 'ruby_block[config_replicaset]' if new_resource.is_replicaset && new_resource.auto_configure_replicaset
-    notifies :create, 'ruby_block[config_sharding]', :immediately if new_resource.type == 'mongos' && new_resource.auto_configure_sharding
+    notifies :create, 'ruby_block[config_sharding]', :immediately if new_resource.is_mongos && new_resource.auto_configure_sharding
       # we don't care about a running mongodb service in these cases, all we need is stopping it
     ignore_failure true if new_resource.name == 'mongodb'
   end
@@ -221,7 +222,7 @@ define :mongodb_instance,
   end
 
   # sharding
-  if new_resource.type == 'mongos' && new_resource.auto_configure_sharding
+  if new_resource.is_mongos && new_resource.auto_configure_sharding
     # add all shards
     # configure the sharded collections
 
@@ -234,10 +235,8 @@ define :mongodb_instance,
 
     ruby_block 'config_sharding' do
       block do
-        if new_resource.type == 'mongos'
-          MongoDB.configure_shards(node, shard_nodes)
-          MongoDB.configure_sharded_collections(node, new_resource.sharded_collections)
-        end
+        MongoDB.configure_shards(node, shard_nodes)
+        MongoDB.configure_sharded_collections(node, new_resource.sharded_collections)
       end
       action :nothing
     end
