@@ -33,7 +33,7 @@ platforms:
     box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-6.5_chef-provisionerless.box
   run_list:
   - "recipe[yum]"
-  - "recipe[yum-epel]"
+  - "recipe[yum::epel]"
 
 - name: centos-5.10
   driver_config:
@@ -41,7 +41,7 @@ platforms:
     box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-5.10_chef-provisionerless.box
   run_list:
   - "recipe[yum]"
-  - "recipe[yum-epel]"
+  - "recipe[yum::epel]"
 
 # not going to try until
 # https://jira.mongodb.org/browse/SERVER-7285 is closed
