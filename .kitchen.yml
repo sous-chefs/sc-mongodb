@@ -69,6 +69,8 @@ suites:
   attributes:
     mongodb:
       cluster_name: default
+      config:
+        configdb: my_configserver
 
 - name: mms_agent
   run_list:
