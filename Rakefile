@@ -16,7 +16,8 @@ Rubocop::RakeTask.new(:rubocop) do |task|
   # only show the files with failures
   #task.formatters = ['files']
   # don't abort rake on failure
-  task.fail_on_error = true
+  task.fail_on_error = false
+  task.options = ['-D']
 end
 
 begin
