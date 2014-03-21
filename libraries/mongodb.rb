@@ -86,8 +86,8 @@ class Chef::ResourceDefinitionList::MongoDB
     admin = connection['admin']
     cmd = BSON::OrderedHash.new
     cmd['replSetInitiate'] = {
-        '_id' => name,
-        'members' => rs_members
+      '_id' => name,
+      'members' => rs_members
     }
 
     begin
@@ -142,7 +142,7 @@ class Chef::ResourceDefinitionList::MongoDB
         begin
           result = admin.command(cmd, :check_response => false)
         rescue Mongo::ConnectionFailure
-          # reconfiguring destroys exisiting connections, reconnect
+          # reconfiguring destroys existing connections, reconnect
           connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
           config = connection['local']['system']['replset'].find_one('_id' => name)
           # Validate configuration change
@@ -187,7 +187,7 @@ class Chef::ResourceDefinitionList::MongoDB
         begin
           result = admin.command(cmd, :check_response => false)
         rescue Mongo::ConnectionFailure
-          # reconfiguring destroys exisiting connections, reconnect
+          # reconfiguring destroys existing connections, reconnect
           connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
           config = connection['local']['system']['replset'].find_one('_id' => name)
           # Validate configuration change

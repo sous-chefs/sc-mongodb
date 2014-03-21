@@ -1,7 +1,7 @@
 require 'chefspec'
 require 'chefspec/berkshelf'
 
-describe 'mongodb::mms-agent' do
+describe 'mongodb::mms_agent' do
   let(:chef_run) do
     stub_command("/usr/bin/python -c 'import setuptools'").and_return(true)
     ChefSpec::Runner.new(:platform => 'ubuntu', :version => '12.04') do |n|

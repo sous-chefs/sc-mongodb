@@ -8,9 +8,7 @@
 #
 #
 
-if node['mongodb']['mms_agent']['api_key'].nil?
-  Chef::Log.warn 'Found empty mms_agent.api_key attribute'
-end
+Chef::Log.warn 'Found empty mms_agent.api_key attribute' if node['mongodb']['mms_agent']['api_key'].nil?
 
 require 'fileutils'
 include_recipe 'python'

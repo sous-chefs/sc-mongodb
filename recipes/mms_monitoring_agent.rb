@@ -1,3 +1,5 @@
+Chef::Log.warn 'Found empty mms_agent.api_key attribute' if node['mongodb']['mms_agent']['api_key'].nil?
+
 arch = node[:kernel][:machine]
 package = 'https://mms.mongodb.com/download/agent/monitoring/mongodb-mms-monitoring-agent'
 

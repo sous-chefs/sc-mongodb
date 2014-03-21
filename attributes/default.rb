@@ -87,7 +87,7 @@ when 'rhel', 'fedora'
     default[:mongodb][:install_method] = '10gen'
     default[:mongodb][:package_name] = 'mongo-10gen-server'
   end
-when "debian"
+when 'debian'
   if node['platform'] == 'ubuntu'
     default[:mongodb][:apt_repo] = 'ubuntu-upstart'
     default[:mongodb][:init_dir] = '/etc/init/'
@@ -96,8 +96,8 @@ when "debian"
     default[:mongodb][:apt_repo] = 'debian-sysvinit'
   end
 else
-    Chef::Log.error("Unsupported Platform Family: #{node['platform_family']}")
-    fail
+  Chef::Log.error("Unsupported Platform Family: #{node['platform_family']}")
+  fail
 end
 
 default[:mongodb][:template_cookbook] = 'mongodb'
