@@ -19,7 +19,7 @@ depends 'yum', '< 3.0'
 depends 'python', '< 1.4.6'
 depends 'runit', '< 1.5.0'
 
-%w{ubuntu debian freebsd centos redhat fedora amazon scientific}.each do |os|
+%w(ubuntu debian freebsd centos redhat fedora amazon scientific).each do |os|
   supports os
 end
 

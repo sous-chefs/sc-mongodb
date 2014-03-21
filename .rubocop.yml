@@ -24,3 +24,13 @@ NumericLiterals:
 
 Encoding:
   Enabled: false # TODO: enable (?)
+
+FileName:
+  Exclude:
+    - mms-agent.rb
+
+ClassAndModuleChildren:
+  EnforcedStyle: compact
+
+DoubleNegation:
+  Enabled: false # TODO: mms agent recipes could be improved to not use double negation

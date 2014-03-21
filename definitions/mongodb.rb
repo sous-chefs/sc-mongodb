@@ -29,7 +29,7 @@ define :mongodb_instance,
        :notifies      => [] do
 
   # TODO: this is the only remain use of params[:mongodb_type], is it still needed?
-  unless %w[mongod shard configserver mongos].include?(params[:mongodb_type])
+  unless %w(mongod shard configserver mongos).include?(params[:mongodb_type])
     fail ArgumentError, ":mongodb_type must be 'mongod', 'shard', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
   end
 
