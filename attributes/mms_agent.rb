@@ -1,5 +1,5 @@
-default[:mongodb][:mms_agent][:monitoring][:version] = '2.0.0.17-1'
-default[:mongodb][:mms_agent][:backup][:version] = '1.4.3.28-1'
+default[:mongodb][:mms_agent][:monitoring][:version] = '2.1.0.35-1'
+default[:mongodb][:mms_agent][:backup][:version] = '1.4.4.34-1'
 
 # deprecated attributes for mms_agent recipe
 

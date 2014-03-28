@@ -2,12 +2,15 @@ Chef::Log.warn 'Found empty mms_agent.api_key attribute' if node['mongodb']['mms
 
 arch = node[:kernel][:machine]
 package = 'https://mms.mongodb.com/download/agent/monitoring/mongodb-mms-monitoring-agent'
+package_opts = ''
 
 case node.platform_family
 when 'debian'
   arch = 'amd64' if arch == 'x86_64'
   package = "#{package}_#{node[:mongodb][:mms_agent][:monitoring][:version]}_#{arch}.deb"
   provider = Chef::Provider::Package::Dpkg
+  # Without this, if the package changes the config files that we rewrite install fails
+  package_opts = '--force-confold'
 when 'rhel'
   package = "#{package}-#{node[:mongodb][:mms_agent][:monitoring][:version]}.#{arch}.rpm"
   provider = Chef::Provider::Package::Rpm
@@ -23,6 +26,7 @@ end
 package 'mongodb-mms-monitoring-agent' do
   source "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent"
   provider provider
+  options package_opts
 end
 
 service 'mongodb-mms-monitoring-agent' do
