@@ -67,7 +67,7 @@ suites:
       cluster_name: kitchen
       config:
         replSet: kitchen
-   excludes:
+  excludes:
     # Upstart is not starting mongodb, status script returns 0 and there are no useful logs. wat?
     - ubuntu-10.04
     # bson_ext fails to install
