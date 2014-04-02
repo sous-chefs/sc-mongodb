@@ -58,6 +58,23 @@ suites:
   - "recipe[mongodb::10gen_repo]"
   - "recipe[mongodb]"
 
+- name: replicaset
+  run_list:
+  - "recipe[chef-solo-search]"
+  - "recipe[mongodb::replicaset]"
+  attributes:
+    mongodb:
+      cluster_name: kitchen
+      config:
+        replSet: kitchen
+  excludes:
+    # Upstart is not starting mongodb, status script returns 0 and there are no useful logs. wat?
+    - ubuntu-10.04
+    # bson_ext fails to install
+    - centos-6.5
+    # bson_ext fails to install
+    - centos-5.10
+
 - name: configserver
   run_list:
   - "recipe[mongodb::configserver]"
