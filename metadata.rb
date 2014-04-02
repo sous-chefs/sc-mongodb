@@ -3,7 +3,7 @@ maintainer        'edelight GmbH'
 maintainer_email  'markus.korn@edelight.de'
 license           'Apache 2.0'
 description       'Installs and configures mongodb'
-version           '0.15.2'
+version           '0.16.0'
 
 recipe 'mongodb', 'Installs and configures a single node mongodb instance'
 recipe 'mongodb::10gen_repo', 'Adds the 10gen repo to get the latest packages'
@@ -15,9 +15,9 @@ recipe 'mongodb::mms_monitoring_agent', 'Installs and configures a MongoDB MMS M
 recipe 'mongodb::mms_backup_agent', 'Installs and configures a MongoDB MMS Backup Agent'
 
 depends 'apt', '>= 1.8.2'
-depends 'yum', '< 3.0'
-depends 'python', '< 1.4.6'
-depends 'runit', '< 1.5.0'
+depends 'yum', '>= 3.0'
+depends 'python'
+depends 'runit', '>= 1.5.0'
 
 %w(ubuntu debian centos redhat amazon).each do |os|
   supports os
