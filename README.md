@@ -1,5 +1,3 @@
-[![Build Status](https://recipe-tester.com/repo/edelight/chef-mongodb/badge.png)](https://recipe-tester.com/repo/edelight/chef-mongodb/)
-
 # DESCRIPTION:
 
 Installs and configures MongoDB, supporting:
@@ -20,13 +18,14 @@ This cookbook depends on these external cookbooks
 - runit
 - yum
 
+As of 0.16 This Cookbook requires
+
+- Chef > 11
+- Ruby > 1.9
+
 ## Platform:
 
-The cookbook aims to be platform independent, but is best tested on debian squeeze systems.
-
-The `10gen_repo` recipe configures the package manager to use 10gen's
-official package repositories on Debian, Ubuntu, Redhat, CentOS, Fedora, and
-Amazon linux distributions.
+Currently we 'actively' test using test-kitchen on Ubuntu, Debian, CentOS, Redhat
 
 # DEFINITIONS:
 
