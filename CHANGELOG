@@ -1,14 +1,20 @@
 ========================
 Chef-MongoDB Cookbook Changelog
-Last-Update: Tue Mar 18 23:46:25 PDT 2014
+Last-Update: Wed Apr  2 00:01:05 PDT 2014
 ========================
 
-Planned Version 0.16.0 v1.0-rc
+Planned Version 0.16.0 PENDING
 --------------------------
 * BREAKING CHANGE - drop support for Ruby < 1.9, Chef < 11
 
+Version 0.15.2 End of Ruby 1.8, Chef 10 support
+---------------------------
+* update test-kitchen for mongos
+* update MMS version
+* update rubocop
+* minor typo fixes
 
-Version 0.15.1 PENDING
+Version 0.15.1
 ---------------------------
 * 'potentially' BREAKING CHANGES, cookbook dependency pinned
  - yum < 3.0
