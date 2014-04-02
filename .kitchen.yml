@@ -26,12 +26,12 @@ platforms:
 - name: centos-6.5
   run_list:
   - "recipe[yum]"
-  - "recipe[yum::epel]"
+  - "recipe[yum-epel]"
 
 - name: centos-5.10
   run_list:
   - "recipe[yum]"
-  - "recipe[yum::epel]"
+  - "recipe[yum-epel]"
 
 # not going to try until
 # https://jira.mongodb.org/browse/SERVER-7285 is closed
