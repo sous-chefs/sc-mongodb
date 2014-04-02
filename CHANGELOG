@@ -6,6 +6,9 @@ Last-Update: Wed Apr  2 00:01:05 PDT 2014
 Planned Version 0.16.0 PENDING
 --------------------------
 * BREAKING CHANGE - drop support for Ruby < 1.9, Chef < 11
+* cookbook dependency change
+ - yum >= 3.0
+ - remove <= limit for all other dep
 
 Version 0.15.2 End of Ruby 1.8, Chef 10 support
 ---------------------------
