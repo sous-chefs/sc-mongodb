@@ -19,7 +19,7 @@ depends 'yum', '< 3.0'
 depends 'python', '< 1.4.6'
 depends 'runit', '< 1.5.0'
 
-%w(ubuntu debian freebsd centos redhat fedora amazon scientific).each do |os|
+%w(ubuntu debian centos redhat amazon).each do |os|
   supports os
 end
 
@@ -52,7 +52,7 @@ attribute 'mongodb/client_roles',
 attribute 'mongodb/cluster_name',
           :display_name => 'Cluster Name',
           :description => 'Name of the mongodb cluster, all nodes of a cluster must have the same name.',
-          :default => nil
+          :default => ''
 
 attribute 'mongodb/shard_name',
           :display_name => 'Shard name',
@@ -68,7 +68,7 @@ attribute 'mongodb/sharded_collections',
 attribute 'mongodb/config/replSet',
           :display_name => 'Replicaset Name',
           :description => 'Name of a mongodb replicaset',
-          :default => nil
+          :default => ''
 
 attribute 'mongodb/config/rest',
           :display_name => 'Enable Rest',
@@ -81,17 +81,17 @@ attribute 'mongodb/config/smallfiles',
 attribute 'mongodb/config/bind_ip',
           :display_name => 'Bind address',
           :description => 'MongoDB instance bind address',
-          :default => nil
+          :default => ''
 
 attribute 'mongodb/package_version',
           :display_name => 'MongoDB package version',
           :description => 'Version of the MongoDB package to install',
-          :default => nil
+          :default => ''
 
 attribute 'mongodb/configfile',
           :display_name => 'Configuration File',
           :description => 'Name of configuration file to use with when starting mongod/mongos vs command line options',
-          :default => nil
+          :default => ''
 
 attribute 'mongodb/config/nojournal',
           :display_name => 'Disable Journals',
@@ -105,7 +105,7 @@ attribute 'mongodb/mms_agent',
 
 attribute 'mongodb/mms_agent/api_key',
           :display_name => 'MMS Agent API Key',
-          :default => nil
+          :default => ''
 
 attribute 'mongodb/mms_agent/monitoring',
           :display_name => 'MMS Monitoring Agent',
@@ -126,8 +126,3 @@ attribute 'mongodb/mms_agent/backup/version',
           :display_name => 'MMS Backup Agent version',
           :description => 'Version of MMS Backup Agent to install',
           :default => '1.4.3.28-1'
-
-attribute 'mongodb/oplog_size',
-          :display_name => 'oplogSize',
-          :description => 'Specifies a maximum size in megabytes for the replication operation log',
-          :default => nil
