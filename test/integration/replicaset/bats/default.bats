@@ -18,5 +18,5 @@
 @test "replicaset initialized" {
     run mongo --eval "rs.status().ok"
     [ "$status" -eq 0 ]
-    [ "${lines[-1]}" -eq 1 ]
+    [ "${lines[@]:(-1)}" -eq 1 ]
 }
