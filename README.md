@@ -76,13 +76,13 @@ Basically all settings defined in the Configuration File Options documentation p
 * `mongodb[:replica_votes]` - Number of [votes](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].votes) node will cast in an election.
 
 
-### MMS Agent attributes
+### shared MMS Agent attributes
 
 * `mongodb[:mms_agent][:api_key]` - MMS Agent API Key. No default, required.
 * `mongodb[:mms_agent][:monitoring][:version]` - Version of the MongoDB MMS Monitoring Agent package to download and install. Default is '2.0.0.17-1', required.
-* `mongodb[:mms_agent][:monitoring][:<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.  
+* `mongodb[:mms_agent][:monitoring][:<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.
 * `mongodb[:mms_agent][:backup][:version]` - Version of the MongoDB MMS Backup Agent package to download and install. Default is '1.4.3.28-1', required.
-* `mongodb[:mms_agent][:backup][:<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.  
+* `mongodb[:mms_agent][:backup][:<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.
 
 #### Monitoring Agent Settings
 
@@ -90,8 +90,6 @@ The defaults values installed by the package are:
 
 ```
 mmsBaseUrl=https://mms.mongodb.com
-globalAuthUsername=
-globalAuthPassword=
 configCollectionsEnabled=true
 configDatabasesEnabled=true
 throttlePassesShardChunkCounts = 10
@@ -102,10 +100,7 @@ disableGetLogsDataCollection=false
 disableLocksAndRecordStatsDataCollection=false
 enableMunin=true
 useSslForAllConnections=false
-sslTrustedServerCertificates=
 sslRequireValidServerCertificates=false
-krb5Principal=
-krb5Keytab=
 ```
 
 #### Backup Agent Settings
@@ -115,7 +110,6 @@ The defaults values installed by the package are:
 ```
 mothership=api-backup.mongodb.com
 https=true
-sslTrustedServerCertificates=
 sslRequireValidServerCertificates=false
 ```
 

@@ -1,21 +1,26 @@
-default[:mongodb][:mms_agent][:monitoring][:version] = '2.1.0.35-1'
-default[:mongodb][:mms_agent][:backup][:version] = '1.4.4.34-1'
+default['mongodb']['mms_agent']['api_key'] = nil
+default['mongodb']['mms_agent']['package_url'] = 'https://mms.mongodb.com/download/agent/%{agent_type}/mongodb-mms-%{agent_type}-agent'
 
-# deprecated attributes for mms_agent recipe
+default['mongodb']['mms_agent']['monitoring']['version'] = '2.1.2.43-1'
+default['mongodb']['mms_agent']['monitoring']['mmsApiKey'] = node['mongodb']['mms_agent']['api_key']
+default['mongodb']['mms_agent']['monitoring']['mmsBaseUrl'] = 'https://mms.mongodb.com'
+default['mongodb']['mms_agent']['monitoring']['configCollectionsEnabled'] = true
+default['mongodb']['mms_agent']['monitoring']['configDatabasesEnabled'] = true
+default['mongodb']['mms_agent']['monitoring']['throttlePassesShardChunkCounts'] = 10
+default['mongodb']['mms_agent']['monitoring']['throttlePassesDbstats'] = 20
+default['mongodb']['mms_agent']['monitoring']['throttlePassesOplog'] = 10
+default['mongodb']['mms_agent']['monitoring']['disableProfileDataCollection'] = false
+default['mongodb']['mms_agent']['monitoring']['disableGetLogsDataCollection'] = false
+default['mongodb']['mms_agent']['monitoring']['disableLocksAndRecordStatsDataCollection'] = false
+default['mongodb']['mms_agent']['monitoring']['enableMunin'] = true
+default['mongodb']['mms_agent']['monitoring']['useSslForAllConnections'] = false
+default['mongodb']['mms_agent']['monitoring']['sslRequireValidServerCertificates'] = false
 
-default[:mongodb][:mms_agent][:mms_server] = 'https://mms.mongodb.com'
-# shouldn't need to changed, but configurable anyways
-default[:mongodb][:mms_agent][:install_url] = 'https://mms.mongodb.com/settings/mms-monitoring-agent.zip'
-default[:mongodb][:mms_agent][:install_dir] = '/usr/local/share/mms-agent'
-default[:mongodb][:mms_agent][:log_dir] = '/var/log/mms-agent/agent.log'
-default[:mongodb][:mms_agent][:install_munin] = true
-# this is the debian package name
-default[:mongodb][:mms_agent][:munin_package] = 'munin-node'
-default[:mongodb][:mms_agent][:enable_munin] = true
-default[:mongodb][:mms_agent][:require_valid_server_cert] = false
-default[:mongodb][:mms_agent][:user] = 'mmsagent'
-default[:mongodb][:mms_agent][:group] = 'mmsagent'
+default['mongodb']['mms_agent']['backup']['version'] = '1.4.6.43-1'
+default['mongodb']['mms_agent']['backup']['apiKey'] = node['mongodb']['mms_agent']['api_key']
+default['mongodb']['mms_agent']['backup']['mothership'] = 'api-backup.mongodb.com'
+default['mongodb']['mms_agent']['backup']['https'] = true
+default['mongodb']['mms_agent']['backup']['sslRequireValidServerCertificates'] = false
 
-# gem/pip dependencies
-default['mongodb']['mms_agent']['pymongo_version'] = nil
-default['mongodb']['ruby_gems']['rubyzip'] = nil
+default['mongodb']['mms_agent']['user'] = 'mongodb-mms-agent'
+default['mongodb']['mms_agent']['group'] = 'mongodb-mms-agent'
