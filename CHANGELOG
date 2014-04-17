@@ -1,14 +1,15 @@
 ========================
 Chef-MongoDB Cookbook Changelog
-Last-Update: Wed Apr  2 00:01:05 PDT 2014
+Last-Update: Thu Apr 17 14:29:19 PDT 2014
 ========================
 
-Planned Version 0.16.0 PENDING
+Version 0.16.0
 --------------------------
 * BREAKING CHANGE - drop support for Ruby < 1.9, Chef < 11
 * cookbook dependency change
  - yum >= 3.0
  - remove <= limit for all other dep
+* update to Berkshelf 3
 
 Version 0.15.2 End of Ruby 1.8, Chef 10 support
 ---------------------------
