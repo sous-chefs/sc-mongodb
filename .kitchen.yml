@@ -85,19 +85,6 @@ suites:
       config:
         configdb: my_configserver
 
-- name: mms_agent
-  run_list:
-  - "recipe[mongodb::mms_agent]"
-  attributes:
-    mongodb:
-      mms_agent:
-        api_key: "random key"
-  excludes:
-    # bson_ext fails to install because build essentials is not installed
-    - centos-6.5
-    # runit is failing to install
-    - centos-5.10
-
 - name: mms_monitoring_agent
   run_list:
   - "recipe[mongodb::mms_monitoring_agent]"
@@ -114,7 +101,7 @@ suites:
     - debian-7.2.0
     # Package does not create the user
     - centos-5.10
-    
+
 - name: mms_backup_agent
   run_list:
   - "recipe[mongodb::mms_backup_agent]"
