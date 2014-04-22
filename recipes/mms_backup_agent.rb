@@ -1,7 +1,8 @@
 Chef::Log.warn 'Found empty mms_agent.api_key attribute' if node['mongodb']['mms_agent']['api_key'].nil?
 
 arch = node[:kernel][:machine]
-package = 'https://mms.mongodb.com/download/agent/backup/mongodb-mms-backup-agent'
+agent_type = 'backup'
+package = node['mongodb']['mms_agent']['package_url'] % { :agent_type => agent_type }
 package_opts = ''
 
 case node.platform_family
@@ -15,49 +16,35 @@ when 'rhel'
   package = "#{package}-#{node[:mongodb][:mms_agent][:backup][:version]}.#{arch}.rpm"
   provider = Chef::Provider::Package::Rpm
 else
-  Chef::Log.warn('Unsupported platform family for MMS Backup Agent.')
+  Chef::Log.warn('Unsupported platform family for MMS Agent.')
   return
 end
 
-remote_file "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent" do
+remote_file "#{Chef::Config[:file_cache_path]}/mongodb-mms-backup-agent" do
   source package
 end
 
 package 'mongodb-mms-backup-agent' do
-  source "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent"
+  source "#{Chef::Config[:file_cache_path]}/mongodb-mms-backup-agent"
   provider provider
   options package_opts
+end
+
+template '/etc/mongodb-mms/backup-agent.config' do
+    source 'mms_agent_config.erb'
+    owner node['mongodb']['mms_agent']['user']
+    group node['mongodb']['mms_agent']['group']
+    mode 0600
+    variables(
+        :config => node['mongodb']['mms_agent']['backup']
+    )
+    action :create
+    notifies :restart, 'service[mongodb-mms-backup-agent]', :delayed
 end
 
 service 'mongodb-mms-backup-agent' do
   provider Chef::Provider::Service::Upstart if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
   # restart is broken on rhel (MMS-1597)
-  supports :restart => true if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
-  action [:start, :enable]
-end
-
-ruby_block 'update backup-agent.config' do
-  block do
-    config = ''
-    open('/etc/mongodb-mms/backup-agent.config') do |f|
-      config = f.read
-    end
-    api_key = node[:mongodb][:mms_agent][:api_key]
-    # replace mmsApiKey, optionally followed by a space, followed by an equal sign, and not followed by the api_key
-    changed = !!config.gsub!(/^apiKey\s?=(?!#{api_key})$/, "apiKey=#{api_key}")
-
-    node[:mongodb][:mms_agent][:backup].each do |key, value|
-      # replace key, optionally followed by a space, followed by an equal sign, and not followed by the value
-      (changed = !!config.gsub!(/^#{key}\s?=(?!#{value}).*$/, "#{key}=#{value}") || changed) unless key == 'version'
-    end
-
-    if changed
-      Chef::Log.debug 'Settings changed, overwriting and restarting service'
-      open('/etc/mongodb-mms/backup-agent.config', 'w') do |f|
-        f.puts config
-      end
-
-      notifies :restart, resources(:service => 'mongodb-mms-backup-agent'), :delayed
-    end
-  end
+  supports :start => true, :stop => true, :restart => true, :status => true
+  action :nothing
 end

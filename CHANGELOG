@@ -1,7 +1,12 @@
 ========================
 Chef-MongoDB Cookbook Changelog
-Last-Update: Thu Apr 17 14:29:19 PDT 2014
+Last-Update: Sat Apr 19 11:58:48 PDT 2014
 ========================
+
+Pending Version 0.16.1
+--------------------------
+* remove old `mms_agent.rb` and `mms-agent.rb` in favor of new mms_*_agent.rb
+* Update mms_*_agent.rb to use template instead of ruby-block, nothing, but call restart
 
 Version 0.16.0
 --------------------------
@@ -10,6 +15,7 @@ Version 0.16.0
  - yum >= 3.0
  - remove <= limit for all other dep
 * update to Berkshelf 3
+* #280 fix install for centos (missing build-essentials)
 
 Version 0.15.2 End of Ruby 1.8, Chef 10 support
 ---------------------------
