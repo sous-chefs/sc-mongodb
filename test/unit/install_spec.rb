@@ -9,6 +9,12 @@ describe 'mongodb::default' do
       :version => '12.04'
       )
   end
+
+  it 'should include install recipe, and enable mongodb service' do
+    chef_run.should enable_service 'mognodb'
+    chef_run.should include_recipe('mongodb::install')
+  end
+
   it 'package install mongodb-org via 10gen' do
     chef_run.node.set.mongodb.install_method = '10gen'
     chef_run.converge(described_recipe)
