@@ -53,10 +53,12 @@ suites:
   run_list:
   - "recipe[mongodb]"
 
-- name: default_10gen
+- name: default_mongodb_org_repo
   run_list:
-  - "recipe[mongodb::10gen_repo]"
   - "recipe[mongodb]"
+  attributes:
+    mongodb:
+      install_method: mongodb_org
 
 - name: replicaset
   run_list:
