@@ -42,7 +42,7 @@ when 'rhel', 'fedora'
     action :create
     gpgcheck false
   end
-  node.override['mongodb']['package_name'] = 'mongo-10gen-server'
+  node.override['mongodb']['package_name'] = 'mongodb-org'
 
 else
   # pssst build from source
