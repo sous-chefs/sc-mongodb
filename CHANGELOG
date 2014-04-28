@@ -1,12 +1,15 @@
 ========================
 Chef-MongoDB Cookbook Changelog
-Last-Update: Sat Apr 19 11:58:48 PDT 2014
+Last-Update: Mon Apr 28 01:27:52 PDT 2014
 ========================
 
 Pending Version 0.16.1
 --------------------------
 * remove old `mms_agent.rb` and `mms-agent.rb` in favor of new mms_*_agent.rb
 * Update mms_*_agent.rb to use template instead of ruby-block, nothing, but call restart
+* DEPRECATE '10gen_repo' for 'mongodb_org_repo' #287 (dropping in 0.16.2)
+* node['mongodb']['install_method'] can now be '10gen' (DEPRECATE) or 'mongodb_org'
+* allow `node['mongodb']['config']['logpath'] to be nil for syslog #288
 
 Version 0.16.0
 --------------------------
