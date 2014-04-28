@@ -31,15 +31,15 @@ package 'mongodb-mms-backup-agent' do
 end
 
 template '/etc/mongodb-mms/backup-agent.config' do
-    source 'mms_agent_config.erb'
-    owner node['mongodb']['mms_agent']['user']
-    group node['mongodb']['mms_agent']['group']
-    mode 0600
-    variables(
-        :config => node['mongodb']['mms_agent']['backup']
-    )
-    action :create
-    notifies :restart, 'service[mongodb-mms-backup-agent]', :delayed
+  source 'mms_agent_config.erb'
+  owner node['mongodb']['mms_agent']['user']
+  group node['mongodb']['mms_agent']['group']
+  mode 0600
+  variables(
+      :config => node['mongodb']['mms_agent']['backup']
+  )
+  action :create
+  notifies :restart, 'service[mongodb-mms-backup-agent]', :delayed
 end
 
 service 'mongodb-mms-backup-agent' do
