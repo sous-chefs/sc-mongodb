@@ -55,7 +55,7 @@ default[:mongodb][:package_version] = nil
 default[:mongodb][:default_init_name] = 'mongodb'
 default[:mongodb][:instance_name] = 'mongodb'
 
-# this option can be "distro" or "10gen"
+# this option can be "distro" or "mongodb-org"
 default[:mongodb][:install_method] = 'distro'
 
 default[:mongodb][:is_replicaset] = nil
@@ -83,9 +83,9 @@ when 'rhel', 'fedora'
   default[:mongodb][:instance_name] = 'mongod'
   # then there is this guy
   if node['platform'] == 'centos' || node['platform'] == 'amazon'
-    Chef::Log.warn("CentOS doesn't provide mongodb, forcing use of 10gen repo")
-    default[:mongodb][:install_method] = '10gen'
-    default[:mongodb][:package_name] = 'mongo-10gen-server'
+    Chef::Log.warn("CentOS doesn't provide mongodb, forcing use of mongodb-org repo")
+    default[:mongodb][:install_method] = 'mongodb-org'
+    default[:mongodb][:package_name] = 'mongodb-org'
   end
 when 'debian'
   if node['platform'] == 'ubuntu'

@@ -58,7 +58,7 @@ suites:
   - "recipe[mongodb]"
   attributes:
     mongodb:
-      install_method: mongodb_org
+      install_method: mongodb-org
 
 - name: replicaset
   run_list:
