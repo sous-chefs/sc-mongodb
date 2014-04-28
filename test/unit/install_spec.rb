@@ -11,8 +11,9 @@ describe 'mongodb::default' do
   end
 
   it 'should include install recipe, and enable mongodb service' do
-    chef_run.should enable_service 'mognodb'
+    chef_run.converge(described_recipe)
     chef_run.should include_recipe('mongodb::install')
+    chef_run.should enable_service 'mongodb'
   end
 
   it 'package install mongodb-org via 10gen' do
