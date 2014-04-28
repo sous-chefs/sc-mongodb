@@ -33,7 +33,7 @@ when 'debian'
     key '7F0CEB10'
     action :add
   end
-  node.override['mongodb']['package_name'] = 'mongodb-10gen'
+  node.override['mongodb']['package_name'] = 'mongodb-org'
 
 when 'rhel', 'fedora'
   yum_repository '10gen' do
