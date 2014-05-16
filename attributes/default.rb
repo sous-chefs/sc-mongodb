@@ -97,7 +97,6 @@ when 'debian'
   end
 else
   Chef::Log.error("Unsupported Platform Family: #{node['platform_family']}")
-  fail
 end
 
 default[:mongodb][:template_cookbook] = 'mongodb'
