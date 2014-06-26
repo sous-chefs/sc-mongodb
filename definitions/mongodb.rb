@@ -33,12 +33,16 @@ define :mongodb_instance,
     fail ArgumentError, ":mongodb_type must be 'mongod', 'shard', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
   end
 
+  ### Node Attribute Modification ###
   # Make changes to node['mongodb']['config'] before copying to new_resource. Chef 11 appears to resolve the attributes
   # with precedence while Chef 10 copies to not (TBD: find documentation to support observed behavior).
+  # XXX: Resource/Provider will not modify node attributes
+
   if node['mongodb']['is_mongos']
     provides = 'mongos'
     # mongos will fail to start if dbpath is set
     node.default['mongodb']['config']['dbpath'] = nil
+    # persist config.configdb from configservers param
     unless node['mongodb']['config']['configdb']
       node.default['mongodb']['config']['configdb'] = params[:configservers].map do |n|
         "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}"
@@ -48,12 +52,16 @@ define :mongodb_instance,
     provides = 'mongod'
   end
 
+  # persist config.configsvr from is_configserver
   node.default['mongodb']['config']['configsvr'] = true if node['mongodb']['is_configserver']
 
+  ### BEGIN Pseudo Resource ###
   require 'ostruct'
 
   new_resource = OpenStruct.new
 
+  # Essential Parameters
+  # TODO: Resource/Provider will implement these as resource attributes which lazy load from node attributes
   new_resource.name                       = params[:name]
   new_resource.dbpath                     = params[:dbpath]
   new_resource.logpath                    = params[:logpath]
@@ -61,7 +69,8 @@ define :mongodb_instance,
   new_resource.service_action             = params[:action]
   new_resource.service_notifies           = params[:notifies]
 
-  # TODO(jh): parameterize so we can make a resource provider
+  # Parameters from node attributes
+  # TODO: Resource/Provider will implement these as resource attributes which lazy load from node attributes
   new_resource.auto_configure_replicaset  = node['mongodb']['auto_configure']['replicaset']
   new_resource.auto_configure_sharding    = node['mongodb']['auto_configure']['sharding']
   new_resource.bind_ip                    = node['mongodb']['config']['bind_ip']
@@ -89,6 +98,8 @@ define :mongodb_instance,
   new_resource.ulimit                     = node['mongodb']['ulimit']
   new_resource.reload_action              = node['mongodb']['reload_action']
 
+  # internal state helpers
+  # TODO: Resource/Provider will implement these as helper methods
   if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
     mode = '0644'
@@ -121,7 +132,10 @@ define :mongodb_instance,
     # not a replicaset, so no name
     replicaset_name = nil
   end
+  ### END Pseudo Resource ###
 
+
+  ### BEGIN Pseudo Provider ###
   # default file
   template new_resource.sysconfig_file do
     cookbook new_resource.template_cookbook
@@ -243,4 +257,5 @@ define :mongodb_instance,
       action :nothing
     end
   end
+  ### END Pseudo Provider ###
 end
