@@ -20,18 +20,12 @@
 #
 
 define :mongodb_instance,
-       :mongodb_type  => 'mongod',
        :action        => [:enable, :start],
        :logpath       => '/var/log/mongodb/mongodb.log',
        :dbpath        => '/data',
        :configservers => [],
        :replicaset    => nil,
        :notifies      => [] do
-
-  # TODO: this is the only remain use of params[:mongodb_type], is it still needed?
-  unless %w(mongod shard configserver mongos).include?(params[:mongodb_type])
-    fail ArgumentError, ":mongodb_type must be 'mongod', 'shard', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
-  end
 
   ### Node Attribute Modification ###
   # Make changes to node['mongodb']['config'] before copying to new_resource. Chef 11 appears to resolve the attributes
