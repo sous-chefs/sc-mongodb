@@ -38,18 +38,22 @@ define :mongodb_instance,
   # with precedence while Chef 10 copies to not (TBD: find documentation to support observed behavior).
   # XXX: Resource/Provider will not modify node attributes
 
+  # mongos will fail to start if dbpath is set
   if node['mongodb']['is_mongos']
-    provides = 'mongos'
-    # mongos will fail to start if dbpath is set
     node.default['mongodb']['config']['dbpath'] = nil
-    # persist config.configdb from configservers param
+  end
+
+  # persist config.configdb from configservers param
+  if node['mongodb']['is_mongos']
     unless node['mongodb']['config']['configdb']
-      node.default['mongodb']['config']['configdb'] = params[:configservers].map do |n|
-        "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}"
-      end.sort.join(',')
+      configserver_nodes = params[:configservers]
+      configservers = configserver_nodes.map do |n|
+        hostname = n['mongodb']['configserver_url'] || n['fqdn']
+        port = n['mongodb']['port']
+        "#{hostname}:#{port}"
+      end
+      node.default['mongodb']['config']['configdb'] = configservers.sort.join(',')
     end
-  else
-    provides = 'mongod'
   end
 
   # persist config.configsvr from is_configserver
@@ -57,7 +61,6 @@ define :mongodb_instance,
 
   ### BEGIN Pseudo Resource ###
   require 'ostruct'
-
   new_resource = OpenStruct.new
 
   # Essential Parameters
@@ -101,7 +104,7 @@ define :mongodb_instance,
   # internal state helpers
   # TODO: Resource/Provider will implement these as helper methods
   provides =
-  if node['mongodb']['is_mongos']
+  if new_resource.is_mongos
     'mongos'
   else
     'mongod'
