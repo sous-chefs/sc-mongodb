@@ -100,23 +100,36 @@ define :mongodb_instance,
 
   # internal state helpers
   # TODO: Resource/Provider will implement these as helper methods
-  if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
-    new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
-    mode = '0644'
+  provides =
+  if node['mongodb']['is_mongos']
+    'mongos'
   else
-    new_resource.init_file = File.join(node['mongodb']['init_dir'], new_resource.name)
-    mode = '0755'
+    'mongod'
   end
 
-  # TODO(jh): reimplement using polymorphism
+  init_file =
+  if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
+    File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
+  else
+    File.join(node['mongodb']['init_dir'], new_resource.name)
+  end
+
+  mode =
+  if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
+    '0644'
+  else
+    '0755'
+  end
+
+  replicaset_name =
   if new_resource.is_replicaset
     if new_resource.replicaset_name
       # trust a predefined replicaset name
-      replicaset_name = new_resource.replicaset_name
+      new_resource.replicaset_name
     elsif new_resource.is_shard && new_resource.shard_name
       # for replicated shards we autogenerate
       # the replicaset name for each shard
-      replicaset_name = "rs_#{new_resource.shard_name}"
+      "rs_#{new_resource.shard_name}"
     else
       # Well shoot, we don't have a predefined name and we aren't
       # really sharded. If we want backwards compatibility, this should be:
@@ -126,14 +139,13 @@ define :mongodb_instance,
       # But using a non-default shard name when we're creating a default
       # replicaset name seems surprising to me and needlessly arbitrary.
       # So let's use the *default* default in this case:
-      replicaset_name = 'rs_default'
+      'rs_default'
     end
   else
     # not a replicaset, so no name
-    replicaset_name = nil
+    nil
   end
   ### END Pseudo Resource ###
-
 
   ### BEGIN Pseudo Provider ###
   # default file
@@ -184,7 +196,7 @@ define :mongodb_instance,
   end
 
   # init script
-  template new_resource.init_file do
+  template init_file do
     cookbook new_resource.template_cookbook
     source new_resource.init_script_template
     group new_resource.root_group
@@ -210,7 +222,7 @@ define :mongodb_instance,
     end
     notifies :create, 'ruby_block[config_replicaset]' if new_resource.is_replicaset && new_resource.auto_configure_replicaset
     notifies :create, 'ruby_block[config_sharding]', :immediately if new_resource.is_mongos && new_resource.auto_configure_sharding
-      # we don't care about a running mongodb service in these cases, all we need is stopping it
+    # we don't care about a running mongodb service in these cases, all we need is stopping it
     ignore_failure true if new_resource.name == 'mongodb'
   end
 
