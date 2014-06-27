@@ -82,15 +82,15 @@ class Chef::ResourceDefinitionList::MongoDB
       fqdn_host
     end
 
-    def arbiter_only
+    def arbiter_only?
       Boolean(mongodb['replica_arbiter_only'])
     end
 
-    def build_indexes
+    def build_indexes?
       Boolean(mongodb['replica_build_indexes'])
     end
 
-    def hidden
+    def hidden?
       Boolean(mongodb['replica_hidden'])
     end
 
@@ -101,7 +101,7 @@ class Chef::ResourceDefinitionList::MongoDB
     # priority must be 0 if the member lacks buildIndexes, is hidden or
     # has slaveDelay
     def priority
-      if !build_indexes || hidden || slave_delay
+      if !build_indexes? || hidden? || slave_delay?
         # must not become primary
         priority = 0
       else
@@ -125,9 +125,9 @@ class Chef::ResourceDefinitionList::MongoDB
     def to_h
       hash = {
         'host' =>          host,
-        'arbiterOnly' =>   arbiter_only,
-        'buildIndexes' =>  build_indexes,
-        'hidden' =>        hidden,
+        'arbiterOnly' =>   arbiter_only?,
+        'buildIndexes' =>  build_indexes?,
+        'hidden' =>        hidden?,
         'slaveDelay' =>    slave_delay,
         'priority' =>      priority,
         'tags' =>          tags,
