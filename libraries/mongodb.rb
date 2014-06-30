@@ -25,7 +25,12 @@ class Chef
   end
 end
 
+require_relative 'ext_mongodb_connection'
+require_relative 'concern_log'
+
 class Chef::ResourceDefinitionList::MongoDB
+  include ::MongoDB::LogHelpers
+
   def self.configure_replicaset(node, name, members)
     # lazy require, to move loading this modules to runtime of the cookbook
     require 'rubygems'
@@ -284,66 +289,5 @@ class Chef::ResourceDefinitionList::MongoDB
 
   def err?(doc)
     doc && doc.fetch('errmsg', nil)
-  end
-
-  ### Logging helpers
-  def debug(msg)
-    Chef::Log.debug msg
-  end
-
-  def info(msg)
-    Chef::Log.info msg
-  end
-
-  # this stomps on Kernel#warn, that's fine
-  def warn(msg)
-    Chef::Log.warn msg
-  end
-
-  def error(msg)
-    Chef::Log.error msg
-  end
-end
-
-# extra commands to be included into Mongo::Connection
-module ConfigurationCommands
-  def initiate_reconfigure(config, opts = {})
-    fail MongoArgumentError, 'config must be a document' unless config.class == Hash
-    cmd = BSON::OrderedHash.new
-    cmd['replSetInitiate'] = config
-
-    # TODO: investigate why this needs to be run on ['admin']
-    @db['admin'].command(cmd, command_opts(opts))
-  end
-
-  def replicaset_reconfigure(config, opts = {})
-    fail MongoArgumentError, 'config must be a document' unless config.class == Hash
-    cmd = BSON::OrderedHash.new
-    cmd['replSetReconfig'] = config
-
-    # TODO: investigate why this needs to be run on ['admin']
-    @db['admin'].command(cmd, command_opts(opts))
-  end
-
-  def shard_collection(collection, key, opts = {})
-    fail MongoArgumentError, 'collection must be a string' unless collection.class == String
-    fail MongoArgumentError, 'key must be a string' unless key.class == String
-    cmd = BSON::OrderedHash.new
-    cmd['shardcollection'] = collection
-    cmd['key'] = { key => 1 }
-
-    @db.command(cmd, command_opts(opts))
-  end
-
-  def enable_sharding(db_name, opts = {})
-    cmd = BSON::OrderedHash.new
-    cmd['enablesharding'] = db_name
-    @db.command(cmd, command_opts(opts))
-  end
-end
-
-module Mongo
-  class Connection
-    extend ConfigurationCommands
   end
 end
