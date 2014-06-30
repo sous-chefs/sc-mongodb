@@ -61,7 +61,8 @@ class Chef::ResourceDefinitionList::MongoDB
     end
 
     def member_list
-      members.values.map(&:to_h)
+      # sort by name to ensure member ids are the same between runs
+      members.sort.map { |m| m[1].to_h }
     end
 
     def matches?(config)
@@ -82,20 +83,20 @@ class Chef::ResourceDefinitionList::MongoDB
     end
 
     def incr
-      version += 1
+      self.version += 1
     end
 
     def max_id
-      members.map { |_,m| m.id }.max
+      members.map { |_, m| m.id }.max
     end
 
     def replace_member_hosts_with_fqdns_from(config)
-      members = config.members.dup
+      self.members = config.members.dup
     end
 
     def remove_members_absent_from(config)
       expected_hosts = config.member_list.map(&:host)
-      members.delete_if { |host,_| !expected_hosts.include?(host) }
+      members.delete_if { |host, _| !expected_hosts.include?(host) }
     end
 
     def update_member_attributes_while_keeping_ids_from(config)
@@ -107,17 +108,17 @@ class Chef::ResourceDefinitionList::MongoDB
     end
 
     def add_members_adjuct_to(config)
-      config.members.each do |host,member|
-        unless members.key? host
-          self << member
-        end
+      config.members.each do |host, member|
+        next unless members.key? host
+        self << member
       end
     end
 
     private
 
     def member_list_with_ipaddresses
-      members.values.map(&:to_h_with_ipaddress)
+      # sort by name to ensure member ids are the same between runs
+      members.sort.map { |m| m[1].to_h_with_ipaddress }
     end
   end
 end

@@ -139,10 +139,18 @@ class Chef::ResourceDefinitionList::MongoDB
 
     def to_h_with_ipaddress
       hash = {
-        'host' =>          ipaddress_host,
+        'host' =>          ipaddress_host
       }
       hash['_id'] = id if id
       hash
+    end
+
+    def <=>(other)
+      if other.respond_to :host
+        host <=> other.host
+      else
+        nil
+      end
     end
 
     private
