@@ -1,4 +1,6 @@
-module MongoDB
+require 'chef'
+
+module MongoDBCB
   # Shorthand for accessing Chef::Log functions
   module LogHelpers
     def debug(msg)

@@ -3,27 +3,23 @@ require_relative '../../libraries/replicaset_config'
 
 describe 'ReplicasetConfig' do
   let(:member) do
-    Chef::ResourceDefinitionList::MongoDB::ReplicasetMember.new(
-      { 'fqdn' => 'a.b.c',
+    MongoDBCB::ReplicasetMember.new(
+      { 'hostname' => 'a.b.c',
         'ipaddress' => '1.2.3.4',
-        'mongodb' => {
-          'config' => {
-            'port' => 27_017,
-          },
-          'replica_arbiter_only' => 'true',
-          'replica_slave_delay' => 5,
-          'replica_tags' => {},
-          'replica_votes' => 1,
-          'replica_build_indexes' => true,
-          'replica_hidden' => true,
-        },
+        'port' => 27_017,
+        'arbiter_only' => 'true',
+        'slave_delay' => 5,
+        'tags' => {},
+        'votes' => 1,
+        'build_indexes' => true,
+        'hidden' => true
       },
       0
     )
   end
 
   let(:config) do
-    config = Chef::ResourceDefinitionList::MongoDB::ReplicasetConfig.new 'rs_test'
+    config = MongoDBCB::ReplicasetConfig.new 'rs_test'
     config << member
     config
   end
@@ -36,7 +32,7 @@ describe 'ReplicasetConfig' do
     expect(config.members[member.host]).to eq(member)
   end
 
-  it '#to_config' do
+  it '#to_doc' do
     expected = {
       '_id' =>      'rs_test',
       'members' =>  [{
@@ -48,11 +44,11 @@ describe 'ReplicasetConfig' do
         'slaveDelay' =>    5,
         'priority' =>      0,
         'tags' =>          {},
-        'votes' =>         1,
+        'votes' =>         1
       }],
       'version' => 1
     }
-    expect(config.to_config).to eq(expected)
+    expect(config.to_doc).to eq(expected)
   end
 
   it '#member_list' do
@@ -65,7 +61,7 @@ describe 'ReplicasetConfig' do
       'slaveDelay' =>    5,
       'priority' =>      0,
       'tags' =>          {},
-      'votes' =>         1,
+      'votes' =>         1
     }]
     expect(config.member_list).to eq(expected)
   end
@@ -82,7 +78,7 @@ describe 'ReplicasetConfig' do
         'slaveDelay' =>    5,
         'priority' =>      0,
         'tags' =>          {},
-        'votes' =>         1,
+        'votes' =>         1
       }]
     }
     expect(config.matches? other).to eq(true)
@@ -93,7 +89,7 @@ describe 'ReplicasetConfig' do
       '_id' =>      'rs_test',
       'members' =>  [{
         '_id' =>           0,
-        'host' =>          '1.2.3.4:27017',
+        'host' =>          '1.2.3.4:27017'
       }]
     }
     expect(config.matches_by_ipaddress? other).to eq(true)
@@ -102,5 +98,23 @@ describe 'ReplicasetConfig' do
   it '#inspect' do
     expected = '<ReplicasetConfig id="rs_test" members="a.b.c:27017" version=1>'
     expect(config.inspect).to eq(expected)
+  end
+
+  it '#==' do
+    expected = MongoDBCB::ReplicasetConfig.new 'rs_test'
+    expected << MongoDBCB::ReplicasetMember.new(
+      { 'hostname' => 'a.b.c',
+        'ipaddress' => '1.2.3.4',
+        'port' => 27_017,
+        'arbiter_only' => 'true',
+        'slave_delay' => 5,
+        'tags' => {},
+        'votes' => 1,
+        'build_indexes' => true,
+        'hidden' => true
+      },
+      0
+    )
+    expect(config).to eq(expected)
   end
 end

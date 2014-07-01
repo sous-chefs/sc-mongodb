@@ -17,109 +17,90 @@
 #
 
 require 'json'
+require_relative 'ext_boolean'
 
-# ensure parents exist
-class Chef
-  class ResourceDefinitionList
-  end
-end
+module MongoDBCB
+  # ReplicasetMember is a simple struct to represent
+  # each node in a MongoDB replicaset member document
+  ReplicasetMember = Struct.new(
+      :id,
+      :hostname,
+      :ipaddress,
+      :port,
+      :slave_delay,
+      :votes,
+      :arbiter_only,
+      :build_indexes,
+      :hidden,
+      :tags,
+      :priority
+    ) do
 
-class Chef::ResourceDefinitionList::MongoDB
-  # ReplicasetMember is a support class to convert a node object into a
-  # MongoDB replicaset member document.
-  #
-  # This implementation maps document keys onto values from the node
-  # object, and requires each to exist:
-  #
-  #    host:          "{node.fqdn}:{node.mongodb.config.port}"
-  #    arbiterOnly:   node.mongodb.replica_arbiter_only
-  #    buildIndexes:  node.mongodb.replica_build_indexes
-  #    hidden:        node.mongodb.replica_hidden
-  #    slaveDelay:    node.mongodb.replica_slave_delay
-  #    priority:      node.mongodb.replica_priority
-  #    tags:          node.mongodb.replica_tags
-  #    votes:         node.mongodb.replica_votes
-  #
-  # Originally this would not send entries if they matched the defaults:
-  #
-  #    arbiterOnly:   false
-  #    buildIndexes:  true
-  #    hidden:        false
-  #    slaveDelay:    0
-  #    priority:      1
-  #    tags:          {}
-  #    votes:         1
-  class ReplicasetMember
-    attr_accessor :node, :id
-
-    def initialize(node, id = nil)
-      @node = node
-      @id = id
+    # Returns a ReplicasetMember with the following defaults:
+    #
+    #   port:          27107
+    #   slaveDelay:    0
+    #   votes:         1
+    #   priority:      1
+    #   arbiter_only:  false
+    #   build_indexes: true
+    #   hidden:        false
+    #   tags:          {}
+    def self.default
+      @default ||= new(
+        'port' => 27107,
+        'slaveDelay' => 0,
+        'votes' => 1,
+        'priority' => 1,
+        'arbiter_only' => false,
+        'build_indexes' => true,
+        'hidden' => false,
+        'tags' => {}
+      )
     end
 
-    def fqdn
-      node['fqdn']
-    end
+    def initialize(hash, id = nil)
+      fail ArgumentError, 'hash must contain a hostname' unless hash['hostname']
+      self.id = id
+      self.hostname = hash['hostname']
+      self.ipaddress = hash['ipaddress']
+      # Integer
+      self.port = hash['port'] ? Integer(hash['port']) : 27017
+      self.slave_delay = hash['slave_delay'] ? Integer(hash['slave_delay']) : 0
+      self.votes = hash['votes'] ? Integer(hash['votes']) : 1
+      # Boolean
+      self.arbiter_only = hash['arbiter_only'].nil? ? false : Boolean(hash['arbiter_only'])
+      self.build_indexes = hash['build_indexes'].nil? ? true : Boolean(hash['build_indexes'])
+      self.hidden = hash['hidden'].nil? ? false : Boolean(hash['hidden'])
+      # Hash
+      self.tags = hash['tags'] ? hash['tags'].to_hash : {}
 
-    def mongodb_port
-      mongodb['config']['port']
+      # priority must be 0 if the member lacks buildIndexes, is hidden or
+      # has slaveDelay
+      if !build_indexes? || hidden? || slave_delay
+        # must not become primary
+        self.priority = 0
+      else
+        self.priority = hash['priority'] ? Integer(hash['priority']) : 1
+      end
     end
 
     def fqdn_host
-      "#{fqdn}:#{mongodb_port}"
+      "#{hostname}:#{port}"
     end
 
     def ipaddress_host
-      "#{ipaddress}:#{mongodb_port}"
+      "#{ipaddress}:#{port}"
     end
 
-    def host
-      fqdn_host
-    end
-
-    def arbiter_only?
-      Boolean(mongodb['replica_arbiter_only'])
-    end
-
-    def build_indexes?
-      Boolean(mongodb['replica_build_indexes'])
-    end
-
-    def hidden?
-      Boolean(mongodb['replica_hidden'])
-    end
-
-    def slave_delay
-      Integer(mongodb['replica_slave_delay'])
-    end
-
-    # priority must be 0 if the member lacks buildIndexes, is hidden or
-    # has slaveDelay
-    def priority
-      if !build_indexes? || hidden? || slave_delay?
-        # must not become primary
-        priority = 0
-      else
-        priority = mongodb['replica_priority']
-      end
-      priority
-    end
-
-    def ipaddress
-      node['ipaddress']
-    end
-
-    def tags
-      mongodb['replica_tags'].to_hash
-    end
-
-    def votes
-      Integer(mongodb['replica_votes'])
-    end
+    alias_method :arbiter_only?, :arbiter_only
+    alias_method :hidden?, :hidden
+    alias_method :build_indexes?, :build_indexes
+    alias_method :host, :fqdn_host
 
     def to_h
       hash = {
-        'host' =>          host,
+        'host' =>          fqdn_host,
         'arbiterOnly' =>   arbiter_only?,
         'buildIndexes' =>  build_indexes?,
         'hidden' =>        hidden?,
@@ -147,11 +128,55 @@ class Chef::ResourceDefinitionList::MongoDB
         nil
       end
     end
+  end unless defined?(ReplicasetMember)
+end
 
-    private
+# ReplicasetMember is a support class to convert a node object into a
+# MongoDB replicaset member document.
+#
+# This implementation maps document keys onto values from the node
+# object, and requires each to exist:
+#
+#    host:          "{node.fqdn}:{node.mongodb.config.port}"
+#    arbiterOnly:   node.mongodb.replica_arbiter_only
+#    buildIndexes:  node.mongodb.replica_build_indexes
+#    hidden:        node.mongodb.replica_hidden
+#    slaveDelay:    node.mongodb.replica_slave_delay
+#    priority:      node.mongodb.replica_priority
+#    tags:          node.mongodb.replica_tags
+#    votes:         node.mongodb.replica_votes
+class MongoDBCB::ReplicasetMember::ChefNode
+  attr_accessor :node
 
-    def mongodb
-      node['mongodb']
-    end
+  def self.load(node)
+    new(node).to_h
+  end
+
+  def initialize(node)
+    @node = node
+  end
+
+  # This is the simplest mapping that could possibly work. All
+  # real validation and helpers happen in ReplicasetMember.
+  def to_h
+    {
+      'hostname' =>       node['fqdn'],
+      'port' =>           mongodb['config']['port'],
+      'arbiter_only' =>   mongodb['replica_arbiter_only'],
+      'build_indexes' =>  mongodb['replica_build_indexes'],
+      'hidden' =>         mongodb['replica_hidden'],
+      'slave_delay' =>    mongodb['replica_slave_delay'],
+      'priority' =>       mongodb['replica_priority'],
+      'tags' =>           mongodb['replica_tags'],
+      'votes' =>          mongodb['replica_votes'],
+      'ipaddress' =>      node['ipaddress']
+    }
+  end
+
+  private
+
+  def mongodb
+    node['mongodb']
   end
 end
+

@@ -20,14 +20,9 @@
 #
 
 require 'json'
+require_relative 'replicaset_member'
 
-# ensure parents exist
-class Chef
-  class ResourceDefinitionList
-  end
-end
-
-class Chef::ResourceDefinitionList::MongoDB
+module MongoDBCB
   # support class to convert a node object into a mongodb replicaset member document
   class ReplicasetConfig
     attr_accessor :id, :members, :version
@@ -47,7 +42,7 @@ class Chef::ResourceDefinitionList::MongoDB
       members[member.host] = member
     end
 
-    def to_config
+    def to_doc
       {
         '_id' => id,
         'version' => version,
@@ -107,6 +102,12 @@ class Chef::ResourceDefinitionList::MongoDB
         next unless members.key? host
         self << member
       end
+    end
+
+    def ==(other)
+      self.id == other.id &&
+      self.version == other.version &&
+      self.member_list == other.member_list
     end
 
     private
