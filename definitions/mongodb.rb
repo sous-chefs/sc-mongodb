@@ -62,6 +62,7 @@ define :mongodb_instance,
   new_resource.name                       = params[:name]
   new_resource.dbpath                     = params[:dbpath]
   new_resource.logpath                    = params[:logpath]
+  # this is the local node in all current usage
   new_resource.replicaset                 = params[:replicaset]
   new_resource.service_action             = params[:action]
   new_resource.service_notifies           = params[:notifies]
@@ -94,54 +95,66 @@ define :mongodb_instance,
   new_resource.template_cookbook          = node['mongodb']['template_cookbook']
   new_resource.ulimit                     = node['mongodb']['ulimit']
   new_resource.reload_action              = node['mongodb']['reload_action']
+  new_resource.apt_repo                   = node['mongodb']['apt_repo']
 
   # internal state helpers
   # TODO: Resource/Provider will implement these as helper methods
-  provides =
-  if new_resource.is_mongos
-    'mongos'
-  else
-    'mongod'
-  end
-
-  init_file =
-  if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
-    File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
-  else
-    File.join(node['mongodb']['init_dir'], new_resource.name)
-  end
-
-  mode =
-  if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
-    '0644'
-  else
-    '0755'
-  end
-
-  replicaset_name =
-  if new_resource.is_replicaset
-    if new_resource.replicaset_name
-      # trust a predefined replicaset name
-      new_resource.replicaset_name
-    elsif new_resource.is_shard && new_resource.shard_name
-      # for replicated shards we autogenerate
-      # the replicaset name for each shard
-      "rs_#{new_resource.shard_name}"
-    else
-      # Well shoot, we don't have a predefined name and we aren't
-      # really sharded. If we want backwards compatibility, this should be:
-      #   replicaset_name = "rs_#{new_resource.shard_name}"
-      # which with default values defaults to:
-      #   replicaset_name = 'rs_default'
-      # But using a non-default shard name when we're creating a default
-      # replicaset name seems surprising to me and needlessly arbitrary.
-      # So let's use the *default* default in this case:
-      'rs_default'
+  new_resource.extend(Module.new do
+    def provides
+      if is_mongos
+        'mongos'
+      else
+        'mongod'
+      end
     end
-  else
-    # not a replicaset, so no name
-    nil
+
+    def using_upstart?
+      apt_repo == 'ubuntu-upstart'
+    end
+
+    def init_file
+      if using_upstart?
+        File.join(init_dir, "#{name}.conf")
+      else
+        File.join(init_dir, name)
+      end
+    end
+
+    def mode
+      if using_upstart?
+        '0644'
+      else
+        '0755'
+      end
+    end
+
+    def replicaset_name
+      if is_replicaset
+        if replicaset['mongodb']['config']['replSet']
+          # trust a predefined replicaset name
+          replicaset['mongodb']['config']['replSet']
+        elsif is_shard && shard_name
+          # for replicated shards we autogenerate
+          # the replicaset name for each shard
+          "rs_#{shard_name}"
+        else
+          # Well shoot, we don't have a predefined name and we aren't
+          # really sharded. If we want backwards compatibility, this should be:
+          #   replicaset_name = "rs_#{new_resource.shard_name}"
+          # which with default values defaults to:
+          #   replicaset_name = 'rs_default'
+          # But using a non-default shard name when we're creating a default
+          # replicaset name seems surprising to me and needlessly arbitrary.
+          # So let's use the *default* default in this case:
+          'rs_default'
+        end
+      else
+        # not a replicaset, so no name
+        nil
+      end
+    end
   end
+  )
   ### END Pseudo Resource ###
 
   ### BEGIN Pseudo Provider ###
@@ -193,14 +206,14 @@ define :mongodb_instance,
   end
 
   # init script
-  template init_file do
+  template new_resource.init_file do
     cookbook new_resource.template_cookbook
     source new_resource.init_script_template
     group new_resource.root_group
     owner 'root'
     mode mode
     variables(
-      :provides =>       provides,
+      :provides =>       new_resource.provides,
       :sysconfig_file => new_resource.sysconfig_file,
       :ulimit =>         new_resource.ulimit,
       :bind_ip =>        new_resource.bind_ip,
@@ -235,7 +248,7 @@ define :mongodb_instance,
 
     ruby_block 'config_replicaset' do
       block do
-        MongoDB.configure_replicaset(new_resource.replicaset, replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
+        MongoDB.configure_replicaset(new_resource.replicaset, new_resource.replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
       end
       action :nothing
     end
