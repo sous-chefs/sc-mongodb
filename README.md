@@ -41,48 +41,54 @@ For examples see the USAGE section below.
 
 ### Mongodb Configuration
 
-Basically all settings defined in the Configuration File Options documentation page can be added to the `mongodb[:config][:<setting>]` attribute: http://docs.mongodb.org/manual/reference/configuration-options/ 
+Basically all settings defined in the Configuration File Options documentation page can be added to the `mongodb[:config][:<setting>]` attribute: http://docs.mongodb.org/manual/reference/configuration-options/
 
-* `mongodb[:config][:dbpath]` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
-* `mongodb[:config][:logpath]` - Path for the logfiles, default is "/var/log/mongodb/mongodb.log"
-* `mongodb[:config][:port]` - Port the mongod listens on, default is 27017
-* `mongodb[:config][:rest]` - Enable the ReST interface of the webserver
-* `mongodb[:config][:smallfiles]` - Modify MongoDB to use a smaller default data file size
-* `mongodb[:config][:oplogsize]` - Specifies a maximum size in megabytes for the replication operation log
-* `mongodb[:config][:bind_ip]` - Configure from which address to accept connections
-* `mongodb[:config][:<setting>]` - General MongoDB Configuration File option
+* `default['mongodb']['config']['dbpath']` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
+* `default['mongodb']['config']['logpath]` - Path for the logfiles, default is "/var/log/mongodb/mongodb.log"
+* `default['mongodb']['config']['port]` - Port the mongod listens on, default is 27017
+* `default['mongodb']['config']['rest']` - Enable the ReST interface of the webserver
+* `default['mongodb']['config']['smallfiles']` - Modify MongoDB to use a smaller default data file size
+* `default['mongodb']['config']['oplogsize']` - Specifies a maximum size in megabytes for the replication operation log
+* `default['mongodb']['config']['bind_ip']` - Configure from which address to accept connections
+* `default['mongodb']['config']['auth']` - Require authentication on database, defaults to false
+* `default['mongodb']['config'][<setting>]` - General MongoDB Configuration File option
 
 ### Cookbook specific attributes
 
-* `mongodb[:reload_action]` - Action to take when MongoDB conf files are
+* `default[:mongodb][:reload_action]` - Action to take when MongoDB conf files are
     modified, default is `"restart"`
-* `mongodb[:package_version]` - Version of the MongoDB package to install, default is nil
-* `mongodb[:client_role]` - Role identifying all external clients which should have access to a mongod instance
+* `default[:mongodb][:package_version]` - Version of the MongoDB package to install, default is nil
+* `default[:mongodb][:client_role]` - Role identifying all external clients which should have access to a mongod instance
 
 ### Sharding and replication attributes
 
-* `mongodb[:config][:replSet]` - Define name of replicaset
-* `mongodb[:cluster_name]` - Name of the cluster, all members of the cluster must
+* `default['mongodb']['config']['replSet']` - Define name of replicaset
+* `default[:mongodb][:cluster_name]` - Name of the cluster, all members of the cluster must
     reference to the same name, as this name is used internally to identify all
     members of a cluster.
-* `mongodb[:shard_name]` - Name of a shard, default is "default"
-* `mongodb[:sharded_collections]` - Define which collections are sharded
-* `mongodb[:replica_arbiter_only]` - Set to true to make node an [arbiter](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].arbiterOnly).
-* `mongodb[:replica_build_indexes]` - Set to false to omit [index creation](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].buildIndexes).
-* `mongodb[:replica_hidden]` - Set to true to [hide](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].hidden) node from replicaset.
-* `mongodb[:replica_slave_delay]` - Number of seconds to [delay slave replication](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].slaveDelay).
-* `mongodb[:replica_priority]` - Node [priority](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].priority).
-* `mongodb[:replica_tags]` - Node [tags](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].tags).
-* `mongodb[:replica_votes]` - Number of [votes](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].votes) node will cast in an election.
+* `default[:mongodb][:shard_name]` - Name of a shard, default is "default"
+* `default['mongodb']['sharded_collections']` - Define which collections are sharded
+* `default[:mongodb][:replica_arbiter_only]` - Set to true to make node an [arbiter](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].arbiterOnly).
+* `default[:mongodb][:replica_build_indexes]` - Set to false to omit [index creation](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].buildIndexes).
+* `default[:mongodb][:replica_hidden]` - Set to true to [hide](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].hidden) node from replicaset.
+* `default[:mongodb][:replica_slave_delay]` - Number of seconds to [delay slave replication](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].slaveDelay).
+* `default[:mongodb][:replica_priority]` - Node [priority](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].priority).
+* `default[:mongodb][:replica_tags]` - Node [tags](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].tags).
+* `default[:mongodb][:replica_votes]` - Number of [votes](http://docs.mongodb.org/manual/reference/replica-configuration/#local.system.replset.members[n].votes) node will cast in an election.
 
 
 ### shared MMS Agent attributes
 
-* `mongodb[:mms_agent][:api_key]` - MMS Agent API Key. No default, required.
-* `mongodb[:mms_agent][:monitoring][:version]` - Version of the MongoDB MMS Monitoring Agent package to download and install. Default is '2.0.0.17-1', required.
-* `mongodb[:mms_agent][:monitoring][:<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.
-* `mongodb[:mms_agent][:backup][:version]` - Version of the MongoDB MMS Backup Agent package to download and install. Default is '1.4.3.28-1', required.
-* `mongodb[:mms_agent][:backup][:<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.
+* `default['mongodb']['mms_agent']['api_key']` - MMS Agent API Key. No default, required.
+* `default['mongodb['mms_agent']['monitoring']['version']` - Version of the MongoDB MMS Monitoring Agent package to download and install. Default is '2.0.0.17-1', required.
+* `default['mongodb['mms_agent']['monitoring'][<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.
+* `default['mongodb['mms_agent']['backup']['version']` - Version of the MongoDB MMS Backup Agent package to download and install. Default is '1.4.3.28-1', required.
+* `default['mongodb['mms_agent']['backup'][<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.
+
+### User management attributes
+
+* `default[:mongodb][:admin]` - The admin user with userAdmin privileges that allows user management
+* `default[:mongodb][:users]` - Array of users to add when running the user management recipe
 
 #### Monitoring Agent Settings
 
@@ -227,6 +233,16 @@ To setup MMS, simply set your keys in
 `node['mongodb']['mms_agent']['api_key']` and then add the
 `mongodb::mms-agent` recipe to your run list. Your current keys should
 be available at your {MMS Settings page}[https://mms.10gen.com/settings].
+
+### User Management
+
+An optional recipe is `mongodb::user_management` which will enable authentication in
+the configuration file by default and create any users in the `default[:mongodb][:users]`.
+The users array expects a hash of username, password, roles, and database. Roles should be
+an array of roles the user should have on the database given.
+
+Before using on a new database, ensure you're overwriting the `default[:mongodb][:admin][:username]`
+and `default[:mongodb][:admin][:password]` to something besides their default values.
 
 # LICENSE and AUTHOR:
 

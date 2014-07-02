@@ -7,6 +7,7 @@ include_attribute 'mongodb::default'
 
 default['mongodb']['config']['port'] = 27017
 default['mongodb']['config']['bind_ip'] = '0.0.0.0'
+default['mongodb']['config']['auth'] = false
 default['mongodb']['config']['logpath'] = '/var/log/mongodb/mongodb.log'
 default['mongodb']['config']['logappend'] = true
 # The platform_family? syntax in attributes files was added in Chef 11

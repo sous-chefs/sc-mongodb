@@ -120,3 +120,8 @@ suites:
     - debian-7.2.0
     # Package does not create the user
     - centos-5.10
+
+- name: user_management
+  run_list:
+  - "recipe[mongodb::default]"
+  - "recipe[mongodb::user_management]"

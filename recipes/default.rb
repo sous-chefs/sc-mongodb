@@ -39,6 +39,7 @@ if allow_mongodb_instance_run
   mongodb_instance node['mongodb']['instance_name'] do
     mongodb_type 'mongod'
     bind_ip      node['mongodb']['config']['bind_ip']
+    auth         node['mongodb']['config']['auth']
     port         node['mongodb']['config']['port']
     logpath      node['mongodb']['config']['logpath']
     dbpath       node['mongodb']['config']['dbpath']
