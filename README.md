@@ -41,7 +41,7 @@ For examples see the USAGE section below.
 
 ### Mongodb Configuration
 
-Basically all settings defined in the Configuration File Options documentation page can be added to the `mongodb[:config][:<setting>]` attribute: http://docs.mongodb.org/manual/reference/configuration-options/
+Basically all settings defined in the Configuration File Options documentation page can be added to the `node['mongodb']['config'][<setting>]` attribute: http://docs.mongodb.org/manual/reference/configuration-options/
 
 * `node['mongodb']['config']['dbpath']` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
 * `node['mongodb']['config']['logpath]` - Path for the logfiles, default is "/var/log/mongodb/mongodb.log"
@@ -50,7 +50,6 @@ Basically all settings defined in the Configuration File Options documentation p
 * `node['mongodb']['config']['smallfiles']` - Modify MongoDB to use a smaller default data file size
 * `node['mongodb']['config']['oplogsize']` - Specifies a maximum size in megabytes for the replication operation log
 * `node['mongodb']['config']['bind_ip']` - Configure from which address to accept connections
-* `node['mongodb']['config']['auth']` - Require authentication on database, defaults to false
 * `node['mongodb']['config'][<setting>]` - General MongoDB Configuration File option
 
 ### Cookbook specific attributes
@@ -87,6 +86,7 @@ Basically all settings defined in the Configuration File Options documentation p
 
 ### User management attributes
 
+* `node['mongodb']['config']['auth']` - Require authentication on database
 * `node[:mongodb][:admin]` - The admin user with userAdmin privileges that allows user management
 * `node[:mongodb][:users]` - Array of users to add when running the user management recipe
 
@@ -243,6 +243,10 @@ an array of roles the user should have on the database given.
 
 Before using on a new database, ensure you're overwriting the `node[:mongodb][:admin][:username]`
 and `node[:mongodb][:admin][:password]` to something besides their default values.
+
+There's also a user resource which has the actions `:add`, `:modify` and `:delete`. If modify is
+used on a user that doesn't exist, it will be added. If add is used on a user that exists, it
+will be modified.
 
 # LICENSE and AUTHOR:
 
