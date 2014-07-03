@@ -125,3 +125,11 @@ suites:
   run_list:
   - "recipe[mongodb::default]"
   - "recipe[mongodb::user_management]"
+  attributes:
+    mongodb:
+      install_method: mongodb-org
+      default_init_name: mongod
+      dbconfig_file: mongodb.conf
+  excludes:
+    # Can't connect to mongodb without it running from upstart
+    - ubuntu-10.04

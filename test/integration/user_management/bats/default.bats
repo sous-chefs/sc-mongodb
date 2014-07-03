@@ -16,7 +16,7 @@
 }
 
 @test "requires login" {
-    mongo --eval "printjson(db.adminCommand('listDatabases'))" | grep "need to login"
+    mongo --eval "printjson(db.adminCommand('listDatabases'))" | grep "\"ok\" : 0"
     [ $? -eq 0 ]
 }
 
