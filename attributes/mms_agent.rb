@@ -17,7 +17,7 @@ default['mongodb']['mms_agent']['monitoring']['useSslForAllConnections'] = false
 default['mongodb']['mms_agent']['monitoring']['sslRequireValidServerCertificates'] = false
 
 default['mongodb']['mms_agent']['backup']['version'] = '1.4.6.43-1'
-default['mongodb']['mms_agent']['backup']['apiKey'] = node['mongodb']['mms_agent']['api_key']
+default['mongodb']['mms_agent']['backup']['mmsApiKey'] = node['mongodb']['mms_agent']['api_key']
 default['mongodb']['mms_agent']['backup']['mothership'] = 'api-backup.mongodb.com'
 default['mongodb']['mms_agent']['backup']['https'] = true
 default['mongodb']['mms_agent']['backup']['sslRequireValidServerCertificates'] = false
