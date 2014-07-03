@@ -15,12 +15,12 @@
     [ "$status" -eq 0 ]
 }
 
-@test "requires login" {
-    mongo --eval "printjson(db.adminCommand('listDatabases'))" | grep "\"ok\" : 0"
-    [ $? -eq 0 ]
+@test "requires authentication" {
+    mongo --eval "db.stats().ok"
+    ! [ $? -eq 1 ]
 }
 
 @test "admin user created" {
-    mongo admin -u admin -p 2NCDza6MLjDUm0m --eval "printjson(db.adminCommand('listDatabases'))" | grep "totalSize"
+    mongo admin -u admin -p 2NCDza6MLjDUm0m --eval "db.stats().ok"
     [ $? -eq 0 ]
 }
