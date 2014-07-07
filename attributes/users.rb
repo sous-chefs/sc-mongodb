@@ -7,6 +7,4 @@ default[:mongodb][:admin] = {
   :database => 'admin'
 }
 
-default[:mongodb][:users] = [
-  default[:mongodb][:admin]
-]
+default[:mongodb][:users] = []

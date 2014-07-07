@@ -241,8 +241,10 @@ the configuration file by default and create any users in the `node[:mongodb][:u
 The users array expects a hash of username, password, roles, and database. Roles should be
 an array of roles the user should have on the database given.
 
-Before using on a new database, ensure you're overwriting the `node[:mongodb][:admin][:username]`
-and `node[:mongodb][:admin][:password]` to something besides their default values.
+If the auth configuration is true, it will try to create the `node[:mongodb][:admin]` user, or
+update them if they already exist. Before using on a new database, ensure you're overwriting
+the `node[:mongodb][:admin][:username]` and `node[:mongodb][:admin][:password]` to
+something besides their default values.
 
 There's also a user resource which has the actions `:add`, `:modify` and `:delete`. If modify is
 used on a user that doesn't exist, it will be added. If add is used on a user that exists, it
