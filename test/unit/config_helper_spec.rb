@@ -7,7 +7,8 @@ describe 'MongoDBConfigHelpers' do
       'string' => 'foo',
       'boolean' => true,
       'numeric' => 216,
-      'absent' => nil
+      'absent' => nil,
+      'empty-string' => ''
     }
     actual = to_boost_program_options input
     expected = <<EOF
