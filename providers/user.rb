@@ -19,15 +19,10 @@ def add_user(username, password, roles = [], database)
     Chef::Log.warn("Unable to authenticate as admin user. If this is a fresh install, ignore warning: #{e}")
   end
 
-  # Check if the user exists, if they don't, create them
-  # if they do, update them
-  if !user_exists?(username, connection)
-    db.add_user(username, password, false, :roles => roles)
-    Chef::Log.info("Created user #{username} on #{database}")
-  else
-    db.add_user(username, password, false, :roles => roles)
-    Chef::Log.info("Updating user #{username} on #{database}")
-  end
+  # Create the user if they don't exist
+  # Update the user if they already exist
+  db.add_user(username, password, false, :roles => roles)
+  Chef::Log.info("Created or updated user #{username} on #{database}")
 end
 
 # Drop a user from the database specified
