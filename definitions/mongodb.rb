@@ -144,6 +144,7 @@ define :mongodb_instance,
     variables(
       :config => new_resource.config
     )
+    helpers MongoDBConfigHelpers
     mode '0644'
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
   end
