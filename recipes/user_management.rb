@@ -14,6 +14,7 @@ users.each do |user|
     password user['password']
     roles user['roles']
     database user['database']
+    connection node[:mongodb]
     action :add
   end
 end
