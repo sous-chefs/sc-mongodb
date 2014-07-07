@@ -11,11 +11,9 @@ describe 'MongoDBConfigHelpers' do
       'empty-string' => ''
     }
     actual = to_boost_program_options input
-    expected = <<EOF
-boolean = true
-numeric = 216
-string = foo
-EOF
+    expected = "boolean = true\n" +
+               "numeric = 216\n" +
+               "string = foo"
     expect(actual).to eq(expected)
   end
 end

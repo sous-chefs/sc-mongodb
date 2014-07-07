@@ -7,13 +7,14 @@ module MongoDBConfigHelpers
   #
   # Notably it:
   # - ensures consistent ordering by key name
-  # - does not render entries with a value of nil
+  # - does not render entries with a value of nil or ''
   def to_boost_program_options(config)
     config.sort
     .map do |key, value|
-      next if value.nil?
+      next if value.nil? || value == ''
       "#{key} = #{value}"
     end
+    .compact
     .join("\n")
   end
 end
