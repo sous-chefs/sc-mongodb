@@ -14,7 +14,7 @@ def add_user(username, password, roles = [], database)
   # this will fail on the first attempt, but user will still be created
   # because of the localhost exception
   begin
-    admin.authenticate(node[:mongodb][:admin][:username], node[:mongodb][:admin][:password])
+    admin.authenticate(@new_resource.connection[:admin][:username], @new_resource.connection[:admin][:password])
   rescue Mongo::AuthenticationError => e
     Chef::Log.warn("Unable to authenticate as admin user. If this is a fresh install, ignore warning: #{e}")
   end
@@ -34,7 +34,7 @@ def delete_user(username, database)
   admin = connection.db('admin')
   db = connection.db(database)
 
-  admin.authenticate(node[:mongodb][:admin][:username], node[:mongodb][:admin][:password])
+  admin.authenticate(@new_resource.connection[:admin][:username], @new_resource.connection[:admin][:password])
 
   if user_exists?(username, connection)
     db.remove_user(username)

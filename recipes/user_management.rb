@@ -1,10 +1,11 @@
 chef_gem 'mongo'
 
+users = Array.new
 admin = node[:mongodb][:admin]
 
 # If authentication is required,
 # add the admin to the users array for adding/updating
-users = [admin] if node['mongodb']['config']['auth'] == true
+users << admin if node['mongodb']['config']['auth'] == true
 
 users.concat(node[:mongodb][:users])
 
