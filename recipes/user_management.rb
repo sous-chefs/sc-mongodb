@@ -1,6 +1,6 @@
 chef_gem 'mongo'
 
-users = Array.new
+users = []
 admin = node[:mongodb][:admin]
 
 # If authentication is required,
