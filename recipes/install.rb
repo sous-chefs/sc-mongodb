@@ -20,6 +20,7 @@ template node['mongodb']['dbconfig_file'] do
   variables(
     :config => node['mongodb']['config']
   )
+  helpers MongoDBConfigHelpers
   action :create_if_missing
 end
 
