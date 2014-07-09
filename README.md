@@ -87,8 +87,8 @@ Basically all settings defined in the Configuration File Options documentation p
 ### User management attributes
 
 * `node['mongodb']['config']['auth']` - Require authentication on database
-* `node[:mongodb][:admin]` - The admin user with userAdmin privileges that allows user management
-* `node[:mongodb][:users]` - Array of users to add when running the user management recipe
+* `node['mongodb']['admin']` - The admin user with userAdmin privileges that allows user management
+* `node['mongodb']['users']` - Array of users to add when running the user management recipe
 
 #### Monitoring Agent Settings
 
@@ -237,13 +237,13 @@ be available at your {MMS Settings page}[https://mms.10gen.com/settings].
 ### User Management
 
 An optional recipe is `mongodb::user_management` which will enable authentication in
-the configuration file by default and create any users in the `node[:mongodb][:users]`.
+the configuration file by default and create any users in the `node['mongodb']['users']`.
 The users array expects a hash of username, password, roles, and database. Roles should be
 an array of roles the user should have on the database given.
 
-If the auth configuration is true, it will try to create the `node[:mongodb][:admin]` user, or
+If the auth configuration is true, it will try to create the `node['mongodb']['admin']` user, or
 update them if they already exist. Before using on a new database, ensure you're overwriting
-the `node[:mongodb][:admin][:username]` and `node[:mongodb][:admin][:password]` to
+the `node['mongodb']['admin']['username']` and `node['mongodb']['admin']['password']` to
 something besides their default values.
 
 There's also a user resource which has the actions `:add`, `:modify` and `:delete`. If modify is
