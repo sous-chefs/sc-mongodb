@@ -220,7 +220,7 @@ For more details, you can find a [tutorial for Sharding + Replication](https://g
 ### MMS Agent
 
 This cookbook also includes support for
-[MongoDB Monitoring System (MMS)](http://www.10gen.com/mongodb-monitoring-service)
+[MongoDB Monitoring System (MMS)](https://mms.mongodb.com/)
 agent. MMS is a hosted monitoring service, provided by 10gen, Inc. Once
 the small python agent program is installed on the MongoDB host, it
 automatically collects the metrics and uploads them to the MMS server.
@@ -232,7 +232,7 @@ production MongoDB deployments.
 To setup MMS, simply set your keys in
 `node['mongodb']['mms_agent']['api_key']` and then add the
 `mongodb::mms-agent` recipe to your run list. Your current keys should
-be available at your [MMS Settings page](https://mms.10gen.com/settings]).
+be available at your [MMS Settings page](https://mms.mongodb.com/settings).
 
 ### User Management
 
