@@ -241,8 +241,8 @@ the configuration file by default and create any users in the `node['mongodb']['
 The users array expects a hash of username, password, roles, and database. Roles should be
 an array of roles the user should have on the database given.
 
-Ensure `node['mongodb']['config']['auth']` is set to true if you want to lock the database
-down to only authenticated users.
+If the `::user_management` recipe is included, it will enable authentication by setting
+the `node['mongodb']['config']['auth']` to true. This can be overridden in the chef json.
 
 If the auth configuration is true, it will try to create the `node['mongodb']['admin']` user, or
 update them if they already exist. Before using on a new database, ensure you're overwriting
