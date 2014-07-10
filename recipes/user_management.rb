@@ -1,5 +1,8 @@
 chef_gem 'mongo'
 
+# Set default to true if this recipe is included
+node.default['mongodb']['config']['auth'] = true
+
 users = []
 admin = node['mongodb']['admin']
 

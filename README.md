@@ -86,7 +86,7 @@ Basically all settings defined in the Configuration File Options documentation p
 
 ### User management attributes
 
-* `node['mongodb']['config']['auth']` - Require authentication on database
+* `node['mongodb']['config']['auth']` - Require authentication to access or modify the database
 * `node['mongodb']['admin']` - The admin user with userAdmin privileges that allows user management
 * `node['mongodb']['users']` - Array of users to add when running the user management recipe
 
@@ -211,7 +211,7 @@ This is esp. important when you want to replicate shards.
 
 ### Sharding + Replication
 
-The setup is not much different to the one described above. All you have to do is adding the 
+The setup is not much different to the one described above. All you have to do is add the
 `mongodb::replicaset` recipe to all shard nodes, and make sure that all shard
 nodes which should be in the same replicaset have the same shard name.
 
@@ -220,10 +220,10 @@ For more details, you can find a [tutorial for Sharding + Replication](https://g
 ### MMS Agent
 
 This cookbook also includes support for
-{MongoDB Monitoring System (MMS)}[http://www.10gen.com/mongodb-monitoring-service]
+[MongoDB Monitoring System (MMS)](https://mms.mongodb.com/)
 agent. MMS is a hosted monitoring service, provided by 10gen, Inc. Once
 the small python agent program is installed on the MongoDB host, it
-automatically collects the metrics and upload them to the MMS server.
+automatically collects the metrics and uploads them to the MMS server.
 The graphs of these metrics are shown on the web page. It helps a lot
 for tackling MongoDB related problems, so MMS is the baseline for all
 production MongoDB deployments.
@@ -232,7 +232,7 @@ production MongoDB deployments.
 To setup MMS, simply set your keys in
 `node['mongodb']['mms_agent']['api_key']` and then add the
 `mongodb::mms-agent` recipe to your run list. Your current keys should
-be available at your {MMS Settings page}[https://mms.10gen.com/settings].
+be available at your [MMS Settings page](https://mms.mongodb.com/settings).
 
 ### User Management
 
@@ -240,6 +240,9 @@ An optional recipe is `mongodb::user_management` which will enable authenticatio
 the configuration file by default and create any users in the `node['mongodb']['users']`.
 The users array expects a hash of username, password, roles, and database. Roles should be
 an array of roles the user should have on the database given.
+
+If the `::user_management` recipe is included, it will enable authentication by setting
+the `node['mongodb']['config']['auth']` to true. This can be overridden in the chef json.
 
 If the auth configuration is true, it will try to create the `node['mongodb']['admin']` user, or
 update them if they already exist. Before using on a new database, ensure you're overwriting
