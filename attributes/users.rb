@@ -1,5 +1,3 @@
-default['mongodb']['config']['auth'] = true
-
 default['mongodb']['admin'] = {
   'username' => 'admin',
   'password' => '2NCDza6MLjDUm0m',
