@@ -44,8 +44,8 @@ For examples see the USAGE section below.
 Basically all settings defined in the Configuration File Options documentation page can be added to the `node['mongodb']['config'][<setting>]` attribute: http://docs.mongodb.org/manual/reference/configuration-options/
 
 * `node['mongodb']['config']['dbpath']` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
-* `node['mongodb']['config']['logpath]` - Path for the logfiles, default is "/var/log/mongodb/mongodb.log"
-* `node['mongodb']['config']['port]` - Port the mongod listens on, default is 27017
+* `node['mongodb']['config']['logpath']` - Path for the logfiles, default is "/var/log/mongodb/mongodb.log"
+* `node['mongodb']['config']['port']` - Port the mongod listens on, default is 27017
 * `node['mongodb']['config']['rest']` - Enable the ReST interface of the webserver
 * `node['mongodb']['config']['smallfiles']` - Modify MongoDB to use a smaller default data file size
 * `node['mongodb']['config']['oplogsize']` - Specifies a maximum size in megabytes for the replication operation log
