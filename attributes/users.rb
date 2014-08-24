@@ -1,6 +1,6 @@
 default['mongodb']['admin'] = {
   'username' => 'admin',
-  'password' => '2NCDza6MLjDUm0m',
+  'password' => 'admin',
   'roles' => %w(userAdminAnyDatabase dbAdminAnyDatabase),
   'database' => 'admin'
 }
