@@ -10,13 +10,23 @@ def add_user(username, password, roles = [], database)
   admin = connection.db('admin')
   db = connection.db(database)
 
-  # Must authenticate as a userAdmin after an admin user has been created
+  # Check if user is admin / admin, and warn that this should
+  # be overridden to unique values
+  if username == 'admin' && password == 'admin'
+    Chef::Log.warn('Default username / password detected for admin user');
+    Chef::Log.warn('These should be overridden to different, unique values');
+  end
+
+  # If authentication is required on database
+  # must authenticate as a userAdmin after an admin user has been created
   # this will fail on the first attempt, but user will still be created
   # because of the localhost exception
-  begin
-    admin.authenticate(@new_resource.connection['admin']['username'], @new_resource.connection['admin']['password'])
-  rescue Mongo::AuthenticationError => e
-    Chef::Log.warn("Unable to authenticate as admin user. If this is a fresh install, ignore warning: #{e}")
+  if node['mongodb']['config']['auth'] == true
+    begin
+      admin.authenticate(@new_resource.connection['admin']['username'], @new_resource.connection['admin']['password'])
+    rescue Mongo::AuthenticationError => e
+      Chef::Log.warn("Unable to authenticate as admin user. If this is a fresh install, ignore warning: #{e}")
+    end
   end
 
   # Create the user if they don't exist

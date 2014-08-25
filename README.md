@@ -44,8 +44,8 @@ For examples see the USAGE section below.
 Basically all settings defined in the Configuration File Options documentation page can be added to the `node['mongodb']['config'][<setting>]` attribute: http://docs.mongodb.org/manual/reference/configuration-options/
 
 * `node['mongodb']['config']['dbpath']` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
-* `node['mongodb']['config']['logpath]` - Path for the logfiles, default is "/var/log/mongodb/mongodb.log"
-* `node['mongodb']['config']['port]` - Port the mongod listens on, default is 27017
+* `node['mongodb']['config']['logpath']` - Path for the logfiles, default is "/var/log/mongodb/mongodb.log"
+* `node['mongodb']['config']['port']` - Port the mongod listens on, default is 27017
 * `node['mongodb']['config']['rest']` - Enable the ReST interface of the webserver
 * `node['mongodb']['config']['smallfiles']` - Modify MongoDB to use a smaller default data file size
 * `node['mongodb']['config']['oplogsize']` - Specifies a maximum size in megabytes for the replication operation log
@@ -241,8 +241,8 @@ the configuration file by default and create any users in the `node['mongodb']['
 The users array expects a hash of username, password, roles, and database. Roles should be
 an array of roles the user should have on the database given.
 
-If the `::user_management` recipe is included, it will enable authentication by setting
-the `node['mongodb']['config']['auth']` to true. This can be overridden in the chef json.
+By default, authentication is not required on the database. This can be overridden by setting
+the `node['mongodb']['config']['auth']` attribute to true in the chef json.
 
 If the auth configuration is true, it will try to create the `node['mongodb']['admin']` user, or
 update them if they already exist. Before using on a new database, ensure you're overwriting
