@@ -21,6 +21,6 @@
 }
 
 @test "admin user created" {
-    mongo admin -u admin -p 2NCDza6MLjDUm0m --eval "db.stats().ok"
+    mongo admin -u admin -p admin --eval "db.stats().ok"
     [ $? -eq 0 ]
 }
