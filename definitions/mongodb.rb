@@ -170,6 +170,12 @@ define :mongodb_instance,
     not_if { new_resource.is_mongos }
   end
 
+  # Reload systemctl for RHEL 7+ after modifying the init file.
+  execute 'mongodb-systemctl-daemon-reload' do
+    command 'systemctl daemon-reload'
+    action :nothing
+  end
+
   # init script
   template new_resource.init_file do
     cookbook new_resource.template_cookbook
@@ -179,12 +185,17 @@ define :mongodb_instance,
     mode mode
     variables(
       :provides =>       provider,
+      :dbconfig_file  => new_resource.dbconfig_file,
       :sysconfig_file => new_resource.sysconfig_file,
       :ulimit =>         new_resource.ulimit,
       :bind_ip =>        new_resource.bind_ip,
       :port =>           new_resource.port
     )
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
+
+    if(platform_family?('rhel') && node['platform_version'].to_i >= 7)
+      notifies :run, 'execute[mongodb-systemctl-daemon-reload]', :immediately
+    end
   end
 
   # service
