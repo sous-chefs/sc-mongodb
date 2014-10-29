@@ -18,6 +18,7 @@ depends 'apt', '>= 1.8.2'
 depends 'yum', '>= 3.0'
 depends 'python'
 depends 'runit', '>= 1.5.0'
+depends 'build-essential'
 
 %w(ubuntu debian centos redhat amazon).each do |os|
   supports os
