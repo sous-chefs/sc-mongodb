@@ -21,6 +21,7 @@ default['mongodb']['config']['logappend'] = true
 case node['platform_family']
 when 'rhel', 'fedora'
   default['mongodb']['config']['fork'] = true
+  default['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongodb.pid'
 else
   default['mongodb']['config']['fork'] = false
 end
