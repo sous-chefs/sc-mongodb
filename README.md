@@ -17,7 +17,6 @@ This cookbook depends on these external cookbooks
 
 - apt
 - python
-- runit
 - yum
 
 As of 0.16 This Cookbook requires
