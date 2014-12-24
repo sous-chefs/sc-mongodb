@@ -60,8 +60,8 @@ def retrieve_db
   require 'mongo'
 
   Mongo::MongoClient.new(
-    @new_resource.connection['host'],
-    @new_resource.connection['port'],
+    @new_resource.connection['config']['host'],
+    @new_resource.connection['config']['port'],
     :connect_timeout => 15,
     :slave_ok => true
   )
