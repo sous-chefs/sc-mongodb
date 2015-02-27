@@ -24,7 +24,15 @@ node.set['mongodb']['shard_name'] = node['mongodb']['shard_name']
 node.override['mongodb']['instance_name'] = 'mongos'
 
 include_recipe 'mongodb::install'
-include_recipe 'mongodb::mongo_gem'
+
+ruby_block 'chef_gem_at_converge_time' do·
+  block do
+    node['mongodb']['ruby_gems'].each do |gem, version|
+      version = Gem::Dependency.new(gem, version)
+      Chef::Provider::Package::Rubygems::GemEnvironment.new.install(version)
+    end
+  end
+end
 
 service node[:mongodb][:default_init_name] do
   action [:disable, :stop]
