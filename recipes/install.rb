@@ -62,22 +62,9 @@ template init_file do
 end
 
 if node['mongodb']['install_method'] != 'none'
-  packager_opts = case node['platform_family']
-                  when 'debian'
-                    # this options lets us bypass complaint of pre-existing init file
-                    # necessary until upstream fixes ENABLE_MONGOD/DB flag
-                    '-o Dpkg::Options::="--force-confold" --force-yes'
-                  when 'rhel'
-                    # Add --nogpgcheck option when package is signed
-                    # see: https://jira.mongodb.org/browse/SERVER-8770
-                    '--nogpgcheck'
-                  else
-                    ''
-                  end
-
   # install
   package node['mongodb']['package_name'] do
-    options packager_opts
+    options node['mongodb']['packager_options']
     action :install
     version node['mongodb']['package_version']
   end

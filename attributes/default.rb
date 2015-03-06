@@ -59,13 +59,13 @@ case node['platform_family']
 when 'debian'
   # this options lets us bypass complaint of pre-existing init file
   # necessary until upstream fixes ENABLE_MONGOD/DB flag
-  default['mongodb']['packager_opts'] = '-o Dpkg::Options::="--force-confold" --force-yes'
+  default['mongodb']['packager_options'] = '-o Dpkg::Options::="--force-confold" --force-yes'
 when 'rhel'
   # Add --nogpgcheck option when package is signed
   # see: https://jira.mongodb.org/browse/SERVER-8770
-  default['mongodb']['packager_opts'] = '--nogpgcheck'
+  default['mongodb']['packager_options'] = '--nogpgcheck'
 else
-  default['mongodb']['packager_opts'] = ''
+  default['mongodb']['packager_options'] = ''
 end
 
 # this option can be "distro", "mongodb-org" or "none"
