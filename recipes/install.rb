@@ -33,6 +33,12 @@ else
   mode = '0755'
 end
 
+# Reload systemctl for RHEL 7+ after modifying the init file.
+execute 'mongodb-systemctl-daemon-reload' do
+  command 'systemctl daemon-reload'
+  action :nothing
+end
+
 template init_file do
   cookbook node['mongodb']['template_cookbook']
   source node['mongodb']['init_script_template']
@@ -41,12 +47,17 @@ template init_file do
   mode mode
   variables(
     :provides =>       'mongod',
+    :dbconfig_file  => node['mongodb']['dbconfig_file'],
     :sysconfig_file => node['mongodb']['sysconfig_file'],
     :ulimit =>         node['mongodb']['ulimit'],
     :bind_ip =>        node['mongodb']['config']['bind_ip'],
     :port =>           node['mongodb']['config']['port']
   )
   action :create_if_missing
+
+  if(platform_family?('rhel') && node['platform_version'].to_i >= 7)
+    notifies :run, 'execute[mongodb-systemctl-daemon-reload]', :immediately
+  end
 end
 
 case node['platform_family']
