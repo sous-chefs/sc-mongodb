@@ -1,4 +1,4 @@
-chef_gem 'mongo'
+include_recipe 'mongodb::mongo_gem'
 
 users = []
 admin = node['mongodb']['admin']
