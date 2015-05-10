@@ -254,7 +254,8 @@ will be modified.
 
 # LICENSE and AUTHOR:
 
-Author:: Markus Korn <markus.korn@edelight.de>
+This project was originally forked from: https://github.com/edelight/chef-mongodb
+Original Author:: Markus Korn <markus.korn@edelight.de>
 
 Copyright:: 2011-2014, edelight GmbH
 
