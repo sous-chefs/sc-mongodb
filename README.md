@@ -9,7 +9,7 @@ Installs and configures MongoDB, supporting:
 * 10gen repository package installation
 * 10gen MongoDB Monitoring System
 
-[![Build Status](https://travis-ci.org/edelight/chef-mongodb.png?branch=master)](https://travis-ci.org/edelight/chef-mongodb)
+[![Build Status](https://travis-ci.org/chef-brigade/mongodb-cookbook.svg)](https://travis-ci.org/chef-brigade/mongodb-cookbook)
 
 ## REQUIREMENTS:
 
