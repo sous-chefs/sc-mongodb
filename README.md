@@ -38,7 +38,11 @@ For examples see the USAGE section below.
 
 ## ATTRIBUTES:
 
-### Mongodb Configuration
+### MongoDB setup
+
+* `default[:mongodb][:install_method]` - This option can be "distro", "mongodb-org" or "none" - Default (distro)
+
+### MongoDB Configuration
 
 Basically all settings defined in the Configuration File Options documentation page can be added to the `node['mongodb']['config'][<setting>]` attribute: http://docs.mongodb.org/manual/reference/configuration-options/
 
