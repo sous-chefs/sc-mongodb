@@ -22,7 +22,7 @@ node.set['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
 
 include_recipe 'mongodb::install'
 
-ruby_block 'chef_gem_at_converge_time' do·
+ruby_block 'chef_gem_at_converge_time' do
   block do
     node['mongodb']['ruby_gems'].each do |gem, version|
       version = Gem::Dependency.new(gem, version)
