@@ -21,7 +21,15 @@ node.set['mongodb']['is_replicaset'] = true
 node.set['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
 
 include_recipe 'mongodb::install'
-include_recipe 'mongodb::mongo_gem'
+
+ruby_block 'chef_gem_at_converge_time' do
+  block do
+    node['mongodb']['ruby_gems'].each do |gem, version|
+      version = Gem::Dependency.new(gem, version)
+      Chef::Provider::Package::Rubygems::GemEnvironment.new.install(version)
+    end
+  end
+end
 
 unless node['mongodb']['is_shard']
   mongodb_instance node['mongodb']['instance_name'] do
