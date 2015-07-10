@@ -6,3 +6,6 @@ Berksfile.lock
 Gemfile.lock
 
 metadata.json
+
+#IDE
+.idea

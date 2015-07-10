@@ -214,24 +214,28 @@ define :mongodb_instance,
 
   # replicaset
   if new_resource.is_replicaset && new_resource.auto_configure_replicaset
-    rs_nodes = search(
-      :node,
-      "mongodb_cluster_name:#{new_resource.replicaset['mongodb']['cluster_name']} AND \
-       mongodb_is_replicaset:true AND \
-       mongodb_shard_name:#{new_resource.replicaset['mongodb']['shard_name']} AND \
-       chef_environment:#{new_resource.replicaset.chef_environment}"
-    )
+    if Chef::Config[:solo] and not chef_solo_search_installed?
+      Chef::Log.warn("This recipe uses search. Chef Solo does not support search unless you install the chef-solo-search cookbook.")
+    else
+      rs_nodes = search(
+        :node,
+        "mongodb_cluster_name:#{new_resource.replicaset['mongodb']['cluster_name']} AND \
+         mongodb_is_replicaset:true AND \
+         mongodb_shard_name:#{new_resource.replicaset['mongodb']['shard_name']} AND \
+         chef_environment:#{new_resource.replicaset.chef_environment}"
+      )
 
-    ruby_block 'config_replicaset' do
-      block do
-        MongoDB.configure_replicaset(new_resource.replicaset, replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
+      ruby_block 'config_replicaset' do
+        block do
+          MongoDB.configure_replicaset(new_resource.replicaset, replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
+        end
+        action :nothing
       end
-      action :nothing
-    end
 
-    ruby_block 'run_config_replicaset' do
-      block {}
-      notifies :create, 'ruby_block[config_replicaset]'
+      ruby_block 'run_config_replicaset' do
+        block {}
+        notifies :create, 'ruby_block[config_replicaset]'
+      end
     end
   end
 
