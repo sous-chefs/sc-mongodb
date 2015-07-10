@@ -7,7 +7,9 @@ gem 'rake',       '~> 10.1'
 gem 'rubocop',    '~> 0.24.0'
 gem 'chef',       '< 12' if RUBY_VERSION.to_f < 2.0
 
+gem 'mongo'
+
 group :integration do
-    gem 'test-kitchen',    '~> 1.2'
-    gem 'kitchen-vagrant', '~> 0.14'
+  gem 'test-kitchen',    '~> 1.2'
+  gem 'kitchen-vagrant', '~> 0.14'
 end
