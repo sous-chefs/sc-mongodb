@@ -258,8 +258,14 @@ will be modified.
 
 # LICENSE and AUTHOR:
 
-This project was originally forked from: https://github.com/edelight/chef-mongodb
-Original Author:: Markus Korn <markus.korn@edelight.de>
+### Originally forked from
+https://github.com/edelight/chef-mongodb
+
+### Original Author
+Markus Korn <markus.korn@edelight.de>
+
+### Current Maintainers
+Pierce Moore <me@prex.io>
 
 Copyright:: 2011-2014, edelight GmbH
 
