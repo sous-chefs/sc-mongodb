@@ -10,7 +10,7 @@ if platform_family?('rhel')
   sasldev_pkg = 'cyrus-sasl-devel'
 else
   sasldev_pkg = 'libsasl2-dev'
-end 
+end
 
 package sasldev_pkg do
   action :nothing

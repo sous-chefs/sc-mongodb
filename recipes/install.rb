@@ -55,23 +55,23 @@ template init_file do
   )
   action :create_if_missing
 
-  if(platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7)
+  if platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7
     notifies :run, 'execute[mongodb-systemctl-daemon-reload]', :immediately
   end
 end
 
 if node['mongodb']['install_method'] != 'none'
   case node['platform_family']
-    when 'debian'
-      # this options lets us bypass complaint of pre-existing init file
-      # necessary until upstream fixes ENABLE_MONGOD/DB flag
-      packager_opts = '-o Dpkg::Options::="--force-confold" --force-yes'
-    when 'rhel'
-      # Add --nogpgcheck option when package is signed
-      # see: https://jira.mongodb.org/browse/SERVER-8770
-      packager_opts = '--nogpgcheck'
-    else
-      packager_opts = ''
+  when 'debian'
+    # this options lets us bypass complaint of pre-existing init file
+    # necessary until upstream fixes ENABLE_MONGOD/DB flag
+    packager_opts = '-o Dpkg::Options::="--force-confold" --force-yes'
+  when 'rhel'
+    # Add --nogpgcheck option when package is signed
+    # see: https://jira.mongodb.org/browse/SERVER-8770
+    packager_opts = '--nogpgcheck'
+  else
+    packager_opts = ''
   end
 
   # install
@@ -87,7 +87,7 @@ if node[:mongodb][:key_file_content]
   file node[:mongodb][:config][:keyFile] do
     owner node[:mongodb][:user]
     group node[:mongodb][:group]
-    mode  '0600'
+    mode '0600'
     backup false
     content node[:mongodb][:key_file_content]
   end

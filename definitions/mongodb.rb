@@ -193,7 +193,7 @@ define :mongodb_instance,
     )
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
 
-    if(platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7)
+    if platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7
       notifies :run, 'execute[mongodb-systemctl-daemon-reload]', :immediately
     end
   end
@@ -208,7 +208,7 @@ define :mongodb_instance,
     end
     notifies :create, 'ruby_block[config_replicaset]', :immediately if new_resource.is_replicaset && new_resource.auto_configure_replicaset
     notifies :create, 'ruby_block[config_sharding]', :immediately if new_resource.is_mongos && new_resource.auto_configure_sharding
-      # we don't care about a running mongodb service in these cases, all we need is stopping it
+    # we don't care about a running mongodb service in these cases, all we need is stopping it
     ignore_failure true if new_resource.name == 'mongodb'
   end
 
