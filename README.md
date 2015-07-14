@@ -11,6 +11,10 @@ Installs and configures MongoDB, supporting:
 
 [![Build Status](https://travis-ci.org/chef-brigade/mongodb-cookbook.svg)](https://travis-ci.org/chef-brigade/mongodb-cookbook)
 
+## Community
+
+Live discussion happens on [![Slack](http://brigade-slackin.herokuapp.com/badge.svg)](https://brigade-slackin.herokuapp.com/)
+
 ## REQUIREMENTS:
 
 This cookbook depends on these external cookbooks
