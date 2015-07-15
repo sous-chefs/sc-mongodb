@@ -38,11 +38,9 @@ end
 if allow_mongodb_instance_run
   mongodb_instance node['mongodb']['instance_name'] do
     mongodb_type 'mongod'
-    bind_ip      node['mongodb']['config']['bind_ip']
-    port         node['mongodb']['config']['port']
-    logpath      node['mongodb']['config']['logpath']
-    dbpath       node['mongodb']['config']['dbpath']
-    enable_rest  node['mongodb']['config']['rest']
-    smallfiles   node['mongodb']['config']['smallfiles']
+    bind_ip      node['mongodb']['config']['net']['bindIp']
+    port         node['mongodb']['config']['net']['port']
+    logpath      node['mongodb']['config']['systemLog']['path']
+    dbpath       node['mongodb']['config']['storage']['dbPath']
   end
 end

@@ -17,4 +17,21 @@ module MongoDBConfigHelpers
     .compact
     .join("\n")
   end
+  
+  def to_yaml_options(config)
+    require 'yaml'
+    
+    hash = Hash.new
+    config.sort.each do |key, value|
+      next if value.nil? || value == ''
+      if value.kind_of?(Array)
+        value.each do |nestedKey, nestedValue|
+          hash[key] = Hash.new(nestedKey, nestedValue)
+        end
+      else
+        hash[key] = value
+      end
+    end
+    JSON.parse(hash.to_json).to_yaml
+  end
 end
