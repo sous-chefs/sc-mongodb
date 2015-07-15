@@ -50,7 +50,7 @@ template init_file do
     :dbconfig_file  => node['mongodb']['dbconfig_file'],
     :sysconfig_file => node['mongodb']['sysconfig_file'],
     :ulimit =>         node['mongodb']['ulimit'],
-    :bind_ip =>        node['mongodb']['config']['bind_ip'],
+    :bind_ip =>        node['mongodb']['config']['net']['bindIp'],
     :port =>           node['mongodb']['config']['port']
   )
   action :create_if_missing
@@ -91,4 +91,11 @@ if node[:mongodb][:key_file_content]
     backup false
     content node[:mongodb][:key_file_content]
   end
+end
+
+template "/etc/security/limits.d/99-mongod-nproc.conf" do
+  source "nproc.erb"
+  group node[:mongodb][:group]
+  owner node[:mongodb][:user]
+  mode 0644
 end
