@@ -31,8 +31,13 @@ def add_user(username, password, roles = [], database)
 
   # Create the user if they don't exist
   # Update the user if they already exist
+  begin
   db.add_user(username, password, false, :roles => roles)
   Chef::Log.info("Created or updated user #{username} on #{database}")
+  rescue Mongo::ConnectionFailure => e
+    raise e unless e.message == "not master"
+    puts "\nnot primary"
+  end
 end
 
 # Drop a user from the database specified
