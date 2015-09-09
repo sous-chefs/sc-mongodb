@@ -16,6 +16,6 @@ users.each do |user|
     roles user['roles']
     database user['database']
     connection node['mongodb']
-    action :add
+    action user['action'] or :add
   end
 end
