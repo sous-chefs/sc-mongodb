@@ -246,7 +246,8 @@ be available at your [MMS Settings page](https://mms.mongodb.com/settings).
 An optional recipe is `mongodb::user_management` which will enable authentication in
 the configuration file by default and create any users in the `node['mongodb']['users']`.
 The users array expects a hash of username, password, roles, and database. Roles should be
-an array of roles the user should have on the database given.
+an array of roles the user should have on the database given. An optional action, `add`, `modify`
+or `delete` may also be specified. If no action is specified, it will default to `add`.
 
 By default, authentication is not required on the database. This can be overridden by setting
 the `node['mongodb']['config']['auth']` attribute to true in the chef json.
