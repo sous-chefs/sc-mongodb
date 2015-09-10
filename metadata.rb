@@ -17,7 +17,7 @@ recipe 'mongodb::mms_backup_agent', 'Installs and configures a MongoDB MMS Backu
 depends 'apt', '>= 1.8.2'
 depends 'yum', '>= 3.0'
 depends 'python'
-depends 'poise', '~ 1.0.0'
+depends 'poise', '~> 1.0.0'
 
 %w(ubuntu debian centos redhat amazon).each do |os|
   supports os
