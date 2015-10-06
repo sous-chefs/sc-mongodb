@@ -1,4 +1,5 @@
-# MongoDB Cookbook
+# MongoDB Cookbook for by JMC
+Note: this fork has been created to create pull request in chef-brigade Repo. Do not use directly when PR are integrated.
 
 Installs and configures MongoDB, supporting:
 
