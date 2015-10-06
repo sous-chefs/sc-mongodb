@@ -7,7 +7,7 @@ file node['mongodb']['sysconfig_file'] do
   group node['mongodb']['root_group']
   owner 'root'
   mode 0644
-  action :create_if_missing
+  action :create
 end
 
 # just-in-case config file drop
@@ -21,7 +21,7 @@ template node['mongodb']['dbconfig_file'] do
     :config => node['mongodb']['config']
   )
   helpers MongoDBConfigHelpers
-  action :create_if_missing
+  action :create
 end
 
 # and we install our own init file
@@ -53,7 +53,7 @@ template init_file do
     :bind_ip =>        node['mongodb']['config']['bind_ip'],
     :port =>           node['mongodb']['config']['port']
   )
-  action :create_if_missing
+  action :create
 
   if(platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7)
     notifies :run, 'execute[mongodb-systemctl-daemon-reload]', :immediately
