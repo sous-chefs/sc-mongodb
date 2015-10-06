@@ -89,6 +89,27 @@ define :mongodb_instance,
   new_resource.ulimit                     = node['mongodb']['ulimit']
   new_resource.reload_action              = node['mongodb']['reload_action']
 
+  # log dir [make sure it exists]
+  if new_resource.logpath
+    directory File.dirname(new_resource.logpath) do
+      owner new_resource.mongodb_user
+      group new_resource.mongodb_group
+      mode '0755'
+      action :create
+      recursive true
+    end
+  end
+
+  # dbpath dir [make sure it exists]
+  directory new_resource.dbpath do
+    owner new_resource.mongodb_user
+    group new_resource.mongodb_group
+    mode '0755'
+    action :create
+    recursive true
+    not_if { new_resource.is_mongos }
+  end
+
   if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
     mode = '0644'
@@ -147,27 +168,6 @@ define :mongodb_instance,
     helpers MongoDBConfigHelpers
     mode '0644'
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
-  end
-
-  # log dir [make sure it exists]
-  if new_resource.logpath
-    directory File.dirname(new_resource.logpath) do
-      owner new_resource.mongodb_user
-      group new_resource.mongodb_group
-      mode '0755'
-      action :create
-      recursive true
-    end
-  end
-
-  # dbpath dir [make sure it exists]
-  directory new_resource.dbpath do
-    owner new_resource.mongodb_user
-    group new_resource.mongodb_group
-    mode '0755'
-    action :create
-    recursive true
-    not_if { new_resource.is_mongos }
   end
 
   # Reload systemctl for RHEL 7+ after modifying the init file.
