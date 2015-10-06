@@ -1,3 +1,5 @@
+# MongoDB cookbook
+
 Installs and configures MongoDB, supporting:
 
 * Single MongoDB instance
