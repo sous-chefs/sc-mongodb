@@ -26,7 +26,6 @@ ruby_block 'chef_gem_at_converge_time' do
   block do
     node['mongodb']['ruby_gems'].each do |gem, version|
       version = Gem::Dependency.new(gem, version)
-        Chef::Log.info("jmcnet/mongodb-coookbook : updated version is #{version}")
       Chef::Provider::Package::Rubygems::GemEnvironment.new.install(version)
     end
   end
