@@ -39,27 +39,27 @@ execute 'mongodb-systemctl-daemon-reload' do
   action :nothing
 end
 
-# keep the original file. TODO the file for REdhat don't work properly so -> never use this (keeped only for memory)
-# template init_file do
-#   cookbook node['mongodb']['template_cookbook']
-#   source node['mongodb']['init_script_template']
-#   group node['mongodb']['root_group']
-#   owner 'root'
-#   mode mode
-#   variables(
-#     :provides =>       'mongod',
-#     :dbconfig_file  => node['mongodb']['dbconfig_file'],
-#     :sysconfig_file => node['mongodb']['sysconfig_file'],
-#     :ulimit =>         node['mongodb']['ulimit'],
-#     :bind_ip =>        node['mongodb']['config']['bind_ip'],
-#     :port =>           node['mongodb']['config']['port']
-#   )
-#   action :create_if_missing
-# 
-#   if(platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7)
-#     notifies :run, 'execute[mongodb-systemctl-daemon-reload]', :immediately
-#   end
-# end
+# keep the original file.
+template init_file do
+   cookbook node['mongodb']['template_cookbook']
+   source node['mongodb']['init_script_template']
+   group node['mongodb']['root_group']
+   owner 'root'
+   mode mode
+   variables(
+     :provides =>       'mongod',
+     :dbconfig_file  => node['mongodb']['dbconfig_file'],
+     :sysconfig_file => node['mongodb']['sysconfig_file'],
+     :ulimit =>         node['mongodb']['ulimit'],
+     :bind_ip =>        node['mongodb']['config']['bind_ip'],
+     :port =>           node['mongodb']['config']['port']
+   )
+   action :create_if_missing
+ 
+   if(platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7)
+     notifies :run, 'execute[mongodb-systemctl-daemon-reload]', :immediately
+   end
+ end
 
 if node['mongodb']['install_method'] != 'none'
   case node['platform_family']
