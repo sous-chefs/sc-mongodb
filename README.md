@@ -1,4 +1,4 @@
-# MongoDB cookbook
+# MongoDB Cookbook
 
 Installs and configures MongoDB, supporting:
 
