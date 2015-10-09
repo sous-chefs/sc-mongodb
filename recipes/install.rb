@@ -3,7 +3,7 @@ include_recipe 'mongodb::10gen_repo' if %w(10gen mongodb-org).include?(node['mon
 
 # prevent-install defaults, but don't overwrite
 file node['mongodb']['sysconfig_file'] do
-  content 'ENABLE_MONGODB=no'
+  content 'ENABLE_MONGODB=yes'
   group node['mongodb']['root_group']
   owner 'root'
   mode 0644
@@ -21,7 +21,7 @@ template node['mongodb']['dbconfig_file'] do
     :config => node['mongodb']['config']
   )
   helpers MongoDBConfigHelpers
-  action :create_if_missing
+  action :create
 end
 
 # and we install our own init file
@@ -39,6 +39,7 @@ execute 'mongodb-systemctl-daemon-reload' do
   action :nothing
 end
 
+# keep the original file.
 template init_file do
   cookbook node['mongodb']['template_cookbook']
   source node['mongodb']['init_script_template']
@@ -54,7 +55,7 @@ template init_file do
     :port =>           node['mongodb']['config']['port']
   )
   action :create_if_missing
-
+ 
   if(platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7)
     notifies :run, 'execute[mongodb-systemctl-daemon-reload]', :immediately
   end

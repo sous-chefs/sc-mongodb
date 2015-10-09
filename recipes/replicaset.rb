@@ -22,11 +22,12 @@ node.set['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
 
 include_recipe 'mongodb::install'
 
+# TODO decomment once bug corrected : https://github.com/chef-brigade/mongodb-cookbook/issues/93
 ruby_block 'chef_gem_at_converge_time' do
   block do
     node['mongodb']['ruby_gems'].each do |gem, version|
-      version = Gem::Dependency.new(gem, version)
-      Chef::Provider::Package::Rubygems::GemEnvironment.new.install(version)
+      # version = Gem::Dependency.new(gem, version)
+      # Chef::Provider::Package::Rubygems::GemEnvironment.new.install(version)
     end
   end
 end

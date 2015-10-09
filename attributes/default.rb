@@ -47,7 +47,7 @@ default[:mongodb][:init_script_template] = 'debian-mongodb.init.erb'
 default[:mongodb][:sysconfig_file] = '/etc/default/mongodb'
 default[:mongodb][:sysconfig_file_template] = 'mongodb.sysconfig.erb'
 default[:mongodb][:dbconfig_file_template] = 'mongodb.conf.erb'
-default[:mongodb][:dbconfig_file] = '/etc/mongodb.conf'
+default[:mongodb][:dbconfig_file] = '/etc/mongod.conf'
 
 default[:mongodb][:package_name] = 'mongodb'
 default[:mongodb][:package_version] = nil
