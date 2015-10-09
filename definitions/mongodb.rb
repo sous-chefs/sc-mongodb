@@ -222,9 +222,10 @@ define :mongodb_instance,
        chef_environment:#{new_resource.replicaset.chef_environment}"
     )
 
+    # TODO decomment this once this issue has been corrected : https://github.com/chef-brigade/mongodb-cookbook/issues/93
     ruby_block 'config_replicaset' do
       block do
-        MongoDB.configure_replicaset(new_resource.replicaset, replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
+        # MongoDB.configure_replicaset(new_resource.replicaset, replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
       end
       action :nothing
     end
