@@ -3,6 +3,7 @@ def user_exists?(username, connection)
 end
 
 def add_user(username, password, roles = [], database)
+  gem 'mongo', '~>1.12'
   require 'rubygems'
   require 'mongo'
 
