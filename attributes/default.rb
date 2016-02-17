@@ -94,6 +94,8 @@ when 'debian'
     default[:mongodb][:apt_repo] = 'ubuntu-upstart'
     default[:mongodb][:init_dir] = '/etc/init/'
     default[:mongodb][:init_script_template] = 'debian-mongodb.upstart.erb'
+    default[:mongodb][:apt_keyserver] = 'keyserver.ubuntu.com'
+    default[:mongodb][:apt_recv_key] = '7F0CEB10'
   else
     default[:mongodb][:apt_repo] = 'debian-sysvinit'
   end

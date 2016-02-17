@@ -24,15 +24,28 @@
 node.override['mongodb']['package_name'] = 'mongodb-org'
 
 case node['platform_family']
+
 when 'debian'
-  # Adds the repo: http://www.mongodb.org/display/DOCS/Ubuntu+and+Debian+packages
-  apt_repository 'mongodb' do
-    uri "#{node[:mongodb][:repo]}/#{node[:mongodb][:apt_repo]}"
-    distribution 'dist'
-    components ['10gen']
-    keyserver 'hkp://keyserver.ubuntu.com:80'
-    key '7F0CEB10'
-    action :add
+  version = node['mongodb']['package_version'].to_f
+  if version > 2.6 then
+    apt_repository "mongodb-org-#{version}" do
+      uri "http://repo.mongodb.org/apt/#{node['platform']}"
+      distribution "#{node['lsb']['codename']}/mongodb-org/#{version.to_s}"
+      components ['multiverse']
+      keyserver node['mongodb']['apt_keyserver']
+      key node['mongodb']['apt_recv_key']
+      action :add
+    end
+  else
+    # Adds the repo: http://www.mongodb.org/display/DOCS/Ubuntu+and+Debian+packages
+    apt_repository 'mongodb' do
+      uri "#{node[:mongodb][:repo]}/#{node[:mongodb][:apt_repo]}"
+      distribution 'dist'
+      components ['10gen']
+      keyserver node['mongodb']['apt_keyserver']
+      key node['mongodb']['apt_recv_key']
+      action :add
+    end
   end
 
 when 'rhel', 'fedora'
