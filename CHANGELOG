@@ -6,6 +6,7 @@ Last-Update: Tue Nov  4 11:48:54 PST 2014
 Pending 0.16.3 Changes
 --------------------------
 * remove old runit dependency
+* fix user/group attribute variables for newer versions of EL and Fedora
 
 
 Version 0.16.2 Release Tue Nov  4 11:48:54 PST 2014

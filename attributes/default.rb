@@ -77,11 +77,15 @@ when 'rhel', 'fedora'
   default[:mongodb][:repo] = 'http://downloads-distro.mongodb.org/repo/redhat/os'
   default[:mongodb][:package_name] = 'mongodb-server'
   default[:mongodb][:sysconfig_file] = '/etc/sysconfig/mongodb'
-  default[:mongodb][:user] = 'mongod'
-  default[:mongodb][:group] = 'mongod'
+  # Weird user/group for older RHEL & Fedora versions
+  if (node['platform_version'].to_i < 7 && node['platform_family'] == 'rhel') \
+    || (node['platform_version'].to_i < 20 && node['platform_family'] == 'fedora')
+    default[:mongodb][:user] = 'mongod'
+    default[:mongodb][:group] = 'mongod'
+    default[:mongodb][:default_init_name] = 'mongod'
+    default[:mongodb][:instance_name] = 'mongod'
+  end
   default[:mongodb][:init_script_template] = 'redhat-mongodb.init.erb'
-  default[:mongodb][:default_init_name] = 'mongod'
-  default[:mongodb][:instance_name] = 'mongod'
   # then there is this guy
   if node['platform'] == 'centos' || node['platform'] == 'amazon'
     Chef::Log.warn("CentOS doesn't provide mongodb, forcing use of mongodb-org repo")
