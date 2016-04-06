@@ -29,7 +29,7 @@ when 'debian'
   version = node['mongodb']['package_version'].to_f
   if version > 2.6 then
     apt_repository "mongodb-org-#{version}" do
-      uri node[:mongodb][:repo]
+      uri node[:mongodb][:repo_v30]
       distribution "#{node['lsb']['codename']}/mongodb-org/#{version.to_s}"
       components ['multiverse']
       keyserver node['mongodb']['apt_keyserver']
