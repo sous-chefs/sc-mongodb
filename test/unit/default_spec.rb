@@ -12,7 +12,7 @@ describe 'mongodb::default' do
 
   it 'should install and enable mongodb' do
     chef_run.converge(described_recipe)
-    expect(chef_run).to enable_service 'mongodb'
+    expect(chef_run).to enable_service('mongodb')
     expect(chef_run).to include_recipe('mongodb::install')
   end
 
