@@ -22,6 +22,15 @@
 require 'json'
 
 class Chef::ResourceDefinitionList::MongoDB
+  def self.get_connection(node)
+    Mongo::MongoClient.new(
+      '127.0.0.1',
+      node['mongodb']['config']['port'],
+      :connect_timeout => 15,
+      :slave_ok => true,
+    )
+  end
+
   def self.configure_replicaset(node, name, members)
     # lazy require, to move loading this modules to runtime of the cookbook
     require 'rubygems'
@@ -39,7 +48,14 @@ class Chef::ResourceDefinitionList::MongoDB
     begin
       connection = nil
       rescue_connection_failure do
-        connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
+        connection = self.get_connection(node)
+        if node['mongodb']['config']['auth'] == true
+          begin
+            connection.add_auth("admin", node['mongodb']['admin']['username'], node['mongodb']['admin']['password'])
+          rescue Mongo::AuthenticationError => e
+            Chef::Log.warn("Unable to authenticate as admin user. If this is a fresh install, ignore warning: #{e}")
+          end
+        end
         connection.database_names # check connection
       end
     rescue => e
@@ -100,11 +116,6 @@ class Chef::ResourceDefinitionList::MongoDB
       # everything is fine, do nothing
     elsif result.fetch('errmsg', nil) =~ /(\S+) is already initiated/ || (result.fetch('errmsg', nil) == 'already initialized')
       server, port = Regexp.last_match.nil? || Regexp.last_match.length < 2 ? ['localhost', node['mongodb']['config']['port']] : Regexp.last_match[1].split(':')
-      begin
-        connection = Mongo::Connection.new(server, port, :op_timeout => 5, :slave_ok => true)
-      rescue
-        abort("Could not connect to database: '#{server}:#{port}'")
-      end
 
       # check if both configs are the same
       config = connection['local']['system']['replset'].find_one('_id' => name)

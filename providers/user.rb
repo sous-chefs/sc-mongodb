@@ -7,8 +7,10 @@ def add_user(username, password, roles = [], database)
   require 'mongo'
 
   connection = retrieve_db
-  admin = connection.db('admin')
   db = connection.db(database)
+
+
+  return true unless db.command(:ismaster => 1)["ismaster"]
 
   # Check if user is admin / admin, and warn that this should
   # be overridden to unique values
@@ -23,7 +25,7 @@ def add_user(username, password, roles = [], database)
   # because of the localhost exception
   if node['mongodb']['config']['auth'] == true
     begin
-      admin.authenticate(@new_resource.connection['admin']['username'], @new_resource.connection['admin']['password'])
+      connection.add_auth("admin", @new_resource.connection['admin']['username'], @new_resource.connection['admin']['password'])
     rescue Mongo::AuthenticationError => e
       Chef::Log.warn("Unable to authenticate as admin user. If this is a fresh install, ignore warning: #{e}")
     end
