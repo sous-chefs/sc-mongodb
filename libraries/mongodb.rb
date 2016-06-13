@@ -53,7 +53,12 @@ class Chef::ResourceDefinitionList::MongoDB
     rs_members = []
     rs_options = {}
     members.each_index do |n|
-      host = "#{members[n]['fqdn']}:#{members[n]['mongodb']['config']['port']}"
+      if node['mongodb']['add_by_ip']
+        host = "#{members[n]['ipaddress']}:#{members[n]['mongodb']['config']['port']}"
+      else
+        host = "#{members[n]['fqdn']}:#{members[n]['mongodb']['config']['port']}"
+      end
+
       rs_options[host] = {}
       rs_options[host]['arbiterOnly'] = true if members[n]['mongodb']['replica_arbiter_only']
       rs_options[host]['buildIndexes'] = false unless members[n]['mongodb']['replica_build_indexes']

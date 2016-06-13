@@ -68,6 +68,7 @@ Basically all settings defined in the Configuration File Options documentation p
 
 ### Sharding and replication attributes
 
+* `node[:mongodb][:add_by_ip]` - Set to true to add replicaset members by IP instead of FQDN.
 * `node['mongodb']['config']['replSet']` - Define name of replicaset
 * `node[:mongodb][:cluster_name]` - Name of the cluster, all members of the cluster must
     reference to the same name, as this name is used internally to identify all
