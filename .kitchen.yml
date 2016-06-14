@@ -66,6 +66,14 @@ suites:
     mongodb:
       install_method: mongodb-org
 
+- name: default_mongodb_org_repo_3.0
+  run_list:
+  - "recipe[mongodb]"
+  attributes:
+    mongodb:
+      install_method: mongodb-org
+      package_version: 3.0.9
+
 - name: replicaset
   run_list:
   - "recipe[mongodb::replicaset]"
