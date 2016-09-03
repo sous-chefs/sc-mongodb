@@ -19,6 +19,7 @@
 # limitations under the License.
 #
 
+# ensure these are stored by using node.set, not merely node.default
 node.set['mongodb']['is_configserver'] = true
 node.set['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
 node.set['mongodb']['shard_name'] = node['mongodb']['shard_name']
@@ -29,10 +30,10 @@ include_recipe 'mongodb::install'
 # http://docs.mongodb.org/manual/reference/configuration-options/#sharded-cluster-options
 # we still explicitly set the port and small files.
 mongodb_instance node['mongodb']['instance_name'] do
-  mongodb_type 'configserver'
-  port         node['mongodb']['config']['port']
-  logpath      node['mongodb']['config']['logpath']
-  dbpath       node['mongodb']['config']['dbpath']
-  enable_rest  node['mongodb']['config']['rest']
-  smallfiles   node['mongodb']['config']['smallfiles']
+  is_configserver  true
+  cluster_name     node['mongodb']['cluster_name']
+  shard_name       node['mongodb']['shard_name']
+  port             node['mongodb']['config']['port']
+  logpath          node['mongodb']['config']['logpath']
+  dbpath           node['mongodb']['config']['dbpath']
 end
