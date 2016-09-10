@@ -1,9 +1,11 @@
-name              'mongodb'
-maintainer        'edelight GmbH'
-maintainer_email  'markus.korn@edelight.de'
-license           'Apache 2.0'
-description       'Installs and configures mongodb'
-version           '0.16.3'
+name 'mongodb'
+source_url "https://github.com/chef-brigade/#{name}-cookbook" if respond_to?(:source_url)
+issues_url "https://github.com/chef-brigade/#{name}-cookbook/issues" if respond_to?(:issues_url)
+maintainer 'Chef Brigade'
+maintainer_email 'help@chefbrigade.io'
+license 'Apache 2.0'
+description 'Installs and configures mongodb'
+version '0.16.3'
 
 recipe 'mongodb', 'Installs and configures a single node mongodb instance'
 recipe 'mongodb::10gen_repo', 'Adds the 10gen repo to get the latest packages'
