@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+# ensure these are stored by using node.set, not merely node.default
 node.set['mongodb']['is_replicaset'] = true
 node.set['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
 
@@ -33,12 +34,11 @@ end
 
 unless node['mongodb']['is_shard']
   mongodb_instance node['mongodb']['instance_name'] do
-    mongodb_type 'mongod'
+    is_replicaset  true
+    cluster_name  node['mongodb']['cluster_name']
     port         node['mongodb']['config']['port']
     logpath      node['mongodb']['config']['logpath']
     dbpath       node['mongodb']['config']['dbpath']
     replicaset   node
-    enable_rest  node['mongodb']['config']['rest']
-    smallfiles   node['mongodb']['config']['smallfiles']
   end
 end

@@ -19,6 +19,7 @@
 # limitations under the License.
 #
 
+# ensure these are stored by using node.set, not merely node.default
 node.set['mongodb']['is_shard'] = true
 node.set['mongodb']['shard_name'] = node['mongodb']['shard_name']
 node.set['mongodb']['is_replicaset'] = node['mongodb']['is_replicaset']
@@ -30,11 +31,12 @@ include_recipe 'mongodb::install'
 # commandline option because right now this only changes the port it's
 # running on, and we are overwriting this port anyway.
 mongodb_instance node['mongodb']['instance_name'] do
-  mongodb_type 'shard'
-  port         node['mongodb']['config']['port']
-  logpath      node['mongodb']['config']['logpath']
-  dbpath       node['mongodb']['config']['dbpath']
-  replicaset   node if node['mongodb']['is_replicaset']
-  enable_rest  node['mongodb']['config']['rest']
-  smallfiles   node['mongodb']['config']['smallfiles']
+  is_shard       true
+  is_replicaset  node['mongodb']['is_replicaset']
+  port           node['mongodb']['config']['port']
+  logpath        node['mongodb']['config']['logpath']
+  dbpath         node['mongodb']['config']['dbpath']
+  shard_name     node['mongodb']['shard_name']
+  cluster_name   node['mongodb']['cluster_name']
+  replicaset     node if node['mongodb']['is_replicaset']
 end
