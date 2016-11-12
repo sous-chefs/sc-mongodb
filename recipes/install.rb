@@ -29,7 +29,7 @@ if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
   init_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}.conf")
   mode = '0644'
 else
-  init_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}")
+  init_file = File.join(node['mongodb']['init_dir'], node['mongodb']['default_init_name'])
   mode = '0755'
 end
 
