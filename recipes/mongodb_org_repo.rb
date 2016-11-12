@@ -27,7 +27,7 @@ case node['platform_family']
 when 'debian'
   # Adds the repo: http://www.mongodb.org/display/DOCS/Ubuntu+and+Debian+packages
   apt_repository 'mongodb' do
-    uri "#{node[:mongodb][:repo]}/#{node[:mongodb][:apt_repo]}"
+    uri "#{node['mongodb']['repo']}/#{node['mongodb']['apt_repo']}"
     distribution 'dist'
     components ['10gen']
     keyserver 'hkp://keyserver.ubuntu.com:80'

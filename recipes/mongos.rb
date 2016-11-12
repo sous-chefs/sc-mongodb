@@ -34,7 +34,7 @@ ruby_block 'chef_gem_at_converge_time' do
   end
 end
 
-service node[:mongodb][:default_init_name] do
+service node['mongodb']['default_init_name'] do
   action [:disable, :stop]
 end
 
