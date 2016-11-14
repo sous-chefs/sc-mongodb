@@ -21,6 +21,7 @@ namespace :style do
         fail_tags: ['any'],
         progress: true,
         tags: %w(
+          ~FC015
           ~solo
         )
       }
