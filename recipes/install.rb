@@ -84,12 +84,11 @@ if node['mongodb']['install_method'] != 'none'
 end
 
 # Create keyFile if specified
-if node['mongodb']['key_file_content']
-  file node['mongodb']['config']['keyFile'] do
-    owner node['mongodb']['user']
-    group node['mongodb']['group']
-    mode  '0600'
-    backup false
-    content node['mongodb']['key_file_content']
-  end
+file node['mongodb']['config']['keyFile'] do
+  owner node['mongodb']['user']
+  group node['mongodb']['group']
+  mode  '0600'
+  backup false
+  content node['mongodb']['key_file_content']
+  only_if { node['mongodb']['key_file_content'] }
 end

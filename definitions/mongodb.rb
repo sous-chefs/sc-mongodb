@@ -150,14 +150,13 @@ define :mongodb_instance,
   end
 
   # log dir [make sure it exists]
-  if new_resource.logpath
-    directory File.dirname(new_resource.logpath) do
-      owner new_resource.mongodb_user
-      group new_resource.mongodb_group
-      mode '0755'
-      action :create
-      recursive true
-    end
+  directory File.dirname(new_resource.logpath) do
+    owner new_resource.mongodb_user
+    group new_resource.mongodb_group
+    mode '0755'
+    action :create
+    recursive true
+    only_if { new_resource.logpath }
   end
 
   # dbpath dir [make sure it exists]
