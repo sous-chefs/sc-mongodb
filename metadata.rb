@@ -1,8 +1,9 @@
 name              'mongodb'
-maintainer        'edelight GmbH'
-maintainer_email  'markus.korn@edelight.de'
+maintainer        'Chef Brigade '
+maintainer_email  'help@chefbrigade.io'
 license           'Apache 2.0'
 description       'Installs and configures mongodb'
+long_description  IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version           '0.16.3'
 
 depends 'apt', '>= 1.8.2'
