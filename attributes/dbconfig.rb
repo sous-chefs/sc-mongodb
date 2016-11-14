@@ -5,7 +5,7 @@
 
 include_attribute 'mongodb::default'
 
-default['mongodb']['config']['port'] = 27017
+default['mongodb']['config']['port'] = 27_017
 default['mongodb']['config']['bind_ip'] = '0.0.0.0'
 # Workaround for opscode/chef#1507, which prevents users from
 # unsetting our default with a nil override.

@@ -18,7 +18,7 @@ template node['mongodb']['dbconfig_file'] do
   owner 'root'
   mode 0644
   variables(
-    :config => node['mongodb']['config']
+    config: node['mongodb']['config']
   )
   helpers MongoDBConfigHelpers
   action :create_if_missing
@@ -46,34 +46,34 @@ template init_file do
   owner 'root'
   mode mode
   variables(
-    :provides =>       'mongod',
-    :dbconfig_file  => node['mongodb']['dbconfig_file'],
-    :sysconfig_file => node['mongodb']['sysconfig_file'],
-    :ulimit =>         node['mongodb']['ulimit'],
-    :bind_ip =>        node['mongodb']['config']['bind_ip'],
-    :port =>           node['mongodb']['config']['port'],
-    :user =>           node['mongodb']['user']
+    provides: 'mongod',
+    dbconfig_file: node['mongodb']['dbconfig_file'],
+    sysconfig_file: node['mongodb']['sysconfig_file'],
+    ulimit: node['mongodb']['ulimit'],
+    bind_ip: node['mongodb']['config']['bind_ip'],
+    port: node['mongodb']['config']['port'],
+    user: node['mongodb']['user']
   )
   action :create_if_missing
 
-  if(platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7)
+  if platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7
     notifies :run, 'execute[mongodb-systemctl-daemon-reload]', :immediately
   end
 end
 
 if node['mongodb']['install_method'] != 'none'
-  case node['platform_family']
-    when 'debian'
-      # this options lets us bypass complaint of pre-existing init file
-      # necessary until upstream fixes ENABLE_MONGOD/DB flag
-      packager_opts = '-o Dpkg::Options::="--force-confold" --force-yes'
-    when 'rhel'
-      # Add --nogpgcheck option when package is signed
-      # see: https://jira.mongodb.org/browse/SERVER-8770
-      packager_opts = '--nogpgcheck'
-    else
-      packager_opts = ''
-  end
+  packager_opts = case node['platform_family']
+                  when 'debian'
+                    # this options lets us bypass complaint of pre-existing init file
+                    # necessary until upstream fixes ENABLE_MONGOD/DB flag
+                    '-o Dpkg::Options::="--force-confold" --force-yes'
+                  when 'rhel'
+                    # Add --nogpgcheck option when package is signed
+                    # see: https://jira.mongodb.org/browse/SERVER-8770
+                    '--nogpgcheck'
+                  else
+                    ''
+                  end
 
   # install
   package node['mongodb']['package_name'] do

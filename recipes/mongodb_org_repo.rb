@@ -38,7 +38,7 @@ when 'debian'
 when 'rhel', 'fedora'
   yum_repository 'mongodb' do
     description 'mongodb RPM Repository'
-    baseurl "#{node['mongodb']['repo']}/#{node['kernel']['machine']  =~ /x86_64/ ? 'x86_64' : 'i686'}"
+    baseurl "#{node['mongodb']['repo']}/#{node['kernel']['machine'] =~ /x86_64/ ? 'x86_64' : 'i686'}"
     action :create
     gpgcheck false
     enabled true

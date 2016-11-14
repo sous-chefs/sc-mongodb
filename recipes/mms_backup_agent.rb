@@ -2,7 +2,7 @@ Chef::Log.warn 'Found empty mms_agent.api_key attribute' if node['mongodb']['mms
 
 arch = node['kernel']['machine']
 agent_type = 'backup'
-package = node['mongodb']['mms_agent']['package_url'] % { :agent_type => agent_type }
+package = node['mongodb']['mms_agent']['package_url'] % { agent_type: agent_type }
 package_opts = ''
 
 case node['platform_family']
@@ -36,7 +36,7 @@ template '/etc/mongodb-mms/backup-agent.config' do
   group node['mongodb']['mms_agent']['group']
   mode 0600
   variables(
-      :config => node['mongodb']['mms_agent']['backup']
+    config: node['mongodb']['mms_agent']['backup']
   )
   action :create
   notifies :restart, 'service[mongodb-mms-backup-agent]', :delayed
@@ -45,6 +45,6 @@ end
 service 'mongodb-mms-backup-agent' do
   provider Chef::Provider::Service::Upstart if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
   # restart is broken on rhel (MMS-1597)
-  supports :start => true, :stop => true, :restart => true, :status => true
+  supports start: true, stop: true, restart: true, status: true
   action :nothing
 end

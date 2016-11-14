@@ -6,11 +6,11 @@ gcc = package 'gcc' do
 end
 gcc.run_action(:install)
 
-if platform_family?('rhel')
-  sasldev_pkg = 'cyrus-sasl-devel'
-else
-  sasldev_pkg = 'libsasl2-dev'
-end 
+sasldev_pkg = if platform_family?('rhel')
+                'cyrus-sasl-devel'
+              else
+                'libsasl2-dev'
+              end
 
 package sasldev_pkg do
   action :nothing

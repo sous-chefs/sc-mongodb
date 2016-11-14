@@ -10,10 +10,10 @@ module MongoDBConfigHelpers
   # - does not render entries with a value of nil or ''
   def to_boost_program_options(config)
     config.sort \
-    .map do |key, value|
+          .map do |key, value|
       next if value.nil? || value == ''
       "#{key} = #{value}"
     end \
-    .compact.join("\n")
+          .compact.join("\n")
   end
 end

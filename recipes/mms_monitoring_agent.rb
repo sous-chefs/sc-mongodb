@@ -2,7 +2,7 @@ Chef::Log.warn 'Found empty mms_agent.api_key attribute' if node['mongodb']['mms
 
 arch = node['kernel']['machine']
 agent_type = 'monitoring'
-package = node['mongodb']['mms_agent']['package_url'] % { :agent_type => agent_type }
+package = node['mongodb']['mms_agent']['package_url'] % { agent_type: agent_type }
 package_opts = ''
 
 case node['platform_family']
@@ -36,7 +36,7 @@ template '/etc/mongodb-mms/monitoring-agent.config' do
   group node['mongodb']['mms_agent']['group']
   mode 0600
   variables(
-      :config => node['mongodb']['mms_agent']['monitoring']
+    config: node['mongodb']['mms_agent']['monitoring']
   )
   action :create
   notifies :restart, 'service[mongodb-mms-monitoring-agent]', :delayed
@@ -45,6 +45,6 @@ end
 service 'mongodb-mms-monitoring-agent' do
   provider Chef::Provider::Service::Upstart if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
   # restart is broken on rhel (MMS-1597)
-  supports :start => true, :stop => true, :restart => true, :status => true
+  supports start: true, stop: true, restart: true, status: true
   action :nothing
 end
