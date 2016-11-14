@@ -5,9 +5,9 @@ require 'fauxhai'
 describe 'mongodb::default' do
   let(:chef_run) do
     ChefSpec::Runner.new(
-      :platform => 'ubuntu',
-      :version => '12.04'
-      )
+      platform: 'ubuntu',
+      version: '12.04'
+    )
   end
 
   it 'should include install recipe, and enable mongodb service' do
@@ -33,5 +33,4 @@ describe 'mongodb::default' do
     expect(chef_run).to install_package('mongodb-org')
     expect(chef_run).to enable_service('mongodb')
   end
-
 end

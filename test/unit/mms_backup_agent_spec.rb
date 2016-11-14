@@ -3,7 +3,7 @@ require 'chefspec/berkshelf'
 
 describe 'mongodb::mms_backup_agent' do
   let(:chef_run) do
-    ChefSpec::Runner.new(:platform => 'ubuntu', :version => '12.04') do |n|
+    ChefSpec::Runner.new(platform: 'ubuntu', version: '12.04') do |n|
       n.set.mongodb.mms_agent.api_key = 'strange key'
     end
   end
@@ -15,5 +15,4 @@ describe 'mongodb::mms_backup_agent' do
     resource = chef_run.template('/etc/mongodb-mms/backup-agent.config')
     expect(resource).to notify('service[mongodb-mms-backup-agent]').to(:restart).delayed
   end
-
 end

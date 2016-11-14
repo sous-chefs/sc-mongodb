@@ -1,8 +1,10 @@
+use_inline_resources
+
 def user_exists?(username, connection)
-  connection['admin']['system.users'].find(:user => username).count > 0
+  connection['admin']['system.users'].find(user: username).count > 0
 end
 
-def add_user(username, password, roles = [], database)
+def add_user(username, password, database, roles = [])
   require 'rubygems'
   require 'mongo'
 
@@ -13,8 +15,8 @@ def add_user(username, password, roles = [], database)
   # Check if user is admin / admin, and warn that this should
   # be overridden to unique values
   if username == 'admin' && password == 'admin'
-    Chef::Log.warn('Default username / password detected for admin user');
-    Chef::Log.warn('These should be overridden to different, unique values');
+    Chef::Log.warn('Default username / password detected for admin user')
+    Chef::Log.warn('These should be overridden to different, unique values')
   end
 
   # If authentication is required on database
@@ -31,7 +33,7 @@ def add_user(username, password, roles = [], database)
 
   # Create the user if they don't exist
   # Update the user if they already exist
-  db.add_user(username, password, false, :roles => roles)
+  db.add_user(username, password, false, roles: roles)
   Chef::Log.info("Created or updated user #{username} on #{database}")
 end
 
@@ -62,13 +64,13 @@ def retrieve_db
   Mongo::MongoClient.new(
     '127.0.0.1',
     @new_resource.connection['config']['port'],
-    :connect_timeout => 15,
-    :slave_ok => true
+    connect_timeout: 15,
+    slave_ok: true
   )
 end
 
 action :add do
-  add_user(new_resource.username, new_resource.password, new_resource.roles, new_resource.database)
+  add_user(new_resource.username, new_resource.password, new_resource.database, new_resource.roles)
 end
 
 action :delete do
@@ -76,5 +78,5 @@ action :delete do
 end
 
 action :modify do
-  add_user(new_resource.username, new_resource.password, new_resource.roles, new_resource.database)
+  add_user(new_resource.username, new_resource.password, new_resource.database, new_resource.roles)
 end

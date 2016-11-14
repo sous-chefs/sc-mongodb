@@ -18,7 +18,7 @@ template node['mongodb']['dbconfig_file'] do
   owner 'root'
   mode 0644
   variables(
-    :config => node['mongodb']['config']
+    config: node['mongodb']['config']
   )
   helpers MongoDBConfigHelpers
   action :create_if_missing
@@ -29,7 +29,7 @@ if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
   init_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}.conf")
   mode = '0644'
 else
-  init_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}")
+  init_file = File.join(node['mongodb']['init_dir'], node['mongodb']['default_init_name'])
   mode = '0755'
 end
 
@@ -46,50 +46,49 @@ template init_file do
   owner 'root'
   mode mode
   variables(
-    :provides =>       'mongod',
-    :dbconfig_file  => node['mongodb']['dbconfig_file'],
-    :sysconfig_file => node['mongodb']['sysconfig_file'],
-    :ulimit =>         node['mongodb']['ulimit'],
-    :bind_ip =>        node['mongodb']['config']['bind_ip'],
-    :port =>           node['mongodb']['config']['port'],
-    :user =>           node[:mongodb][:user]
+    provides: 'mongod',
+    dbconfig_file: node['mongodb']['dbconfig_file'],
+    sysconfig_file: node['mongodb']['sysconfig_file'],
+    ulimit: node['mongodb']['ulimit'],
+    bind_ip: node['mongodb']['config']['bind_ip'],
+    port: node['mongodb']['config']['port'],
+    user: node['mongodb']['user']
   )
   action :create_if_missing
 
-  if(platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7)
+  if platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7
     notifies :run, 'execute[mongodb-systemctl-daemon-reload]', :immediately
   end
 end
 
 if node['mongodb']['install_method'] != 'none'
-  case node['platform_family']
-    when 'debian'
-      # this options lets us bypass complaint of pre-existing init file
-      # necessary until upstream fixes ENABLE_MONGOD/DB flag
-      packager_opts = '-o Dpkg::Options::="--force-confold" --force-yes'
-    when 'rhel'
-      # Add --nogpgcheck option when package is signed
-      # see: https://jira.mongodb.org/browse/SERVER-8770
-      packager_opts = '--nogpgcheck'
-    else
-      packager_opts = ''
-  end
+  packager_opts = case node['platform_family']
+                  when 'debian'
+                    # this options lets us bypass complaint of pre-existing init file
+                    # necessary until upstream fixes ENABLE_MONGOD/DB flag
+                    '-o Dpkg::Options::="--force-confold" --force-yes'
+                  when 'rhel'
+                    # Add --nogpgcheck option when package is signed
+                    # see: https://jira.mongodb.org/browse/SERVER-8770
+                    '--nogpgcheck'
+                  else
+                    ''
+                  end
 
   # install
-  package node[:mongodb][:package_name] do
+  package node['mongodb']['package_name'] do
     options packager_opts
     action :install
-    version node[:mongodb][:package_version]
+    version node['mongodb']['package_version']
   end
 end
 
 # Create keyFile if specified
-if node[:mongodb][:key_file_content]
-  file node[:mongodb][:config][:keyFile] do
-    owner node[:mongodb][:user]
-    group node[:mongodb][:group]
-    mode  '0600'
-    backup false
-    content node[:mongodb][:key_file_content]
-  end
+file node['mongodb']['config']['keyFile'] do
+  owner node['mongodb']['user']
+  group node['mongodb']['group']
+  mode  '0600'
+  backup false
+  content node['mongodb']['key_file_content']
+  only_if { node['mongodb']['key_file_content'] }
 end

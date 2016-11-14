@@ -5,9 +5,9 @@ require 'fauxhai'
 describe 'mongodb::default' do
   let(:chef_run) do
     ChefSpec::Runner.new(
-      :platform => 'ubuntu',
-      :version => '12.04'
-      )
+      platform: 'ubuntu',
+      version: '12.04'
+    )
   end
 
   it 'should install and enable mongodb' do

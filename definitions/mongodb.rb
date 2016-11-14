@@ -20,17 +20,16 @@
 #
 
 define :mongodb_instance,
-       :mongodb_type  => 'mongod',
-       :action        => [:enable, :start],
-       :logpath       => '/var/log/mongodb/mongodb.log',
-       :dbpath        => '/data',
-       :configservers => [],
-       :replicaset    => nil,
-       :notifies      => [] do
-
+       mongodb_type: 'mongod',
+       action: [:enable, :start],
+       logpath: '/var/log/mongodb/mongodb.log',
+       dbpath: '/data',
+       configservers: [],
+       replicaset: nil,
+       notifies: [] do
   # TODO: this is the only remain use of params[:mongodb_type], is it still needed?
   unless %w(mongod shard configserver mongos).include?(params[:mongodb_type])
-    fail ArgumentError, ":mongodb_type must be 'mongod', 'shard', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
+    raise ArgumentError, ":mongodb_type must be 'mongod', 'shard', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
   end
 
   # Make changes to node['mongodb']['config'] before copying to new_resource. Chef 11 appears to resolve the attributes
@@ -98,29 +97,26 @@ define :mongodb_instance,
   end
 
   # TODO(jh): reimplement using polymorphism
-  if new_resource.is_replicaset
-    if new_resource.replicaset_name
-      # trust a predefined replicaset name
-      replicaset_name = new_resource.replicaset_name
-    elsif new_resource.is_shard && new_resource.shard_name
-      # for replicated shards we autogenerate
-      # the replicaset name for each shard
-      replicaset_name = "rs_#{new_resource.shard_name}"
-    else
-      # Well shoot, we don't have a predefined name and we aren't
-      # really sharded. If we want backwards compatibility, this should be:
-      #   replicaset_name = "rs_#{new_resource.shard_name}"
-      # which with default values defaults to:
-      #   replicaset_name = 'rs_default'
-      # But using a non-default shard name when we're creating a default
-      # replicaset name seems surprising to me and needlessly arbitrary.
-      # So let's use the *default* default in this case:
-      replicaset_name = 'rs_default'
-    end
-  else
-    # not a replicaset, so no name
-    replicaset_name = nil
-  end
+  replicaset_name = if new_resource.is_replicaset
+                      if new_resource.replicaset_name
+                        # trust a predefined replicaset name
+                        new_resource.replicaset_name
+                      elsif new_resource.is_shard && new_resource.shard_name
+                        # for replicated shards we autogenerate
+                        # the replicaset name for each shard
+                        "rs_#{new_resource.shard_name}"
+                      else
+                        # Well shoot, we don't have a predefined name and we aren't
+                        # really sharded. If we want backwards compatibility, this should be:
+                        #   replicaset_name = "rs_#{new_resource.shard_name}"
+                        # which with default values defaults to:
+                        #   replicaset_name = 'rs_default'
+                        # But using a non-default shard name when we're creating a default
+                        # replicaset name seems surprising to me and needlessly arbitrary.
+                        # So let's use the *default* default in this case:
+                        'rs_default'
+                      end
+                    end
 
   # default file
   template new_resource.sysconfig_file do
@@ -130,7 +126,7 @@ define :mongodb_instance,
     owner 'root'
     mode '0644'
     variables(
-      :sysconfig => new_resource.sysconfig_vars
+      sysconfig: new_resource.sysconfig_vars
     )
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
   end
@@ -142,7 +138,7 @@ define :mongodb_instance,
     group new_resource.root_group
     owner 'root'
     variables(
-      :config => new_resource.config
+      config: new_resource.config
     )
     helpers MongoDBConfigHelpers
     mode '0644'
@@ -150,14 +146,13 @@ define :mongodb_instance,
   end
 
   # log dir [make sure it exists]
-  if new_resource.logpath
-    directory File.dirname(new_resource.logpath) do
-      owner new_resource.mongodb_user
-      group new_resource.mongodb_group
-      mode '0755'
-      action :create
-      recursive true
-    end
+  directory File.dirname(new_resource.logpath) do
+    owner new_resource.mongodb_user
+    group new_resource.mongodb_group
+    mode '0755'
+    action :create
+    recursive true
+    only_if { new_resource.logpath }
   end
 
   # dbpath dir [make sure it exists]
@@ -184,16 +179,16 @@ define :mongodb_instance,
     owner 'root'
     mode mode
     variables(
-      :provides =>       provider,
-      :dbconfig_file  => new_resource.dbconfig_file,
-      :sysconfig_file => new_resource.sysconfig_file,
-      :ulimit =>         new_resource.ulimit,
-      :bind_ip =>        new_resource.bind_ip,
-      :port =>           new_resource.port
+      provides: provider,
+      dbconfig_file: new_resource.dbconfig_file,
+      sysconfig_file: new_resource.sysconfig_file,
+      ulimit: new_resource.ulimit,
+      bind_ip: new_resource.bind_ip,
+      port: new_resource.port
     )
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
 
-    if(platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7)
+    if platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7
       notifies :run, 'execute[mongodb-systemctl-daemon-reload]', :immediately
     end
   end
@@ -201,14 +196,14 @@ define :mongodb_instance,
   # service
   service new_resource.name do
     provider Chef::Provider::Service::Upstart if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
-    supports :status => true, :restart => true
+    supports status: true, restart: true
     action new_resource.service_action
     new_resource.service_notifies.each do |service_notify|
       notifies :run, service_notify
     end
     notifies :create, 'ruby_block[config_replicaset]', :immediately if new_resource.is_replicaset && new_resource.auto_configure_replicaset
     notifies :create, 'ruby_block[config_sharding]', :immediately if new_resource.is_mongos && new_resource.auto_configure_sharding
-      # we don't care about a running mongodb service in these cases, all we need is stopping it
+    # we don't care about a running mongodb service in these cases, all we need is stopping it
     ignore_failure true if new_resource.name == 'mongodb'
   end
 
