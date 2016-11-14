@@ -65,7 +65,7 @@ Basically all settings defined in the Configuration File Options documentation p
 
 * `node['mongodb']['reload_action']` - Action to take when MongoDB conf files are modified, default is `"restart"`
 * `node['mongodb']['package_version']` - Version of the MongoDB package to install, default is nil
-* `node['mongodb']['client_role']` - Role identifying all external clients which should have access to a mongod instance
+* `node['mongodb']['client_roles']` - Role identifying all external clients which should have access to a mongod instance
 
 ### Sharding and replication attributes
 
