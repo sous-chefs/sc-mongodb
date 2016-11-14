@@ -1,6 +1,10 @@
 # MongoDB Cookbook
 
-Installs and configures MongoDB, supporting:
+[![Build Status](https://travis-ci.org/chef-brigade/mongodb-cookbook.svg)](https://travis-ci.org/chef-brigade/mongodb-cookbook)
+
+Installs and configures MongoDB
+
+## Supports:
 
 * Single MongoDB instance
 * Replication
@@ -8,8 +12,6 @@ Installs and configures MongoDB, supporting:
 * Replication and Sharding
 * 10gen repository package installation
 * 10gen MongoDB Monitoring System
-
-[![Build Status](https://travis-ci.org/chef-brigade/mongodb-cookbook.svg)](https://travis-ci.org/chef-brigade/mongodb-cookbook)
 
 ## Community
 
@@ -262,17 +264,17 @@ will be modified.
 
 # LICENSE and AUTHOR:
 
-### Originally forked from
-https://github.com/edelight/chef-mongodb
+## Original Author
+- Author:: Markus Korn <markus.korn@edelight.de> via https://github.com/edelight/chef-mongodb
 
-### Original Author
-Markus Korn <markus.korn@edelight.de>
+## Current Maintainers
 
-### Current Maintainers
-Pierce Moore <me@prex.io>
+- Maintainer:: Pierce Moore <me@prex.io>
+- Maintainer Community:: Chef Brigade [help@chefbrigade.io](mailto:help@chefbrigade.io)
 
 Copyright:: 2011-2014, edelight GmbH
 
+```
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -284,3 +286,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+```
