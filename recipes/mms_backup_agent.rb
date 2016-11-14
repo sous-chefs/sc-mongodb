@@ -5,7 +5,7 @@ agent_type = 'backup'
 package = node['mongodb']['mms_agent']['package_url'] % { :agent_type => agent_type }
 package_opts = ''
 
-case node.platform_family
+case node['platform_family']
 when 'debian'
   arch = 'amd64' if arch == 'x86_64'
   package = "#{package}_#{node['mongodb']['mms_agent']['backup']['version']}_#{arch}.deb"
