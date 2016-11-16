@@ -1,5 +1,5 @@
 name              'mongodb'
-maintainer        'Chef Brigade '
+maintainer        'Chef Brigade'
 maintainer_email  'help@chefbrigade.io'
 license           'Apache 2.0'
 description       'Installs and configures mongodb'
