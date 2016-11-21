@@ -10,8 +10,7 @@ Installs and configures MongoDB
 * Replication
 * Sharding
 * Replication and Sharding
-* 10gen repository package installation
-* 10gen MongoDB Monitoring System
+* MongoDB Monitoring System
 
 ## Community
 
@@ -127,13 +126,6 @@ sslRequireValidServerCertificates=false
 
 ## USAGE:
 
-### 10gen
-Adds the stable [10gen repo](http://www.mongodb.org/downloads#packages) for the
-corresponding platform. Currently only implemented for the Debian and Ubuntu repository.
-
-Usage: just add `recipe[sc-mongodb::10gen_repo]` to the node run_list *before* any other
-MongoDB recipe, and the mongodb-10gen **stable** packages will be installed instead of the distribution default.
-
 ### Single mongodb instance
 
 Simply add
@@ -227,7 +219,7 @@ For more details, you can find a [tutorial for Sharding + Replication](https://g
 
 This cookbook also includes support for
 [MongoDB Monitoring System (MMS)](https://mms.mongodb.com/)
-agent. MMS is a hosted monitoring service, provided by 10gen, Inc. Once
+agent. MMS is a hosted monitoring service, provided by MongoDB, Inc. Once
 the small python agent program is installed on the MongoDB host, it
 automatically collects the metrics and uploads them to the MMS server.
 The graphs of these metrics are shown on the web page. It helps a lot

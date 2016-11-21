@@ -79,7 +79,7 @@ default['mongodb']['reload_action'] = 'restart' # or "nothing"
 
 case node['platform_family']
 when 'freebsd'
-  default['mongodb']['package_name'] = 'mongo-10gen-server'
+  default['mongodb']['package_name'] = 'mongodb'
   default['mongodb']['sysconfig_file'] = '/etc/rc.conf.d/mongodb'
   default['mongodb']['init_dir'] = '/usr/local/etc/rc.d'
   default['mongodb']['root_group'] = 'wheel'

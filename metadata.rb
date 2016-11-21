@@ -7,7 +7,6 @@ long_description  IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version           '0.18.1'
 
 recipe 'sc-mongodb', 'Installs and configures a single node mongodb instance'
-recipe 'sc-mongodb::10gen_repo', 'Adds the 10gen repo to get the latest packages'
 recipe 'sc-mongodb::mongos', 'Installs and configures a mongos which can be used in a sharded setup'
 recipe 'sc-mongodb::configserver', 'Installs and configures a configserver for mongodb sharding'
 recipe 'sc-mongodb::shard', 'Installs and configures a single shard'

@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: sc-mongodb
-# Recipe:: 10gen_repo
+# Recipe:: mongodb_org_repo
 #
 # Copyright 2011, edelight GmbH
 # Authors:
@@ -29,7 +29,7 @@ when 'debian'
   apt_repository 'mongodb' do
     uri "#{node['mongodb']['repo']}/#{node['mongodb']['apt_repo']}"
     distribution 'dist'
-    components ['10gen']
+    components ['multiverse']
     keyserver 'hkp://keyserver.ubuntu.com:80'
     key '7F0CEB10'
     action :add
@@ -46,5 +46,5 @@ when 'rhel', 'fedora'
 
 else
   # pssst build from source
-  Chef::Log.warn("Adding the #{node['platform_family']} 10gen repository is not yet not supported by this cookbook")
+  Chef::Log.warn("Adding the #{node['platform_family']} mongodb-org repository is not yet not supported by this cookbook")
 end

@@ -1,5 +1,5 @@
 # install the mongodb_org_repo if necessary
-include_recipe 'sc-mongodb::mongodb_org_repo' if %w(10gen mongodb-org).include?(node['mongodb']['install_method'])
+include_recipe 'sc-mongodb::mongodb_org_repo' if node['mongodb']['install_method'] == 'mongodb-org'
 
 build_essential 'build-tools'
 
