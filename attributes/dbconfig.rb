@@ -32,4 +32,4 @@ default['mongodb']['config']['smallfiles'] = false
 default['mongodb']['config']['oplogSize'] = nil
 
 default['mongodb']['config']['replSet'] = nil
-default['mongodb']['config']['keyFile'] = '/etc/mongodb.key' if node['mongodb']['key_file_content']
+default['mongodb']['config']['keyFile'] = '/etc/mongodb.key'
