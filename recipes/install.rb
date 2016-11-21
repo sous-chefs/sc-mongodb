@@ -1,4 +1,27 @@
-# install the mongodb_org_repo if necessary
+#
+# Cookbook Name:: mongodb
+# Recipe:: install
+#
+# Copyright 2011, edelight GmbH
+# Authors:
+#       Markus Korn <markus.korn@edelight.de>
+#
+# Copyright 2016, Sous Chefs
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# install the mongodb org repo if necessary
 include_recipe 'sc-mongodb::mongodb_org_repo' if node['mongodb']['install_method'] == 'mongodb-org'
 
 build_essential 'build-tools'
