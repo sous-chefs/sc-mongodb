@@ -22,7 +22,7 @@
 define :mongodb_instance,
        mongodb_type: 'mongod',
        action: [:enable, :start],
-       logpath: '/var/log/mongodb/mongodb.log',
+       logpath: '/var/log/mongodb/mongod.log',
        dbpath: '/data',
        configservers: [],
        replicaset: nil,
@@ -63,7 +63,7 @@ define :mongodb_instance,
   # TODO(jh): parameterize so we can make a resource provider
   new_resource.auto_configure_replicaset  = node['mongodb']['auto_configure']['replicaset']
   new_resource.auto_configure_sharding    = node['mongodb']['auto_configure']['sharding']
-  new_resource.bind_ip                    = node['mongodb']['config']['bind_ip']
+  new_resource.bind_ip                    = node['mongodb']['config']['net']['bindIp']
   new_resource.cluster_name               = node['mongodb']['cluster_name']
   new_resource.config                     = node['mongodb']['config']
   new_resource.dbconfig_file              = node['mongodb']['dbconfig_file']
@@ -76,8 +76,8 @@ define :mongodb_instance,
   new_resource.is_mongos                  = node['mongodb']['is_mongos']
   new_resource.mongodb_group              = node['mongodb']['group']
   new_resource.mongodb_user               = node['mongodb']['user']
-  new_resource.replicaset_name            = node['mongodb']['config']['replSet']
-  new_resource.port                       = node['mongodb']['config']['port']
+  new_resource.replicaset_name            = node['mongodb']['config']['replication']['replSetName']
+  new_resource.port                       = node['mongodb']['config']['net']['port']
   new_resource.root_group                 = node['mongodb']['root_group']
   new_resource.shard_name                 = node['mongodb']['shard_name']
   new_resource.sharded_collections        = node['mongodb']['sharded_collections']

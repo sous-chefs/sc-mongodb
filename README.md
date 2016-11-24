@@ -45,19 +45,18 @@ For examples see the USAGE section below.
 
 ### MongoDB setup
 
-* `default['mongodb']['install_method']` - This option can be "distro", "mongodb-org" or "none" - Default (distro)
+* `default['mongodb']['install_method']` - This option can be "mongodb-org" or "none" - Default ("mongodb-org")
 
 ### MongoDB Configuration
 
-Basically all settings defined in the Configuration File Options documentation page can be added to the `node['mongodb']['config'][<setting>]` attribute: http://docs.mongodb.org/manual/reference/configuration-options/
+The `node['mongodb']['config']` attributes are rendered out as a yaml config file. All settings defined in the Configuration File Options documentation page can be added to the `node['mongodb']['config'][<setting>]` attribute: http://docs.mongodb.org/manual/reference/configuration-options/
 
-* `node['mongodb']['config']['dbpath']` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
-* `node['mongodb']['config']['logpath']` - Path for the logfiles, default is "/var/log/mongodb/mongodb.log"
-* `node['mongodb']['config']['port']` - Port the mongod listens on, default is 27017
-* `node['mongodb']['config']['rest']` - Enable the ReST interface of the webserver
-* `node['mongodb']['config']['smallfiles']` - Modify MongoDB to use a smaller default data file size
-* `node['mongodb']['config']['oplogsize']` - Specifies a maximum size in megabytes for the replication operation log
-* `node['mongodb']['config']['bind_ip']` - Configure from which address to accept connections
+* `node['mongodb']['config']['net']['bindIp']` - Configure from which address to accept connections
+* `node['mongodb']['config']['net']['port']` - Port the mongod listens on, default is 27017
+* `node['mongodb']['config']['replication']['oplogSizeMB']` - Specifies a maximum size in megabytes for the replication operation log
+* `node['mongodb']['config']['storage']['dbPath']` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
+* `node['mongodb']['config']['storage']['engine']` - Storage engine to use, default is "wiredTiger"
+* `node['mongodb']['config']['systemLog']['path']` - Path for the logfiles, default is "/var/log/mongodb/mongod.log"
 * `node['mongodb']['config'][<setting>]` - General MongoDB Configuration File option
 
 ### Cookbook specific attributes
@@ -68,7 +67,7 @@ Basically all settings defined in the Configuration File Options documentation p
 
 ### Sharding and replication attributes
 
-* `node['mongodb']['config']['replSet']` - Define name of replicaset
+* `node['mongodb']['config']['replication']['replSetName']` - Define name of replicaset
 * `node['mongodb']['cluster_name']` - Name of the cluster, all members of the cluster must reference to the same name, as this name is used internally to identify all members of a cluster.
 * `node['mongodb']['shard_name']` - Name of a shard, default is "default"
 * `node['mongodb']['sharded_collections']` - Define which collections are sharded

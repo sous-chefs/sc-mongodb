@@ -67,7 +67,7 @@ suites:
           sslRequireValidServerCertificates: false
   excludes:
     # Upstart is not present
-    - debian-7.2.0
+    - debian-7.11
 
 - name: mms_backup_agent
   run_list:
@@ -80,7 +80,7 @@ suites:
           sslRequireValidServerCertificates: false
   excludes:
     # Upstart is not present
-    - debian-7.2.0
+    - debian-7.11
 
 - name: user_management
   run_list:

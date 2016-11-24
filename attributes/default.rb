@@ -50,10 +50,10 @@ default['mongodb']['dbconfig_file_template'] = 'mongodb.conf.erb'
 default['mongodb']['dbconfig_file'] = '/etc/mongodb.conf'
 
 default['mongodb']['package_name'] = 'mongodb'
-default['mongodb']['package_version'] = nil
+default['mongodb']['package_version'] = '3.2.10'
 
-default['mongodb']['default_init_name'] = 'mongodb'
-default['mongodb']['instance_name'] = 'mongodb'
+default['mongodb']['default_init_name'] = 'mongod'
+default['mongodb']['instance_name'] = 'mongod'
 
 case node['platform_family'] # rubocop:disable Style/ConditionalAssignment
 when 'debian'
@@ -68,8 +68,8 @@ else
   default['mongodb']['packager_options'] = ''
 end
 
-# this option can be "distro", "mongodb-org" or "none"
-default['mongodb']['install_method'] = 'distro'
+# this option can be "mongodb-org" or "none"
+default['mongodb']['install_method'] = 'mongodb-org'
 
 default['mongodb']['is_replicaset'] = nil
 default['mongodb']['is_shard'] = nil
@@ -78,41 +78,28 @@ default['mongodb']['is_configserver'] = nil
 default['mongodb']['reload_action'] = 'restart' # or "nothing"
 
 case node['platform_family']
-when 'freebsd'
-  default['mongodb']['package_name'] = 'mongodb'
-  default['mongodb']['sysconfig_file'] = '/etc/rc.conf.d/mongodb'
-  default['mongodb']['init_dir'] = '/usr/local/etc/rc.d'
-  default['mongodb']['root_group'] = 'wheel'
 when 'rhel', 'fedora'
   # determine the package name
   # from http://rpm.pbone.net/index.php3?stat=3&limit=1&srodzaj=3&dl=40&search=mongodb
   # verified for RHEL5,6 Fedora 18,19
-  default['mongodb']['repo'] = 'http://downloads-distro.mongodb.org/repo/redhat/os'
-  default['mongodb']['package_name'] = 'mongodb-server'
+  default['mongodb']['package_name'] = 'mongodb-org'
   default['mongodb']['sysconfig_file'] = '/etc/sysconfig/mongodb'
-  # Weird user/group for older RHEL & Fedora versions
-  if (node['platform_version'].to_i < 7 && node['platform_family'] == 'rhel') \
-    || (node['platform_version'].to_i < 20 && node['platform_family'] == 'fedora')
-    default['mongodb']['user'] = 'mongod'
-    default['mongodb']['group'] = 'mongod'
-    default['mongodb']['default_init_name'] = 'mongod'
-    default['mongodb']['instance_name'] = 'mongod'
-  end
+  default['mongodb']['user'] = 'mongod'
+  default['mongodb']['group'] = 'mongod'
+  default['mongodb']['dbconfig_file'] = '/etc/mongod.conf'
   default['mongodb']['init_script_template'] = 'redhat-mongodb.init.erb'
-  # then there is this guy
-  if node['platform'] == 'centos' || node['platform'] == 'amazon'
-    Chef::Log.warn("CentOS doesn't provide mongodb, forcing use of mongodb-org repo")
-    default['mongodb']['install_method'] = 'mongodb-org'
-    default['mongodb']['package_name'] = 'mongodb-org'
-  end
 when 'debian'
   if node['platform'] == 'ubuntu'
-    default['mongodb']['repo'] = 'http://downloads-distro.mongodb.org/repo'
-    default['mongodb']['apt_repo'] = 'ubuntu-upstart'
+    default['mongodb']['repo'] = 'http://repo.mongodb.org/apt/ubuntu'
     default['mongodb']['init_dir'] = '/etc/init/'
     default['mongodb']['init_script_template'] = 'debian-mongodb.upstart.erb'
-  else
-    default['mongodb']['apt_repo'] = 'debian-sysvinit'
+  elsif node['platform'] == 'debian'
+    default['mongodb']['repo'] = 'http://repo.mongodb.org/apt/debian'
+    if node['platform_version'].to_i < 8
+      # Debian 7 uses the older "mongodb" as the service name
+      default['mongodb']['default_init_name'] = 'mongodb'
+      default['mongodb']['instance_name'] = 'mongodb'
+    end
   end
 else
   Chef::Log.error("Unsupported Platform Family: #{node['platform_family']}")

@@ -75,8 +75,8 @@ template init_file do
     dbconfig_file: node['mongodb']['dbconfig_file'],
     sysconfig_file: node['mongodb']['sysconfig_file'],
     ulimit: node['mongodb']['ulimit'],
-    bind_ip: node['mongodb']['config']['bind_ip'],
-    port: node['mongodb']['config']['port'],
+    bind_ip: node['mongodb']['config']['net']['bindIp'],
+    port: node['mongodb']['config']['net']['port'],
     user: node['mongodb']['user']
   )
   action :create_if_missing
@@ -86,11 +86,25 @@ template init_file do
   end
 end
 
-# install
+# Adjust the version number for RHEL style if needed
+package_version = case node['platform_family']
+                  when 'rhel'
+                    if node['platform'] == 'amazon'
+                      "#{node['mongodb']['package_version']}-1.amzn1"
+                    else
+                      "#{node['mongodb']['package_version']}-1.el#{node['platform_version'].to_i}"
+                    end
+                  when 'fedora'
+                    "#{node['mongodb']['package_version']}-1.el7"
+                  else
+                    node['mongodb']['package_version']
+                  end
+
+# Install
 package node['mongodb']['package_name'] do
   options node['mongodb']['packager_options']
   action :install
-  version node['mongodb']['package_version']
+  version package_version
   not_if { node['mongodb']['install_method'] == 'none' }
 end
 
@@ -104,3 +118,5 @@ if node['mongodb']['key_file_content']
     content node['mongodb']['key_file_content']
   end
 end
+
+node.default['mongodb']['config']['security']['keyFile'] = nil if node['mongodb']['key_file_content'].nil?
