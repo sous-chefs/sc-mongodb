@@ -239,7 +239,7 @@ class Chef::ResourceDefinitionList::MongoDB
     begin
       connection = nil
       rescue_connection_failure do
-        connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5)
+        connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], op_timeout: 5)
       end
     rescue => e
       Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['config']['port']}', reason #{e}")
@@ -282,7 +282,7 @@ class Chef::ResourceDefinitionList::MongoDB
     begin
       connection = nil
       rescue_connection_failure do
-        connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5)
+        connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], op_timeout: 5)
       end
     rescue => e
       Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['config']['port']}', reason #{e}")

@@ -34,7 +34,7 @@ def add_user(username, password, database, roles = [])
   # Create the user if they don't exist
   # Update the user if they already exist
   begin
-    db.add_user(username, password, false, :roles => roles)
+    db.add_user(username, password, false, roles: roles)
     Chef::Log.info("Created or updated user #{username} on #{database}")
   rescue Mongo::ConnectionFailure => e
     if @new_resource.connection['is_replicaset']
@@ -51,7 +51,7 @@ def add_user(username, password, database, roles = [])
           has_info_message = result['members'].select { |a| a['self'] && a.key?('infoMessage') }.count > 0
           if result['myState'] == 1
             # This node is a primary node, try to add the user
-            db.add_user(username, password, false, :roles => roles)
+            db.add_user(username, password, false, roles: roles)
             Chef::Log.info("Created or updated user #{username} on #{database} of primary replicaset node")
             break
           elsif result['myState'] == 2 && has_info_message == true
@@ -113,11 +113,11 @@ def retrieve_db(attempt = 0)
     Mongo::MongoClient.new(
       @new_resource.connection['host'],
       @new_resource.connection['port'],
-      :connect_timeout => 15,
-      :slave_ok => true
+      connect_timeout: 15,
+      slave_ok: true
     )
-  rescue Mongo::ConnectionFailure => e
-    if(attempt) < @new_resource.connection['user_management']['connection']['retries']
+  rescue Mongo::ConnectionFailure
+    if attempt < @new_resource.connection['user_management']['connection']['retries']
       Chef::Log.warn("Unable to connect to MongoDB instance, retrying in #{@new_resource.connection['user_management']['connection']['delay']} second(s)...")
       sleep(@new_resource.connection['user_management']['connection']['delay'])
       retrieve_db(attempt + 1)
