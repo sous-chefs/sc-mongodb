@@ -55,7 +55,7 @@ default['mongodb']['package_version'] = nil
 default['mongodb']['default_init_name'] = 'mongodb'
 default['mongodb']['instance_name'] = 'mongodb'
 
-case node['platform_family']
+case node['platform_family'] # rubocop:disable Style/ConditionalAssignment
 when 'debian'
   # this options lets us bypass complaint of pre-existing init file
   # necessary until upstream fixes ENABLE_MONGOD/DB flag

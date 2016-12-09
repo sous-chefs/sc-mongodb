@@ -61,13 +61,12 @@ template init_file do
   end
 end
 
-if node['mongodb']['install_method'] != 'none'
-  # install
-  package node['mongodb']['package_name'] do
-    options node['mongodb']['packager_options']
-    action :install
-    version node['mongodb']['package_version']
-  end
+# install
+package node['mongodb']['package_name'] do
+  options node['mongodb']['packager_options']
+  action :install
+  version node['mongodb']['package_version']
+  not_if { node['mongodb']['install_method'] == 'none' }
 end
 
 # Create keyFile if specified
