@@ -55,6 +55,7 @@ class Chef::ResourceDefinitionList::MongoDB
     members.each_index do |n|
       host = "#{members[n]['fqdn']}:#{members[n]['mongodb']['config']['port']}"
       rs_options[host] = {}
+
       rs_options[host]['arbiterOnly'] = true if members[n]['mongodb']['replica_arbiter_only']
       rs_options[host]['buildIndexes'] = false unless members[n]['mongodb']['replica_build_indexes']
       rs_options[host]['hidden'] = true if members[n]['mongodb']['replica_hidden']
@@ -98,7 +99,7 @@ class Chef::ResourceDefinitionList::MongoDB
     end
     if result.fetch('ok', nil) == 1
       # everything is fine, do nothing
-    elsif result.fetch('errmsg', nil) =~ /(\S+) is already initiated/ || (result.fetch('errmsg', nil) == 'already initialized')
+    elsif result.fetch('errmsg', nil) =~ /(\S+) is already initiated/ || (result.fetch('errmsg', nil) == 'already initialized') || (result.fetch('errmsg', nil) =~ /is not empty on the initiating member/)
       server, port = Regexp.last_match.nil? || Regexp.last_match.length < 2 ? ['localhost', node['mongodb']['config']['port']] : Regexp.last_match[1].split(':')
       begin
         connection = Mongo::Connection.new(server, port, op_timeout: 5, slave_ok: true)
@@ -108,7 +109,6 @@ class Chef::ResourceDefinitionList::MongoDB
 
       # check if both configs are the same
       config = connection['local']['system']['replset'].find_one('_id' => name)
-
       if config['_id'] == name && config['members'] == rs_members
         # config is up-to-date, do nothing
         Chef::Log.info("Replicaset '#{name}' already configured")
@@ -155,6 +155,7 @@ class Chef::ResourceDefinitionList::MongoDB
         end
         Chef::Log.error("configuring replicaset returned: #{result.inspect}") unless result.fetch('errmsg', nil).nil?
       else
+        Chef::Log.info 'going to add and remove members from the replicaset'
         # remove removed members from the replicaset and add the new ones
         old_ids = config['members'].map { |member| member['_id'] }
         rs_members.map! { |member| member['host'] }
@@ -166,16 +167,29 @@ class Chef::ResourceDefinitionList::MongoDB
           host = m['host']
           { '_id' => m['_id'], 'host' => host }.merge(rs_options[host])
         end
+
         ids = (0...256).to_a - old_ids
+
+        Chef::Log.info "after removing members, config = #{config}"
+        remaining_members = config['members'].count
+
         members_add = rs_members - old_members
         members_add.each do |m|
           new_id = ids.shift
           config['members'] << { '_id' => new_id, 'host' => m }.merge(rs_options[m])
         end
+        Chef::Log.info "after adding new members, config = #{config}"
 
         rs_connection = nil
+        force = false
         rescue_connection_failure do
-          rs_connection = Mongo::ReplSetConnection.new(old_members)
+          case remaining_members
+          when 0
+            force = true
+            rs_connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], op_timeout: 5, slave_ok: true)
+          else
+            rs_connection = Mongo::ReplSetConnection.new(old_members)
+          end
           rs_connection.database_names # check connection
         end
 
@@ -186,7 +200,7 @@ class Chef::ResourceDefinitionList::MongoDB
 
         result = nil
         begin
-          result = admin.command(cmd, check_response: false)
+          result = admin.command(cmd, force: force, check_response: false)
         rescue Mongo::ConnectionFailure
           # reconfiguring destroys existing connections, reconnect
           connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], op_timeout: 5, slave_ok: true)
