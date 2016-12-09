@@ -155,7 +155,7 @@ class Chef::ResourceDefinitionList::MongoDB
         end
         Chef::Log.error("configuring replicaset returned: #{result.inspect}") unless result.fetch('errmsg', nil).nil?
       else
-        Chef::Log.info "going to add and remove members from the replicaset"
+        Chef::Log.info 'going to add and remove members from the replicaset'
         # remove removed members from the replicaset and add the new ones
         old_ids = config['members'].map { |member| member['_id'] }
         rs_members.map! { |member| member['host'] }
@@ -186,12 +186,11 @@ class Chef::ResourceDefinitionList::MongoDB
           case remaining_members
           when 0
             force = true
-            rs_connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], :op_timeout => 5, :slave_ok => true)
-            rs_connection.database_names # check connection
+            rs_connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], op_timeout: 5, slave_ok: true)
           else
             rs_connection = Mongo::ReplSetConnection.new(old_members)
-            rs_connection.database_names # check connection
           end
+          rs_connection.database_names # check connection
         end
 
         admin = rs_connection['admin']
