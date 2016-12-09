@@ -1,6 +1,6 @@
 # MongoDB Cookbook
 
-[![Build Status](https://travis-ci.org/chef-brigade/mongodb-cookbook.svg)](https://travis-ci.org/chef-brigade/mongodb-cookbook)
+[![Build Status](https://travis-ci.org/sous-chefs/mongodb.svg)](https://travis-ci.org/sous-chefs/mongodb)
 
 Installs and configures MongoDB
 
@@ -15,7 +15,7 @@ Installs and configures MongoDB
 
 ## Community
 
-Live discussion happens on [![Slack](http://brigade-slackin.herokuapp.com/badge.svg)](https://brigade-slackin.herokuapp.com/)
+Live discussion happens on [![Chef Community Slack](https://community-slack.chef.io/badge.svg)](https://community-slack.chef.io/) in [#sous-chefs](https://chefcommunity.slack.com/messages/sous-chefs/).
 
 ## REQUIREMENTS:
 
@@ -267,7 +267,7 @@ will be modified.
 ## Current Maintainers
 
 - Maintainer:: Pierce Moore <me@prex.io>
-- Maintainer Community:: Chef Brigade [help@chefbrigade.io](mailto:help@chefbrigade.io)
+- Maintainer Community:: Sous Chefs [help@sous-chefs.org](mailto:help@sous-chefs.org)
 
 Copyright:: 2011-2014, edelight GmbH
 
