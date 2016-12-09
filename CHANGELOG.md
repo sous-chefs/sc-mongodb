@@ -1,6 +1,25 @@
 # mongodb Cookbook CHANGELOG
 
-## Pending v0.16.3 Changes
+## v0.17.0 Changes
+
+* Add ability to use ipaddress instead of fqdn in replicaset
+* fix creating user bug for custom host and port
+* Add a new install method 'none' that doesn't install.
+* Add NUMA support to debian-mongodb upstart script
+* Moved the ulimit commands to the start function
+* fix for bug #348 - broken sharding
+* Get rid of chef_gem
+* Excluded Amazon Linux from using systemctl
+* pessimistically allow 1.X mongo gem
+* add custom repo support
+* Moved the running of the sysconfig_file above the NUMA support
+* replace deprecated recipe
+* bug fix in member_config for having _id > 255
+* User management in replicasets / sharding
+* Force rs.reconfig when there are no old members
+* Packager Options Attribute
+
+## v0.16.3 Changes (release never tagged, rolled into `v0.17.0` release)
 
 * remove old runit dependency
 * fix user/group attribute variables for newer versions of EL and Fedora
