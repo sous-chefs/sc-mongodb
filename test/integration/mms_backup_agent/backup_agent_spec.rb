@@ -1,5 +1,5 @@
 describe file('/etc/mongodb-mms/backup-agent.config') do
-  its('content') { should match(%r{(sslRequireValidServerCertificates=false)}) }
+  its('content') { should match(/(sslRequireValidServerCertificates=false)/) }
 end
 
 describe service('mongodb-mms-backup-agent') do

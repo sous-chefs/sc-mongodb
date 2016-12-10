@@ -8,7 +8,6 @@
 #     [ $? -eq 0 ]
 # }
 
-
 describe service('mongodb') do
   it { should be_installed }
   it { should be_enabled }
