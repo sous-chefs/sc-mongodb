@@ -30,6 +30,16 @@ end
 desc 'Run all style checks'
 task style: ['style:chef', 'style:ruby']
 
+# ChefSpec
+begin
+  require 'rspec/core/rake_task'
+
+  desc 'Run ChefSpec examples'
+  RSpec::Core::RakeTask.new(:spec)
+rescue LoadError => e
+  puts ">>> Gem load error: #{e}, omitting spec" unless ENV['CI']
+end
+
 # Integration tests. Kitchen.ci
 namespace :integration do
   begin
