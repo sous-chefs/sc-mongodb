@@ -1,14 +1,8 @@
 ---
 driver:
-  name: dokken
+  name: vagrant 
   chef_version: latest
-  privileged: true # because Docker and SystemD/Upstart
-
-transport:
-  name: dokken
-
-provisioner:
-  name: dokken
+  linked_clone: true
 
 verifier:
   name: inspec
@@ -17,40 +11,16 @@ platforms:
 - name: ubuntu-12.04
   run_list:
   - "recipe[apt]"
-  driver:
-    image: ubuntu-upstart:12.04
-    pid_one_command: /sbin/init
-    intermediate_instructions:
-      - RUN /usr/bin/apt-get update
-
 - name: ubuntu-14.04
   run_list:
   - "recipe[apt]"
-  driver:
-    image: ubuntu-upstart:14.04
-    pid_one_command: /sbin/init
-    intermediate_instructions:
-      - RUN /usr/bin/apt-get update
-
 - name: ubuntu-16.04
   run_list:
   - "recipe[apt]"
-  driver:
-    image: ubuntu:16.04
-    pid_one_command: /bin/systemd
-    intermediate_instructions:
-      - RUN /usr/bin/apt-get update
-
 - name: debian-7
   run_list:
   - "recipe[apt]"
-  driver:
-    image: debian:7
-    pid_one_command: /sbin/init
-    intermediate_instructions:
-      - RUN /usr/bin/apt-get update
-      - RUN /usr/bin/apt-get install lsb-release procps -y
-
+    
 # - name: centos-7.4
 #   run_list:
 #   - "recipe[yum]"
@@ -60,12 +30,6 @@ platforms:
   run_list:
   - "recipe[yum]"
   - "recipe[yum-epel]"
-  driver:
-    image: centos:6
-    platform: rhel
-    pid_one_command: /sbin/init
-    intermediate_instructions:
-      - RUN yum -y install which initscripts
 
 suites:
 - name: default
