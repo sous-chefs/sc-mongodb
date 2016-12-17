@@ -11,13 +11,15 @@ platforms:
 - name: ubuntu-12.04
   run_list:
   - "recipe[apt]"
+
 - name: ubuntu-14.04
   run_list:
   - "recipe[apt]"
 - name: ubuntu-16.04
   run_list:
   - "recipe[apt]"
-- name: debian-7
+
+- name: debian-7.11
   run_list:
   - "recipe[apt]"
     
@@ -35,13 +37,6 @@ suites:
 - name: default
   run_list:
   - "recipe[mongodb]"
-
-- name: default_mongodb_org_repo
-  run_list:
-  - "recipe[mongodb]"
-  attributes:
-    mongodb:
-      install_method: mongodb-org
 
 - name: replicaset
   run_list:
