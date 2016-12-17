@@ -1,6 +1,6 @@
 ---
 driver:
-  name: vagrant 
+  name: vagrant
   chef_version: latest
   linked_clone: true
 
@@ -23,12 +23,12 @@ platforms:
   run_list:
   - "recipe[apt]"
     
-# - name: centos-7.4
-#   run_list:
-#   - "recipe[yum]"
-#   - "recipe[yum-epel]"
-
 - name: centos-6.8
+  run_list:
+  - "recipe[yum]"
+  - "recipe[yum-epel]"
+
+- name: centos-7.4
   run_list:
   - "recipe[yum]"
   - "recipe[yum-epel]"
