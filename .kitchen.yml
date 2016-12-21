@@ -1,70 +1,42 @@
 ---
 driver:
   name: vagrant
-  customize:
-    memory: 512
+  chef_version: latest
+  linked_clone: true
 
-provisioner:
-  name: chef_zero
-  # require_chef_omnibus: latest # will install on each run
-  require_chef_omnibus: 11.12.8
-  nodes_path: test/integration/nodes
+verifier:
+  name: inspec
 
 platforms:
-
 - name: ubuntu-12.04
   run_list:
   - "recipe[apt]"
 
-- name: ubuntu-10.04
+- name: ubuntu-14.04
+  run_list:
+  - "recipe[apt]"
+- name: ubuntu-16.04
   run_list:
   - "recipe[apt]"
 
-- name: debian-7.2.0
+- name: debian-7.11
   run_list:
   - "recipe[apt]"
-
-- name: centos-7.0
+    
+- name: centos-6.8
   run_list:
   - "recipe[yum]"
   - "recipe[yum-epel]"
 
-- name: centos-6.5
+- name: centos-7.4
   run_list:
   - "recipe[yum]"
   - "recipe[yum-epel]"
-
-- name: centos-5.10
-  run_list:
-  - "recipe[yum]"
-  - "recipe[yum-epel]"
-
-# not going to try until
-# https://jira.mongodb.org/browse/SERVER-7285 is closed
-#- name: fedora-19
-  #run_list:
-  #- "recipe[yum]"
-
- #- name: fedora-20
-  #run_list:
-  #- "recipe[yum]"
-
-# maybe again oneday
- #- name: freebsd-9.2
-  #run_list:
-  #- "recipe[yum]"
 
 suites:
 - name: default
   run_list:
   - "recipe[mongodb]"
-
-- name: default_mongodb_org_repo
-  run_list:
-  - "recipe[mongodb]"
-  attributes:
-    mongodb:
-      install_method: mongodb-org
 
 - name: replicaset
   run_list:
@@ -74,9 +46,6 @@ suites:
       cluster_name: kitchen
       config:
         replSet: kitchen
-  excludes:
-    # Upstart is not starting mongodb, status script returns 0 and there are no useful logs. wat?
-    - ubuntu-10.04
 
 - name: configserver
   run_list:
@@ -101,12 +70,8 @@ suites:
         monitoring:
           sslRequireValidServerCertificates: false
   excludes:
-    # Upstart script uses setuid which is not present in this version
-    - ubuntu-10.04
     # Upstart is not present
     - debian-7.2.0
-    # Package does not create the user
-    - centos-5.10
 
 - name: mms_backup_agent
   run_list:
@@ -118,12 +83,8 @@ suites:
         backup:
           sslRequireValidServerCertificates: false
   excludes:
-    # Upstart script uses setuid which is not present in this version
-    - ubuntu-10.04
     # Upstart is not present
     - debian-7.2.0
-    # Package does not create the user
-    - centos-5.10
 
 - name: user_management
   run_list:
@@ -138,6 +99,3 @@ suites:
       dbconfig_file: mongodb.conf
       config:
         auth: true
-  excludes:
-    # Can't connect to mongodb without it running from upstart
-    - ubuntu-10.04

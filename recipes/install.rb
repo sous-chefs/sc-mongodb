@@ -1,6 +1,8 @@
 # install the mongodb_org_repo if necessary
 include_recipe 'mongodb::mongodb_org_repo' if %w(10gen mongodb-org).include?(node['mongodb']['install_method'])
 
+build_essential 'build-tools'
+
 # prevent-install defaults, but don't overwrite
 file node['mongodb']['sysconfig_file'] do
   content 'ENABLE_MONGODB=no'
@@ -70,11 +72,12 @@ package node['mongodb']['package_name'] do
 end
 
 # Create keyFile if specified
-file node['mongodb']['config']['keyFile'] do
-  owner node['mongodb']['user']
-  group node['mongodb']['group']
-  mode  '0600'
-  backup false
-  content node['mongodb']['key_file_content']
-  only_if { node['mongodb']['key_file_content'] }
+if node['mongodb']['key_file_content']
+  file node['mongodb']['config']['keyFile'] do
+    owner node['mongodb']['user']
+    group node['mongodb']['group']
+    mode  '0600'
+    backup false
+    content node['mongodb']['key_file_content']
+  end
 end

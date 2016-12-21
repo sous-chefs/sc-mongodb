@@ -7,7 +7,7 @@ default['mongodb']['admin'] = {
   'username' => default['mongodb']['authentication']['username'],
   'password' => default['mongodb']['authentication']['password'],
   'roles' => %w(userAdminAnyDatabase dbAdminAnyDatabase clusterAdmin),
-  'database' => 'admin'
+  'database' => 'admin',
 }
 
 default['mongodb']['users'] = []
