@@ -1,3 +1,5 @@
+provides :mongodb_user
+
 actions :add, :delete, :modify
 
 attribute :username, kind_of: String, name_attribute: true
