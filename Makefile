@@ -1,5 +1,5 @@
 
-COOKBOOK=mongodb
+COOKBOOK=sc-mongodb
 BRANCH=master
 
 BUILD_DIR=../build
@@ -13,7 +13,7 @@ clean:
 metadata.json:
 	-rm $@
 	knife cookbook metadata -o .. $(COOKBOOK)
-	
+
 dist: clean metadata.json
 	mkdir -p $(BUILD_DIR)
 	version=`python -c "import json;c = json.load(open('metadata.json')); print c.get('version', 'UNKNOWN')"`; \

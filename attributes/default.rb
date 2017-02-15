@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: mongodb
+# Cookbook Name:: sc-mongodb
 # Attributes:: default
 #
 # Copyright 2010, edelight GmbH
