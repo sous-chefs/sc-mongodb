@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: mongodb
+# Cookbook Name:: sc-mongodb
 # Recipe:: default
 #
 # Copyright 2011, edelight GmbH
@@ -19,7 +19,7 @@
 # limitations under the License.
 #
 
-include_recipe 'mongodb::install'
+include_recipe 'sc-mongodb::install'
 
 # allow mongodb_instance to run if recipe isn't included
 allow_mongodb_instance_run = true

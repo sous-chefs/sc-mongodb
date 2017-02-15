@@ -3,7 +3,7 @@
 # dump anything into default['mongodb']['config'][<setting>] = <value>
 # these options are in the order of mongodb docs
 
-include_attribute 'mongodb::default'
+include_attribute 'sc-mongodb::default'
 
 default['mongodb']['config']['port'] = 27_017
 default['mongodb']['config']['bind_ip'] = '0.0.0.0'

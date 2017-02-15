@@ -1,5 +1,9 @@
 # mongodb Cookbook CHANGELOG
 
+## Unreleased Changes
+
+* Rename cookbook from mongodb to sc-mongodb (no attribute changes, should be 100% compatable with mongodb cookbook on supermarket)
+
 ## v0.17.0 Changes
 
 * Add ability to use ipaddress instead of fqdn in replicaset

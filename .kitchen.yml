@@ -22,7 +22,7 @@ platforms:
 - name: debian-7.11
   run_list:
   - "recipe[apt]"
-    
+
 - name: centos-6.8
   run_list:
   - "recipe[yum]"
@@ -36,11 +36,11 @@ platforms:
 suites:
 - name: default
   run_list:
-  - "recipe[mongodb]"
+  - "recipe[sc-mongodb]"
 
 - name: replicaset
   run_list:
-  - "recipe[mongodb::replicaset]"
+  - "recipe[sc-mongodb::replicaset]"
   attributes:
     mongodb:
       cluster_name: kitchen
@@ -49,11 +49,11 @@ suites:
 
 - name: configserver
   run_list:
-  - "recipe[mongodb::configserver]"
+  - "recipe[sc-mongodb::configserver]"
 
 - name: mongos
   run_list:
-  - "recipe[mongodb::mongos]"
+  - "recipe[sc-mongodb::mongos]"
   attributes:
     mongodb:
       cluster_name: default
@@ -62,7 +62,7 @@ suites:
 
 - name: mms_monitoring_agent
   run_list:
-  - "recipe[mongodb::mms_monitoring_agent]"
+  - "recipe[sc-mongodb::mms_monitoring_agent]"
   attributes:
     mongodb:
       mms_agent:
@@ -75,7 +75,7 @@ suites:
 
 - name: mms_backup_agent
   run_list:
-  - "recipe[mongodb::mms_backup_agent]"
+  - "recipe[sc-mongodb::mms_backup_agent]"
   attributes:
     mongodb:
       mms_agent:
@@ -88,8 +88,8 @@ suites:
 
 - name: user_management
   run_list:
-  - "recipe[mongodb::default]"
-  - "recipe[mongodb::user_management]"
+  - "recipe[sc-mongodb::default]"
+  - "recipe[sc-mongodb::user_management]"
   attributes:
     mongodb:
       install_method: mongodb-org

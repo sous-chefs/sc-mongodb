@@ -1,4 +1,4 @@
-include_recipe 'mongodb::mongo_gem'
+include_recipe 'sc-mongodb::mongo_gem'
 
 users = []
 admin = node['mongodb']['admin']
