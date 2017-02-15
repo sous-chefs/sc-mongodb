@@ -228,7 +228,7 @@ class Chef::ResourceDefinitionList::MongoDB
     shard_groups = Hash.new { |h, k| h[k] = [] }
 
     shard_nodes.each do |n|
-      if n['recipes'].include?('mongodb::replicaset')
+      if n['recipes'].include?('sc-mongodb::replicaset')
         # do not include hidden members when calling addShard
         # see https://jira.mongodb.org/browse/SERVER-9882
         next if n['mongodb']['replica_hidden']
@@ -263,7 +263,7 @@ class Chef::ResourceDefinitionList::MongoDB
     admin = connection['admin']
 
     # If we require authentication on mongos / mongod, need to authenticate to run these commands
-    if node.recipe?('mongodb::user_management')
+    if node.recipe?('sc-mongodb::user_management')
       begin
         admin.authenticate(node['mongodb']['authentication']['username'], node['mongodb']['authentication']['password'])
       rescue Mongo::AuthenticationError => e
@@ -306,7 +306,7 @@ class Chef::ResourceDefinitionList::MongoDB
     admin = connection['admin']
 
     # If we require authentication on mongos / mongod, need to authenticate to run these commands
-    if node.recipe?('mongodb::user_management')
+    if node.recipe?('sc-mongodb::user_management')
       begin
         admin.authenticate(node['mongodb']['authentication']['username'], node['mongodb']['authentication']['password'])
       rescue Mongo::AuthenticationError => e

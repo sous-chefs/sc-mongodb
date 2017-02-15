@@ -2,7 +2,7 @@ require 'chefspec'
 require 'chefspec/berkshelf'
 require 'fauxhai'
 
-describe 'mongodb::default' do
+describe 'sc-mongodb::default' do
   let(:chef_run) do
     ChefSpec::Runner.new(
       platform: 'ubuntu',

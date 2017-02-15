@@ -16,7 +16,7 @@ users.each do |user|
     roles user['roles']
     database user['database']
     connection node['mongodb']
-    if node.recipe?('mongodb::mongos') || node.recipe?('mongodb::replicaset')
+    if node.recipe?('sc-mongodb::mongos') || node.recipe?('sc-mongodb::replicaset')
       # If it's a replicaset or mongos, don't make any users until the end
       action :nothing
       subscribes :add, 'ruby_block[config_replicaset]', :delayed
