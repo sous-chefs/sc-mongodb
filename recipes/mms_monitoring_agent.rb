@@ -2,7 +2,7 @@ Chef::Log.warn 'Found empty mms_agent.api_key attribute' if node['mongodb']['mms
 
 arch = node['kernel']['machine']
 agent_type = 'monitoring'
-package = node['mongodb']['mms_agent']['package_url'] % { agent_type: agent_type }
+package = format(node['mongodb']['mms_agent']['package_url'], agent_type: agent_type)
 package_opts = ''
 
 case node['platform_family']

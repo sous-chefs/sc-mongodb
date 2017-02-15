@@ -325,7 +325,7 @@ class Chef::ResourceDefinitionList::MongoDB
       rescue Mongo::OperationTimeout
         result = "enable sharding for '#{db_name}' timed out, run the recipe again to check the result"
       end
-      if result['ok'].zero?
+      if result['ok'] == 0
         # some error
         errmsg = result.fetch('errmsg')
         if errmsg == 'already enabled'
@@ -348,7 +348,7 @@ class Chef::ResourceDefinitionList::MongoDB
       rescue Mongo::OperationTimeout
         result = "sharding '#{name}' on key '#{key}' timed out, run the recipe again to check the result"
       end
-      if result['ok'].zero?
+      if result['ok'] == 0
         # some error
         errmsg = result.fetch('errmsg')
         if errmsg == 'already sharded'
