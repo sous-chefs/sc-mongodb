@@ -1,8 +1,10 @@
 # sc-mongodb Cookbook CHANGELOG
 
-## Unreleased Changes
+## v0.18.0 Changes
 
 - Rename cookbook from mongodb to sc-mongodb (no attribute changes, should be 100% compatable with mongodb cookbook on supermarket)
+
+**NOTE** v0.18.0 is the same as v0.17.0 with the exception of the cookbook name.  All attributes have keped the `mongodb` namespace while the cookbook has been renamed `sc-mongodb`
 
 ## v0.17.0 Changes
 

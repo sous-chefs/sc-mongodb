@@ -4,7 +4,7 @@ maintainer_email  'help@sous-chefs.org'
 license           'Apache 2.0'
 description       'Installs and configures mongodb'
 long_description  IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version           '0.17.0'
+version           '0.18.0'
 
 recipe 'sc-mongodb', 'Installs and configures a single node mongodb instance'
 recipe 'sc-mongodb::10gen_repo', 'Adds the 10gen repo to get the latest packages'
