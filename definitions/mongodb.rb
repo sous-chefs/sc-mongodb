@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: mongodb
+# Cookbook Name:: sc-mongodb
 # Definition:: mongodb
 #
 # Copyright 2011, edelight GmbH

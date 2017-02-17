@@ -1,4 +1,4 @@
-include_attribute 'mongodb::default'
+include_attribute 'sc-mongodb::default'
 
 default['mongodb']['sysconfig']['DAEMON'] = '/usr/bin/$NAME'
 default['mongodb']['sysconfig']['DAEMON_USER'] = node['mongodb']['user']
