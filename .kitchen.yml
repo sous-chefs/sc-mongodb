@@ -7,6 +7,10 @@ driver:
 verifier:
   name: inspec
 
+client_rb:
+  treat_deprecation_warnings_as_errors: true
+  resource_cloning: false
+
 platforms:
 - name: ubuntu-12.04
   run_list:
