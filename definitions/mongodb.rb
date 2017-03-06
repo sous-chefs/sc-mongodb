@@ -197,7 +197,7 @@ define :mongodb_instance,
   service new_resource.name do
     case node['platform']
     when 'ubuntu'
-      if node['platform_version'].to_f  >= 15.04
+      if node['platform_version'].to_f >= 15.04
         provider Chef::Provider::Service::Systemd
       end
     else
