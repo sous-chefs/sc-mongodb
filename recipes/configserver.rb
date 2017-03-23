@@ -21,20 +21,14 @@
 # limitations under the License.
 #
 
-node.set['mongodb']['is_configserver'] = true
-node.set['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
-node.set['mongodb']['shard_name'] = node['mongodb']['shard_name']
+node.override['mongodb']['is_configserver'] = true
+node.override['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
 
 include_recipe 'sc-mongodb::install'
 
 # mongodb_instance will set configsvr = true in the config file.
 # http://docs.mongodb.org/manual/reference/configuration-options/#sharded-cluster-options
 # we still explicitly set the port and small files.
-mongodb_instance node['mongodb']['instance_name'] do
+mongodb_instance node['mongodb']['instance_name']['mongod'] do
   mongodb_type 'configserver'
-  port         node['mongodb']['config']['port']
-  logpath      node['mongodb']['config']['logpath']
-  dbpath       node['mongodb']['config']['dbpath']
-  enable_rest  node['mongodb']['config']['rest']
-  smallfiles   node['mongodb']['config']['smallfiles']
 end

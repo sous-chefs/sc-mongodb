@@ -41,7 +41,9 @@ suites:
     mongodb:
       cluster_name: kitchen
       config:
-        replSet: kitchen
+        mongod:
+          replication:
+            replSetName: kitchen
 
 - name: configserver
   run_list:
@@ -49,12 +51,19 @@ suites:
 
 - name: mongos
   run_list:
+  - "recipe[sc-mongodb::configserver]"
   - "recipe[sc-mongodb::mongos]"
   attributes:
     mongodb:
       cluster_name: default
       config:
-        configdb: my_configserver
+        mongod:
+          net:
+            # use this port since mongos will use 27017 instead
+            port: 27019
+        mongos:
+          sharding:
+            configDB: 127.0.0.1:27019
 
 - name: mms_monitoring_agent
   run_list:

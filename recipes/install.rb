@@ -24,10 +24,14 @@
 # install the mongodb org repo if necessary
 include_recipe 'sc-mongodb::mongodb_org_repo' if node['mongodb']['install_method'] == 'mongodb-org'
 
+# TODO: still need all of the tools?
+# yum_package[autoconf, bison, flex, gcc, gcc-c++, gettext, kernel-devel, make, m4, ncurses-devel, patch]
 build_essential 'build-tools'
 
+config_type = node['mongodb']['is_mongos'] ? 'mongos' : 'mongod'
+
 # prevent-install defaults, but don't overwrite
-file node['mongodb']['sysconfig_file'] do
+file node['mongodb']['sysconfig_file'][config_type] do
   content 'ENABLE_MONGODB=no'
   group node['mongodb']['root_group']
   owner 'root'
@@ -36,14 +40,14 @@ file node['mongodb']['sysconfig_file'] do
 end
 
 # just-in-case config file drop
-template node['mongodb']['dbconfig_file'] do
+template node['mongodb']['dbconfig_file'][config_type] do
   cookbook node['mongodb']['template_cookbook']
-  source node['mongodb']['dbconfig_file_template']
+  source node['mongodb']['dbconfig_file']['template']
   group node['mongodb']['root_group']
   owner 'root'
   mode 0644
   variables(
-    config: node['mongodb']['config']
+    config: node['mongodb']['config'][config_type]
   )
   helpers MongoDBConfigHelpers
   action :create_if_missing
@@ -72,11 +76,11 @@ template init_file do
   mode mode
   variables(
     provides: 'mongod',
-    dbconfig_file: node['mongodb']['dbconfig_file'],
-    sysconfig_file: node['mongodb']['sysconfig_file'],
+    dbconfig_file: node['mongodb']['dbconfig_file'][config_type],
+    sysconfig_file: node['mongodb']['sysconfig_file'][config_type],
     ulimit: node['mongodb']['ulimit'],
-    bind_ip: node['mongodb']['config']['net']['bindIp'],
-    port: node['mongodb']['config']['net']['port'],
+    bind_ip: node['mongodb']['config'][config_type]['net']['bindIp'],
+    port: node['mongodb']['config'][config_type]['net']['port'],
     user: node['mongodb']['user']
   )
   action :create_if_missing
@@ -110,7 +114,7 @@ end
 
 # Create keyFile if specified
 if node['mongodb']['key_file_content']
-  file node['mongodb']['config']['keyFile'] do
+  file node['mongodb']['config'][config_type]['keyFile'] do
     owner node['mongodb']['user']
     group node['mongodb']['group']
     mode  '0600'
@@ -119,4 +123,4 @@ if node['mongodb']['key_file_content']
   end
 end
 
-node.default['mongodb']['config']['security']['keyFile'] = nil if node['mongodb']['key_file_content'].nil?
+node.default['mongodb']['config'][config_type]['security']['keyFile'] = nil if node['mongodb']['key_file_content'].nil?

@@ -30,7 +30,7 @@ conflicting_recipes.each do |recipe|
   allow_mongodb_instance_run &&= false if node.run_context.loaded_recipe?(recipe)
 end
 
-mongodb_instance node['mongodb']['instance_name'] do
+mongodb_instance node['mongodb']['instance_name']['mongod'] do
   mongodb_type 'mongod'
   # bind_ip      node['mongodb']['config']['bind_ip']
   # port         node['mongodb']['config']['port']
