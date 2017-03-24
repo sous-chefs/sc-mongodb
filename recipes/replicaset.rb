@@ -35,11 +35,5 @@ end
 
 mongodb_instance node['mongodb']['instance_name']['mongod'] do
   mongodb_type 'mongod'
-  # port         node['mongodb']['config']['port']
-  # logpath      node['mongodb']['config']['logpath']
-  # dbpath       node['mongodb']['config']['dbpath']
-  # replicaset   node
-  # enable_rest  node['mongodb']['config']['rest']
-  # smallfiles   node['mongodb']['config']['smallfiles']
   not_if { node['mongodb']['is_shard'] }
 end
