@@ -231,7 +231,7 @@ define :mongodb_instance,
     rs_nodes = search(
       :node,
       "mongodb_cluster_name:#{new_resource.cluster_name} AND "\
-      "mongodb_is_replicaset:true AND "\
+      'mongodb_is_replicaset:true AND '\
       "mongodb_config_mongod_replication_replSetName:#{new_resource.replicaset_name} AND "\
       "chef_environment:#{node.chef_environment}"
     )
@@ -258,7 +258,7 @@ define :mongodb_instance,
       :node,
       "mongodb_cluster_name:#{new_resource.cluster_name} AND "\
       "mongodb_shard_name:#{new_resource.shard_name} AND "\
-      "mongodb_is_shard:true AND "\
+      'mongodb_is_shard:true AND '\
       "chef_environment:#{node.chef_environment}"
     )
 

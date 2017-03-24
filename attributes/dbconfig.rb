@@ -6,7 +6,7 @@
 include_attribute 'sc-mongodb::default'
 
 # mongod defaults
-default['mongodb']['config']['mongod']['net']['port'] = 27_017
+default['mongodb']['config']['mongod']['net']['port'] = 27017
 default['mongodb']['config']['mongod']['net']['bindIp'] = '0.0.0.0'
 
 default['mongodb']['config']['mongod']['systemLog']['destination'] = 'file'
@@ -21,11 +21,11 @@ end
 
 default['mongodb']['config']['mongod']['storage']['journal']['enabled'] = true
 default['mongodb']['config']['mongod']['storage']['dbPath'] = case node['platform_family']
-                                                    when 'rhel', 'fedora'
-                                                      '/var/lib/mongo'
-                                                    else
-                                                      '/var/lib/mongodb'
-                                                    end
+                                                              when 'rhel', 'fedora'
+                                                                '/var/lib/mongo'
+                                                              else
+                                                                '/var/lib/mongodb'
+                                                              end
 
 default['mongodb']['config']['mongod']['storage']['engine'] = 'wiredTiger'
 
@@ -37,7 +37,7 @@ default['mongodb']['config']['mongod']['replication']['enableMajorityReadConcern
 default['mongodb']['config']['mongod']['security']['keyFile'] = nil
 
 # mongos defaults
-default['mongodb']['config']['mongos']['net']['port'] = 27_017
+default['mongodb']['config']['mongos']['net']['port'] = 27017
 default['mongodb']['config']['mongos']['net']['bindIp'] = '0.0.0.0'
 
 default['mongodb']['config']['mongos']['systemLog']['destination'] = 'file'
