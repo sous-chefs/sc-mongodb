@@ -38,7 +38,8 @@ package_repo_url = case node['platform']
 
 case node['platform_family']
 when 'debian'
-  # Adds the repo: http://www.mongodb.org/display/DOCS/Ubuntu+and+Debian+packages
+  # Ubuntu: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
+  # Debian: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/
   apt_repository 'mongodb' do
     uri node['mongodb']['repo']
     distribution "#{node['lsb']['codename']}/mongodb-org/#{package_version_major}"
@@ -46,7 +47,9 @@ when 'debian'
     keyserver 'hkp://keyserver.ubuntu.com:80'
     key package_version_major >= 3.2 ? 'EA312927' : '7F0CEB10'
   end
-when 'rhel', 'fedora'
+when 'amazon', 'fedora', 'oracle', 'rhel'
+  # RHEL: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/
+  # Amazon: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-amazon/
   yum_repository 'mongodb' do
     description 'mongodb RPM Repository'
     baseurl package_repo_url

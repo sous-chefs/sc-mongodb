@@ -19,7 +19,14 @@ depends 'yum', '>= 3.0'
 depends 'python'
 depends 'build-essential', '>= 5.0.0'
 
-%w(ubuntu debian centos redhat amazon).each do |os|
+%w(
+  amazon
+  centos
+  debian
+  oracle
+  redhat
+  ubuntu
+).each do |os|
   supports os
 end
 
