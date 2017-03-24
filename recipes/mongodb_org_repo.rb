@@ -6,7 +6,7 @@
 # Authors:
 #       Miquel Torres <miquel.torres@edelight.de>
 #
-# Copyright 2016, Sous Chefs
+# Copyright 2016-2017, Grant Ridder
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
