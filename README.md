@@ -24,6 +24,11 @@ This cookbook depends on these external cookbooks
 - python
 - yum
 
+As of 1.0 This Cookbook requires
+
+- Chef > 12
+- Ruby > 2.1
+
 As of 0.16 This Cookbook requires
 
 - Chef > 11
@@ -49,15 +54,17 @@ For examples see the USAGE section below.
 
 ### MongoDB Configuration
 
-The `node['mongodb']['config']` attributes are rendered out as a yaml config file. All settings defined in the Configuration File Options documentation page can be added to the `node['mongodb']['config'][<setting>]` attribute: http://docs.mongodb.org/manual/reference/configuration-options/
+The `node['mongodb']['config']` is split into 2 keys, `mongod` and `mongos` (i.e. node['mongodb']['config']['mongod']). They attributes are rendered out as a yaml config file. All settings defined in the Configuration File Options documentation page can be added to the `node['mongodb']['config'][<setting>]` attribute: https://docs.mongodb.com/manual/reference/configuration-options/
 
-* `node['mongodb']['config']['net']['bindIp']` - Configure from which address to accept connections
-* `node['mongodb']['config']['net']['port']` - Port the mongod listens on, default is 27017
-* `node['mongodb']['config']['replication']['oplogSizeMB']` - Specifies a maximum size in megabytes for the replication operation log
-* `node['mongodb']['config']['storage']['dbPath']` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
-* `node['mongodb']['config']['storage']['engine']` - Storage engine to use, default is "wiredTiger"
-* `node['mongodb']['config']['systemLog']['path']` - Path for the logfiles, default is "/var/log/mongodb/mongod.log"
-* `node['mongodb']['config'][<setting>]` - General MongoDB Configuration File option
+Several important attributes to note:
+
+* `node['mongodb']['config']['mongod']['net']['bindIp']` - Configure from which address to accept connections
+* `node['mongodb']['config']['mongod']['net']['port']` - Port the mongod listens on, default is 27017
+* `node['mongodb']['config']['mongod']['replication']['oplogSizeMB']` - Specifies a maximum size in megabytes for the replication operation log
+* `node['mongodb']['config']['mongod']['storage']['dbPath']` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
+* `node['mongodb']['config']['mongod']['storage']['engine']` - Storage engine to use, default is `"wiredTiger"`
+* `node['mongodb']['config']['mongod']['systemLog']['path']` - Path for the logfiles, default is `"/var/lib/mongo"` for `rhel` and `fedora` and `"/var/log/mongodb/mongod.log"` for all others
+* `node['mongodb']['config']['mongod'][<setting>]` - General MongoDB Configuration File option
 
 ### Cookbook specific attributes
 
@@ -67,7 +74,7 @@ The `node['mongodb']['config']` attributes are rendered out as a yaml config fil
 
 ### Sharding and replication attributes
 
-* `node['mongodb']['config']['replication']['replSetName']` - Define name of replicaset
+* `node['mongodb']['config']['mongod']['replication']['replSetName']` - Define name of replicaset
 * `node['mongodb']['cluster_name']` - Name of the cluster, all members of the cluster must reference to the same name, as this name is used internally to identify all members of a cluster.
 * `node['mongodb']['shard_name']` - Name of a shard, default is "default"
 * `node['mongodb']['sharded_collections']` - Define which collections are sharded
@@ -90,7 +97,7 @@ The `node['mongodb']['config']` attributes are rendered out as a yaml config fil
 
 ### User management attributes
 
-* `node['mongodb']['config']['auth']` - Require authentication to access or modify the database
+* `node['mongodb']['config']['auth']` - Require authentication to access or modify the database (`True` or `False`), Default is `nil`
 * `node['mongodb']['admin']` - The admin user with userAdmin privileges that allows user management
 * `node['mongodb']['users']` - Array of users to add when running the user management recipe
 
@@ -232,6 +239,10 @@ To setup MMS, simply set your keys in
 be available at your [MMS Settings page](https://mms.mongodb.com/settings).
 
 ### User Management
+
+**NOTE:** Using the `sc-mongodb::user_management` is not secure since passwords are stored plain
+text in your node attributes.  Please concider using a wrapper recipe with encrypted data bags
+when using this cookbook in production.
 
 An optional recipe is `sc-mongodb::user_management` which will enable authentication in
 the configuration file by default and create any users in the `node['mongodb']['users']`.
