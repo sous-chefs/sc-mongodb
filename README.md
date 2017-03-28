@@ -10,8 +10,7 @@ Installs and configures MongoDB
 * Replication
 * Sharding
 * Replication and Sharding
-* 10gen repository package installation
-* 10gen MongoDB Monitoring System
+* MongoDB Monitoring System
 
 ## Community
 
@@ -24,6 +23,11 @@ This cookbook depends on these external cookbooks
 - apt
 - python
 - yum
+
+As of 1.0 This Cookbook requires
+
+- Chef > 12
+- Ruby > 2.1
 
 As of 0.16 This Cookbook requires
 
@@ -46,20 +50,21 @@ For examples see the USAGE section below.
 
 ### MongoDB setup
 
-* `default['mongodb']['install_method']` - This option can be "distro", "mongodb-org" or "none" - Default (distro)
+* `default['mongodb']['install_method']` - This option can be "mongodb-org" or "none" - Default ("mongodb-org")
 
 ### MongoDB Configuration
 
-Basically all settings defined in the Configuration File Options documentation page can be added to the `node['mongodb']['config'][<setting>]` attribute: http://docs.mongodb.org/manual/reference/configuration-options/
+The `node['mongodb']['config']` is split into 2 keys, `mongod` and `mongos` (i.e. node['mongodb']['config']['mongod']). They attributes are rendered out as a yaml config file. All settings defined in the Configuration File Options documentation page can be added to the `node['mongodb']['config'][<setting>]` attribute: https://docs.mongodb.com/manual/reference/configuration-options/
 
-* `node['mongodb']['config']['dbpath']` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
-* `node['mongodb']['config']['logpath']` - Path for the logfiles, default is "/var/log/mongodb/mongodb.log"
-* `node['mongodb']['config']['port']` - Port the mongod listens on, default is 27017
-* `node['mongodb']['config']['rest']` - Enable the ReST interface of the webserver
-* `node['mongodb']['config']['smallfiles']` - Modify MongoDB to use a smaller default data file size
-* `node['mongodb']['config']['oplogsize']` - Specifies a maximum size in megabytes for the replication operation log
-* `node['mongodb']['config']['bind_ip']` - Configure from which address to accept connections
-* `node['mongodb']['config'][<setting>]` - General MongoDB Configuration File option
+Several important attributes to note:
+
+* `node['mongodb']['config']['mongod']['net']['bindIp']` - Configure from which address to accept connections
+* `node['mongodb']['config']['mongod']['net']['port']` - Port the mongod listens on, default is 27017
+* `node['mongodb']['config']['mongod']['replication']['oplogSizeMB']` - Specifies a maximum size in megabytes for the replication operation log
+* `node['mongodb']['config']['mongod']['storage']['dbPath']` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
+* `node['mongodb']['config']['mongod']['storage']['engine']` - Storage engine to use, default is `"wiredTiger"`
+* `node['mongodb']['config']['mongod']['systemLog']['path']` - Path for the logfiles, default is `"/var/lib/mongo"` for `rhel` and `fedora` and `"/var/log/mongodb/mongod.log"` for all others
+* `node['mongodb']['config']['mongod'][<setting>]` - General MongoDB Configuration File option
 
 ### Cookbook specific attributes
 
@@ -69,7 +74,7 @@ Basically all settings defined in the Configuration File Options documentation p
 
 ### Sharding and replication attributes
 
-* `node['mongodb']['config']['replSet']` - Define name of replicaset
+* `node['mongodb']['config']['mongod']['replication']['replSetName']` - Define name of replicaset
 * `node['mongodb']['cluster_name']` - Name of the cluster, all members of the cluster must reference to the same name, as this name is used internally to identify all members of a cluster.
 * `node['mongodb']['shard_name']` - Name of a shard, default is "default"
 * `node['mongodb']['sharded_collections']` - Define which collections are sharded
@@ -92,7 +97,7 @@ Basically all settings defined in the Configuration File Options documentation p
 
 ### User management attributes
 
-* `node['mongodb']['config']['auth']` - Require authentication to access or modify the database
+* `node['mongodb']['config']['auth']` - Require authentication to access or modify the database (`True` or `False`), Default is `nil`
 * `node['mongodb']['admin']` - The admin user with userAdmin privileges that allows user management
 * `node['mongodb']['users']` - Array of users to add when running the user management recipe
 
@@ -126,13 +131,6 @@ sslRequireValidServerCertificates=false
 ```
 
 ## USAGE:
-
-### 10gen
-Adds the stable [10gen repo](http://www.mongodb.org/downloads#packages) for the
-corresponding platform. Currently only implemented for the Debian and Ubuntu repository.
-
-Usage: just add `recipe[sc-mongodb::10gen_repo]` to the node run_list *before* any other
-MongoDB recipe, and the mongodb-10gen **stable** packages will be installed instead of the distribution default.
 
 ### Single mongodb instance
 
@@ -227,7 +225,7 @@ For more details, you can find a [tutorial for Sharding + Replication](https://g
 
 This cookbook also includes support for
 [MongoDB Monitoring System (MMS)](https://mms.mongodb.com/)
-agent. MMS is a hosted monitoring service, provided by 10gen, Inc. Once
+agent. MMS is a hosted monitoring service, provided by MongoDB, Inc. Once
 the small python agent program is installed on the MongoDB host, it
 automatically collects the metrics and uploads them to the MMS server.
 The graphs of these metrics are shown on the web page. It helps a lot
@@ -241,6 +239,10 @@ To setup MMS, simply set your keys in
 be available at your [MMS Settings page](https://mms.mongodb.com/settings).
 
 ### User Management
+
+**NOTE:** Using the `sc-mongodb::user_management` is not secure since passwords are stored plain
+text in your node attributes.  Please concider using a wrapper recipe with encrypted data bags
+when using this cookbook in production.
 
 An optional recipe is `sc-mongodb::user_management` which will enable authentication in
 the configuration file by default and create any users in the `node['mongodb']['users']`.

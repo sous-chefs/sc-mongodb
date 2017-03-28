@@ -12,30 +12,13 @@ client_rb:
   resource_cloning: false
 
 platforms:
-- name: ubuntu-12.04
-  run_list:
-  - "recipe[apt]"
-
-- name: ubuntu-14.04
-  run_list:
-  - "recipe[apt]"
-- name: ubuntu-16.04
-  run_list:
-  - "recipe[apt]"
-
-- name: debian-7.11
-  run_list:
-  - "recipe[apt]"
-
 - name: centos-6.8
-  run_list:
-  - "recipe[yum]"
-  - "recipe[yum-epel]"
-
-- name: centos-7.4
-  run_list:
-  - "recipe[yum]"
-  - "recipe[yum-epel]"
+- name: centos-7.3
+- name: debian-7.11
+- name: debian-8.6
+- name: fedora-25
+- name: ubuntu-14.04
+- name: ubuntu-16.04
 
 suites:
 - name: default
@@ -49,7 +32,9 @@ suites:
     mongodb:
       cluster_name: kitchen
       config:
-        replSet: kitchen
+        mongod:
+          replication:
+            replSetName: kitchen
 
 - name: configserver
   run_list:
@@ -57,12 +42,19 @@ suites:
 
 - name: mongos
   run_list:
+  - "recipe[sc-mongodb::configserver]"
   - "recipe[sc-mongodb::mongos]"
   attributes:
     mongodb:
       cluster_name: default
       config:
-        configdb: my_configserver
+        mongod:
+          net:
+            # use this port since mongos will use 27017 instead
+            port: 27019
+        mongos:
+          sharding:
+            configDB: 127.0.0.1:27019
 
 - name: mms_monitoring_agent
   run_list:
@@ -75,7 +67,7 @@ suites:
           sslRequireValidServerCertificates: false
   excludes:
     # Upstart is not present
-    - debian-7.2.0
+    - debian-7.11
 
 - name: mms_backup_agent
   run_list:
@@ -88,7 +80,7 @@ suites:
           sslRequireValidServerCertificates: false
   excludes:
     # Upstart is not present
-    - debian-7.2.0
+    - debian-7.11
 
 - name: user_management
   run_list:
