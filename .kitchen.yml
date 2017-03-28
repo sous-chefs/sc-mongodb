@@ -12,22 +12,13 @@ client_rb:
   resource_cloning: false
 
 platforms:
-- name: ubuntu-16.04
-- name: ubuntu-14.04
-- name: ubuntu-12.04
-- name: debian-8.5
-- name: debian-7.11
-- name: centos-7.2
 - name: centos-6.8
-# wait until DNF provider is working
-# - name: fedora-24
-# - name: fedora-23
-# - name: fedora-22
-- name: fedora-21
-# maybe again oneday
-# - name: freebsd-9.2
-#   run_list:
-#   - "recipe[yum]"
+- name: centos-7.3
+- name: debian-7.11
+- name: debian-8.6
+- name: fedora-25
+- name: ubuntu-14.04
+- name: ubuntu-16.04
 
 suites:
 - name: default
