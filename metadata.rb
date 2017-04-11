@@ -16,7 +16,6 @@ recipe 'sc-mongodb::mms_backup_agent', 'Installs and configures a MongoDB MMS Ba
 
 depends 'apt', '>= 1.8.2'
 depends 'yum', '>= 3.0'
-depends 'python'
 depends 'build-essential', '>= 5.0.0'
 
 %w(
