@@ -42,5 +42,6 @@ end.run_action(:install)
 node['mongodb']['ruby_gems'].each do |gem, version|
   chef_gem gem do
     version version
+    compile_time false
   end
 end
