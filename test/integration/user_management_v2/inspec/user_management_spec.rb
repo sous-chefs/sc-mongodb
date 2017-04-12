@@ -24,6 +24,6 @@ describe bash('mongo --eval "db.stats().ok"') do
 end
 
 # kitchen read user created
-describe bash(%(mongo admin -u admin -p admin --eval "db.system.users.find({'_id' : 'admin.kitchen', 'user' : 'kitchen', 'db' : 'admin', 'roles' : [ { 'role' : 'read', 'db' : 'admin' } ]})")) do
+describe bash(%(mongo admin -u admin -p admin --eval "db.system.users.find({'_id' : 'admin.kitchen', 'user' : 'kitchen', 'db' : 'admin', 'roles' : [ { 'role' : 'read', 'db' : 'admin' } ]})" | grep _id)) do
   its('exit_status') { should eq 0 }
 end

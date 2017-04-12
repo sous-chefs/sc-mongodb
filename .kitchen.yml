@@ -117,3 +117,21 @@ suites:
           roles:
             - read
           database: admin
+
+- name: user_management_v2_delete
+  run_list:
+  - recipe[sc-mongodb::default]
+  - recipe[sc-mongodb::user_management]
+  - recipe[mongodb_spec::user_delete]
+  attributes:
+    mongodb:
+      config:
+        auth: true
+      ruby_gems:
+        mongo: ~> 2.0
+      users:
+        - username: kitchen
+          password: blah123
+          roles:
+            - read
+          database: admin

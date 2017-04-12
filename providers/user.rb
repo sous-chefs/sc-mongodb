@@ -4,6 +4,10 @@ def user_exists?(username, connection)
   connection['admin']['system.users'].find(user: username).count > 0
 end
 
+def user_exists_v2?(username, connection)
+  connection['system.users'].find(user: username).count > 0
+end
+
 def add_user(username, password, database, roles = [])
   require 'rubygems'
   require 'mongo'
@@ -117,12 +121,17 @@ def add_user_v2(username, password, database, roles = [])
   db = connection.use(database)
 
   begin
-    # Create the user
-    db.database.users.create(
-      username,
-      password: password,
-      roles: roles
-    )
+    if user_exists_v2?(username, connection)
+      Chef::Log.warn("#{username} already exists on #{database}")
+    else
+      # Create the user
+      db.database.users.create(
+        username,
+        password: password,
+        roles: roles
+      )
+      Chef::Log.info("Created user #{username} on #{database}")
+    end
   rescue Mongo::Error::OperationFailure => e
     # User probably already exists
     Chef::Application.fatal!("Unable to add user on initial try: #{e}")
@@ -191,7 +200,37 @@ def delete_user(username, database)
 end
 
 def delete_user_v2(username, database)
-  # TODO: write mongo delete user for gem 2.x
+  if (@new_resource.connection['config']['auth'] == true) || (@new_resource.connection['mongos_create_admin'] == true)
+    begin
+      connection = retrieve_db_v2(
+        @new_resource.connection['authentication']['username'],
+        @new_resource.connection['authentication']['password']
+      )
+    rescue Mongo::Auth::Unauthorized => e
+      # invalid creds
+      Chef::Application.fatal!("Unable to authenticate as admin user: #{e}")
+      connection = retrieve_db_v2
+    rescue Mongo::Error::NoServerAvailable => e
+      # Replicaset not initialized
+      Chef::Log.warn("Server appears to be part of an uninitialized or initializing replicaset: #{e}")
+      Chef::Log.warn('Retrying 1 time')
+      sleep(@new_resource.connection['mongod_create_user']['delay'])
+      begin
+        connection = retrieve_db_v2
+      rescue Mongo::Error::NoServerAvailable => e
+        Chef::Application.fatal!("Unable to connect to mongo: #{e}")
+      end
+    end
+  end
+
+  db = connection.use(database)
+
+  if user_exists_v2?(username, connection)
+    db.database.users.remove(username)
+    Chef::Log.info("Deleted user #{username} on #{database}")
+  else
+    Chef::Log.warn("Unable to delete non-existent user #{username} on #{database}")
+  end
 end
 
 # Get the MongoClient connection
@@ -236,10 +275,8 @@ def retrieve_db_v2(username = nil, password = nil, attempt = 0)
     # Query the server for all database names to verify server connection
     client.database_names
   rescue Mongo::Error::NoServerAvailable, Mongo::Error::OperationFailure => e
-    Chef::Log.warn("attempt: #{attempt}")
-    Chef::Log.warn("retries: #{@new_resource.connection['user_management']['connection']['retries']}")
     if attempt < @new_resource.connection['user_management']['connection']['retries']
-      Chef::Log.warn("Unable to connect to MongoDB instance, retrying in #{@new_resource.connection['user_management']['connection']['delay']} second(s)...")
+      Chef::Log.warn("Unable to connect to MongoDB instance: #{e}, retrying in #{@new_resource.connection['user_management']['connection']['delay']} second(s)...")
       sleep(@new_resource.connection['user_management']['connection']['delay'])
       retrieve_db_v2(username, password, attempt + 1)
     end
@@ -264,6 +301,7 @@ action :delete do
   if defined?(Mongo::VERSION) && Gem::Version.new(Mongo::VERSION) >= Gem::Version.new('2.0.0')
     # The gem displays a lot of debug messages by default so set to INFO
     Mongo::Logger.logger.level = ::Logger::INFO
+    delete_user_v2(new_resource.username, new_resource.database)
   else # mongo gem version 1.x
     delete_user(new_resource.username, new_resource.database)
   end
@@ -274,6 +312,7 @@ action :modify do
   if defined?(Mongo::VERSION) && Gem::Version.new(Mongo::VERSION) >= Gem::Version.new('2.0.0')
     # The gem displays a lot of debug messages by default so set to INFO
     Mongo::Logger.logger.level = ::Logger::INFO
+    # TODO: implement modify for 2.x gem
   else # mongo gem version 1.x
     add_user(new_resource.username, new_resource.password, new_resource.database, new_resource.roles)
   end
