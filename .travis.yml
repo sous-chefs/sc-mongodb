@@ -15,6 +15,7 @@ install: echo "skip bundle install"
 branches:
   only:
     - master
+    - rewrite_v1
 
 # Ensure we make ChefDK's Ruby the default
 before_script:
