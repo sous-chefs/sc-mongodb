@@ -100,6 +100,10 @@ suites:
           roles:
             - read
           database: admin
+  includes:
+    # Only need to test this on one OS since this is
+    # purely to test mongo ruby driver code
+    - centos-7.3
 
 - name: user_management_v2
   run_list:
@@ -117,6 +121,10 @@ suites:
           roles:
             - read
           database: admin
+  includes:
+    # Only need to test this on one OS since this is
+    # purely to test mongo ruby driver code
+    - centos-7.3
 
 - name: user_management_v2_delete
   run_list:
@@ -135,3 +143,7 @@ suites:
           roles:
             - read
           database: admin
+  includes:
+    # Only need to test this on one OS since this is
+    # purely to test mongo ruby driver code
+    - centos-7.3
