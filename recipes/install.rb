@@ -40,7 +40,8 @@ file node['mongodb']['sysconfig_file'][config_type] do
 end
 
 # just-in-case config file drop
-template node['mongodb']['dbconfig_file'][config_type] do
+template "#{node['mongodb']['dbconfig_file'][config_type]} install" do
+  path node['mongodb']['dbconfig_file'][config_type]
   cookbook node['mongodb']['template_cookbook']
   source node['mongodb']['dbconfig_file']['template']
   group node['mongodb']['root_group']
@@ -68,7 +69,8 @@ execute 'mongodb-systemctl-daemon-reload' do
   action :nothing
 end
 
-template init_file do
+template "#{init_file} install" do
+  path init_file
   cookbook node['mongodb']['template_cookbook']
   source node['mongodb']['init_script_template']
   group node['mongodb']['root_group']
