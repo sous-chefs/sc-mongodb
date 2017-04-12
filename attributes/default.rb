@@ -99,11 +99,6 @@ when 'debian'
     default['mongodb']['init_script_template'] = 'debian-mongodb.upstart.erb'
   elsif node['platform'] == 'debian'
     default['mongodb']['repo'] = 'http://repo.mongodb.org/apt/debian'
-    if node['platform_version'].to_i < 8
-      # Debian 7 uses the older "mongodb" as the service name
-      default['mongodb']['default_init_name'] = 'mongodb'
-      default['mongodb']['instance_name']['mongod'] = 'mongodb'
-    end
   end
 else
   Chef::Log.error("Unsupported Platform Family: #{node['platform_family']}")
