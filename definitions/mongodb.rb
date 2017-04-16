@@ -100,7 +100,8 @@ define :mongodb_instance,
   new_resource.ulimit                     = node['mongodb']['ulimit']
   new_resource.reload_action              = node['mongodb']['reload_action']
 
-  if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
+  # Upstart or sysvinit
+  if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
     mode = '0644'
   else
