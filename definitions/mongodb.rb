@@ -208,14 +208,6 @@ define :mongodb_instance,
 
   # service
   service new_resource.name do
-    case node['platform']
-    when 'ubuntu'
-      if node['platform_version'].to_f >= 15.04
-        provider Chef::Provider::Service::Systemd
-      end
-    else
-      provider Chef::Provider::Service::Upstart if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
-    end
     supports status: true, restart: true
     action new_resource.service_action
     new_resource.service_notifies.each do |service_notify|
