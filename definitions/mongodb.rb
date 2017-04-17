@@ -100,7 +100,8 @@ define :mongodb_instance,
   new_resource.ulimit                     = node['mongodb']['ulimit']
   new_resource.reload_action              = node['mongodb']['reload_action']
 
-  if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
+  # Upstart or sysvinit
+  if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
     mode = '0644'
   else
@@ -200,21 +201,13 @@ define :mongodb_instance,
     )
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
 
-    if platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7
+    if (platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7) || (node['platform'] == 'debian' && node['platform_version'].to_i >= 8)
       notifies :run, "execute[mongodb-systemctl-daemon-reload-#{new_resource.name}]", :immediately
     end
   end
 
   # service
   service new_resource.name do
-    case node['platform']
-    when 'ubuntu'
-      if node['platform_version'].to_f >= 15.04
-        provider Chef::Provider::Service::Systemd
-      end
-    else
-      provider Chef::Provider::Service::Upstart if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
-    end
     supports status: true, restart: true
     action new_resource.service_action
     new_resource.service_notifies.each do |service_notify|

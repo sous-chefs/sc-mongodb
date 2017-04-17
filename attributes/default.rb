@@ -49,7 +49,7 @@ default['mongodb']['sysconfig_file']['mongos'] = '/etc/default/mongos'
 default['mongodb']['sysconfig_file']['template'] = 'mongodb.sysconfig.erb'
 
 default['mongodb']['dbconfig_file']['template'] = 'mongodb.conf.erb'
-default['mongodb']['dbconfig_file']['mongod'] = '/etc/mongodb.conf'
+default['mongodb']['dbconfig_file']['mongod'] = '/etc/mongod.conf'
 default['mongodb']['dbconfig_file']['mongos'] = '/etc/mongos.conf'
 
 default['mongodb']['package_name'] = 'mongodb'
@@ -90,20 +90,18 @@ when 'rhel', 'fedora'
   default['mongodb']['sysconfig_file']['mongod'] = '/etc/sysconfig/mongodb'
   default['mongodb']['user'] = 'mongod'
   default['mongodb']['group'] = 'mongod'
-  default['mongodb']['dbconfig_file']['mongod'] = '/etc/mongod.conf'
   default['mongodb']['init_script_template'] = 'redhat-mongodb.init.erb'
 when 'debian'
   if node['platform'] == 'ubuntu'
     default['mongodb']['repo'] = 'http://repo.mongodb.org/apt/ubuntu'
-    default['mongodb']['init_dir'] = '/etc/init/'
-    default['mongodb']['init_script_template'] = 'debian-mongodb.upstart.erb'
+
+    # Upstart
+    if node['platform_version'].to_f < 15.04
+      default['mongodb']['init_dir'] = '/etc/init/'
+      default['mongodb']['init_script_template'] = 'debian-mongodb.upstart.erb'
+    end
   elsif node['platform'] == 'debian'
     default['mongodb']['repo'] = 'http://repo.mongodb.org/apt/debian'
-    if node['platform_version'].to_i < 8
-      # Debian 7 uses the older "mongodb" as the service name
-      default['mongodb']['default_init_name'] = 'mongodb'
-      default['mongodb']['instance_name']['mongod'] = 'mongodb'
-    end
   end
 else
   Chef::Log.error("Unsupported Platform Family: #{node['platform_family']}")
