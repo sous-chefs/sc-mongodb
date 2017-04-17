@@ -201,7 +201,7 @@ define :mongodb_instance,
     )
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
 
-    if platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7
+    if (platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7) || (node['platform'] == 'debian' && node['platform_version'].to_i >= 8)
       notifies :run, "execute[mongodb-systemctl-daemon-reload-#{new_resource.name}]", :immediately
     end
   end
