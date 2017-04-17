@@ -1,8 +1,14 @@
 # Mongos service
 describe service('mongos') do
   it { should be_installed }
-  it { should be_enabled }
   it { should be_running }
+end
+
+# SystemD on Debian 8 doesn't detect enabled sysvinit services correctly
+unless os[:family] == 'debian' && os[:release] =~ /^8\./
+  describe service('mongos') do
+    it { should be_enabled }
+  end
 end
 
 # Mongos process
