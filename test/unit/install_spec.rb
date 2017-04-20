@@ -17,7 +17,7 @@ describe 'sc-mongodb::default' do
   end
 
   it 'package install mongodb-org via mongodb-org' do
-    chef_run.node.set.mongodb.install_method = 'mongodb-org'
+    chef_run.node['mongodb']['install_method'] = 'mongodb-org'
     chef_run.converge(described_recipe)
     expect(chef_run).to include_recipe('sc-mongodb::mongodb_org_repo')
     expect(chef_run).to include_recipe('sc-mongodb::install')
