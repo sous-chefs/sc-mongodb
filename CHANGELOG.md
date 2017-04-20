@@ -1,5 +1,15 @@
 # sc-mongodb Cookbook CHANGELOG
 
+## Unreleased
+
+- Drop support for 10gen repo and default to mongo-org repo install
+- Remove Chef 10 and 11 support
+- Update Mongo default version to 3.2.10
+- Drop support for Mongo < 3.0
+- Convert all test-kitchen verification to inspec
+- Change `node['mongodb']['config']` to have `mongos` and `mongod` keys before actual config setting
+- Update apt and yum repo
+
 ## v0.18.1 Changes
 
 - Fix cookbook name in attributes file
