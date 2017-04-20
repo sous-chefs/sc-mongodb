@@ -17,20 +17,20 @@ describe 'sc-mongodb::default' do
   end
 
   it 'should disable logpath when syslog is set' do
-    chef_run.node.set.mongodb.config.syslog = true
+    chef_run.node.normal.mongodb.config.syslog = true
     chef_run.converge(described_recipe)
     expect(chef_run).to_not create_directory('/var/log/mongodb')
   end
 
   it 'should be able to set logpath to nil, and wont create' do
-    chef_run.node.set.mongodb.config.logpath = '/tmp/mongodb_config_logpath/logfile.log'
-    chef_run.node.set.mongodb.config.logpath = nil
+    chef_run.node.normal.mongodb.config.logpath = '/tmp/mongodb_config_logpath/logfile.log'
+    chef_run.node.normal.mongodb.config.logpath = nil
     chef_run.converge(described_recipe)
     expect(chef_run).to_not create_directory('/tmp/mongodb_config_logpath')
   end
 
   it 'should by default create a logpath' do
-    chef_run.node.set.mongodb.config.logpath = '/tmp/mongodb_config_logpath/logfile.log'
+    chef_run.node.normal.mongodb.config.logpath = '/tmp/mongodb_config_logpath/logfile.log'
     chef_run.converge(described_recipe)
     expect(chef_run).to create_directory('/tmp/mongodb_config_logpath')
   end
