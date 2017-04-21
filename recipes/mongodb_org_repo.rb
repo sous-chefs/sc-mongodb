@@ -47,7 +47,7 @@ when 'debian'
     keyserver 'hkp://keyserver.ubuntu.com:80'
     key package_version_major >= 3.2 ? 'EA312927' : '7F0CEB10'
   end
-when 'amazon', 'fedora', 'oracle', 'rhel'
+when 'amazon', 'fedora', 'rhel'
   # RHEL: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/
   # Amazon: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-amazon/
   yum_repository 'mongodb' do
