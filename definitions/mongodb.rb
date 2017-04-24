@@ -165,7 +165,7 @@ define :mongodb_instance,
     mode '0755'
     action :create
     recursive true
-    only_if { new_resource.logpath }
+    not_if { new_resource.logpath.nil? || new_resource.logpath.empty? }
   end
 
   # dbpath dir [make sure it exists]
