@@ -28,15 +28,16 @@ node.normal['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
 
 include_recipe 'sc-mongodb::install'
 
-# we are not starting the shard service with the --shardsvr
-# commandline option because right now this only changes the port it's
-# running on, and we are overwriting this port anyway.
+ruby_block 'chef_gem_at_converge_time' do
+  block do
+    node['mongodb']['ruby_gems'].each do |gem, version|
+      version = Gem::Dependency.new(gem, version)
+      Chef::Provider::Package::Rubygems::GemEnvironment.new.install(version)
+    end
+  end
+end
+
 mongodb_instance node['mongodb']['instance_name']['mongod'] do
-  mongodb_type 'shard'
-  port         node['mongodb']['config']['port']
-  logpath      node['mongodb']['config']['logpath']
-  dbpath       node['mongodb']['config']['dbpath']
-  replicaset   node if node['mongodb']['is_replicaset']
-  enable_rest  node['mongodb']['config']['rest']
-  smallfiles   node['mongodb']['config']['smallfiles']
+  mongodb_type 'mongod'
+  replicaset true
 end

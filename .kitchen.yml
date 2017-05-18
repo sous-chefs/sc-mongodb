@@ -216,3 +216,101 @@ suites:
     # Only need to test this on one OS since this is
     # purely to test mongo ruby driver code
     - centos-7.3
+
+- name: shard1-n1
+  driver:
+    network:
+      private_network:
+        ip: 192.168.10.10
+  run_list:
+  - recipe[mongodb_spec::set_hostname]
+  - recipe[sc-mongodb::shard]
+  attributes:
+    mongodb:
+      auto_configure:
+        replicaset: false
+      cluster_name: kitchen1
+      config:
+        mongod:
+          replication:
+            replSetName: kitchen1
+      is_replicaset: true
+  includes:
+    # Only need to test this on one OS since this is
+    # purely to test mongo ruby driver code
+    - centos-7.3
+
+- name: shard1-n2
+  driver:
+    network:
+      private_network:
+        ip: 192.168.10.20
+  run_list:
+  - recipe[mongodb_spec::set_hostname]
+  - recipe[sc-mongodb::shard]
+  attributes:
+    mongodb:
+      auto_configure:
+        replicaset: false
+      cluster_name: kitchen1
+      config:
+        mongod:
+          replication:
+            replSetName: kitchen1
+      is_replicaset: true
+  includes:
+    # Only need to test this on one OS since this is
+    # purely to test mongo ruby driver code
+    - centos-7.3
+
+- name: shard1-n3
+  driver:
+    network:
+      private_network:
+        ip: 192.168.10.30
+  run_list:
+  - recipe[mongodb_spec::set_hostname]
+  - recipe[sc-mongodb::shard]
+  attributes:
+    mongodb:
+      auto_configure:
+        replicaset: true
+      cluster_name: kitchen1
+      config:
+        mongod:
+          replication:
+            replSetName: kitchen1
+      is_replicaset: true
+  includes:
+    # Only need to test this on one OS since this is
+    # purely to test mongo ruby driver code
+    - centos-7.3
+
+- name: shard-mongos
+  driver:
+    network:
+      private_network:
+        ip: 192.168.10.99
+  run_list:
+  - recipe[mongodb_spec::set_hostname]
+  - recipe[sc-mongodb::configserver]
+  - recipe[sc-mongodb::mongos]
+  attributes:
+    mongodb:
+      cluster_name: kitchen1
+      config:
+        mongod:
+          net:
+            # use this port since mongos will use 27017 instead
+            port: 27019
+          sharding:
+            clusterRole: configsvr
+        mongos:
+          sharding:
+            configDB: mongos:27019
+      sharded_collections:
+        test.testing: _id
+  includes:
+    # Only need to test this on one OS since this is
+    # purely to test mongo ruby driver code
+    - centos-7.3

@@ -1,4 +1,4 @@
-['192.168.10.10 mongo1', '192.168.10.20 mongo2', '192.168.10.30 mongo3'].each do |host|
+['192.168.10.10 mongo1', '192.168.10.20 mongo2', '192.168.10.30 mongo3', '192.168.10.99 mongos'].each do |host|
   execute "set_hostnames for #{host}" do
     command "echo #{host} >> /etc/hosts"
   end
