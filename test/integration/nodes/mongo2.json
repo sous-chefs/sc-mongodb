@@ -1,0 +1,46 @@
+{
+  "id": "mongo2",
+  "name": "mongo2",
+  "chef_environment": "_default",
+  "json_class": "Chef::Node",
+  "automatic": {
+    "hostname": "vagrant.vm",
+    "os": "centos"
+  },
+  "normal": {
+    "fqdn": "mongo2",
+    "mongodb":{
+      "cluster_name": "kitchen",
+      "is_replicaset": "true"
+    },
+    "mongodb_cluster_name": "default"
+  },
+  "chef_type": "node",
+  "default": {
+    "mongodb":{
+      "cluster_name": "kitchen",
+      "config": {
+        "mongod": {
+          "net": {
+            "port": 27017
+          },
+          "replication": {
+            "replSetName": "kitchen"
+          }
+        }
+      },
+      "is_replicaset": "true",
+      "replica_build_indexes": true,
+      "replica_priority": 1,
+      "replica_tags": {},
+      "replica_slave_delay": 0,
+      "replica_votes": 1
+    },
+    "mongodb_cluster_name": "default"
+  },
+  "override": {
+  },
+  "run_list": [
+    "role[mongodb-configserver]"
+  ]
+}

@@ -231,7 +231,7 @@ define :mongodb_instance,
 
     ruby_block 'config_replicaset' do
       block do
-        MongoDB.configure_replicaset(new_resource.replicaset, replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
+        MongoDB.configure_replicaset(node, replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
       end
       action :nothing
     end

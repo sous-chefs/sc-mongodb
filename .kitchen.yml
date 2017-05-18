@@ -21,7 +21,7 @@ platforms:
 - name: debian-7.11
   # Set due to https://github.com/test-kitchen/kitchen-vagrant/issues/293
   driver:
-    kitchen_cache_directory: ~/.kitchen/cache/debian
+    kitchen_cache_directory: .kitchen/cache/debian
 - name: debian-8.6
 - name: fedora-25
 - name: ubuntu-14.04
@@ -146,6 +146,72 @@ suites:
           roles:
             - read
           database: admin
+  includes:
+    # Only need to test this on one OS since this is
+    # purely to test mongo ruby driver code
+    - centos-7.3
+
+- name: replicaset1
+  driver:
+    network:
+      private_network:
+        ip: 192.168.10.10
+  run_list:
+  - recipe[mongodb_spec::set_hostname]
+  - recipe[sc-mongodb::replicaset]
+  attributes:
+    mongodb:
+      auto_configure:
+        replicaset: false
+      cluster_name: kitchen
+      config:
+        mongod:
+          replication:
+            replSetName: kitchen
+  includes:
+    # Only need to test this on one OS since this is
+    # purely to test mongo ruby driver code
+    - centos-7.3
+
+- name: replicaset2
+  driver:
+    network:
+      private_network:
+        ip: 192.168.10.20
+  run_list:
+  - recipe[mongodb_spec::set_hostname]
+  - recipe[sc-mongodb::replicaset]
+  attributes:
+    mongodb:
+      auto_configure:
+        replicaset: false
+      cluster_name: kitchen
+      config:
+        mongod:
+          replication:
+            replSetName: kitchen
+  includes:
+    # Only need to test this on one OS since this is
+    # purely to test mongo ruby driver code
+    - centos-7.3
+
+- name: replicaset3
+  driver:
+    network:
+      private_network:
+        ip: 192.168.10.30
+  run_list:
+  - recipe[mongodb_spec::set_hostname]
+  - recipe[sc-mongodb::replicaset]
+  attributes:
+    mongodb:
+      auto_configure:
+        replicaset: true
+      cluster_name: kitchen
+      config:
+        mongod:
+          replication:
+            replSetName: kitchen
   includes:
     # Only need to test this on one OS since this is
     # purely to test mongo ruby driver code

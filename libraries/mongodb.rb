@@ -53,7 +53,10 @@ class Chef::ResourceDefinitionList::MongoDB
     rs_members = []
     rs_options = {}
     members.each_index do |n|
-      host = "#{members[n]['fqdn']}:#{members[n]['mongodb']['config']['port']}"
+      # Ignore any vagrant hosts since we stub all of the nodes in testing
+      next if members[n]['fqdn'] =~ /\.vagrantup\.com$/
+
+      host = "#{members[n]['fqdn']}:#{members[n]['mongodb']['config']['mongod']['net']['port']}"
       rs_options[host] = {}
 
       rs_options[host]['arbiterOnly'] = true if members[n]['mongodb']['replica_arbiter_only']
@@ -76,6 +79,10 @@ class Chef::ResourceDefinitionList::MongoDB
 
     Chef::Log.info(
       "Configuring replicaset with members #{members.map { |n| n['hostname'] }.join(', ')}"
+    )
+
+    Chef::Log.debug(
+      "Configuring replicaset with config: #{rs_members}"
     )
 
     rs_member_ips = []
