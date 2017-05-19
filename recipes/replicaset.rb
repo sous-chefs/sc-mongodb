@@ -35,5 +35,6 @@ end
 
 mongodb_instance node['mongodb']['instance_name']['mongod'] do
   mongodb_type 'mongod'
+  replicaset true
   not_if { node['mongodb']['is_shard'] }
 end

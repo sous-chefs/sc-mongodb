@@ -28,8 +28,8 @@ define :mongodb_instance,
        replicaset: nil,
        notifies: [] do
   # TODO: this is the only remain use of params[:mongodb_type], is it still needed?
-  unless %w(mongod shard configserver mongos).include?(params[:mongodb_type])
-    raise ArgumentError, ":mongodb_type must be 'mongod', 'shard', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
+  unless %w(mongod configserver mongos).include?(params[:mongodb_type])
+    raise ArgumentError, ":mongodb_type must be 'mongod', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
   end
 
   require 'ostruct'
@@ -38,6 +38,9 @@ define :mongodb_instance,
 
   # Determine type right away so we know if we need mongos or mognod installation
   new_resource.is_mongos = params[:mongodb_type] == 'mongos'
+
+  # Determine if this will be part of a shard
+  new_resource.is_shard = node['mongodb']['is_shard']
 
   # Make changes to node['mongodb']['config'] before copying to new_resource.
   if new_resource.is_mongos
@@ -67,6 +70,11 @@ define :mongodb_instance,
     new_resource.dbconfig_file = node['mongodb']['dbconfig_file']['mongod']
     new_resource.sysconfig_file = node['mongodb']['sysconfig_file']['mongod']
     new_resource.sysconfig_vars = node['mongodb']['sysconfig']['mongod']
+
+    if new_resource.is_shard
+      new_resource.config['sharding'] ||= {}
+      new_resource.config['sharding']['clusterRole'] = 'shardsvr'
+    end
   end
 
   node.default['mongodb']['config']['configsvr'] = true if node['mongodb']['is_configserver']
@@ -87,7 +95,6 @@ define :mongodb_instance,
   new_resource.init_dir                   = node['mongodb']['init_dir']
   new_resource.init_script_template       = node['mongodb']['init_script_template']
   new_resource.is_replicaset              = node['mongodb']['is_replicaset']
-  new_resource.is_shard                   = node['mongodb']['is_shard']
   new_resource.is_configserver            = node['mongodb']['is_configserver']
   new_resource.mongodb_group              = node['mongodb']['group']
   new_resource.mongodb_user               = node['mongodb']['user']
@@ -231,7 +238,7 @@ define :mongodb_instance,
 
     ruby_block 'config_replicaset' do
       block do
-        MongoDB.configure_replicaset(new_resource.replicaset, replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
+        MongoDB.configure_replicaset(node, replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
       end
       action :nothing
     end
