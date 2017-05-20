@@ -23,7 +23,6 @@ define :mongodb_instance,
        mongodb_type: 'mongod',
        action: [:enable, :start],
        logpath: '/var/log/mongodb/mongod.log',
-       dbpath: '/data',
        configservers: [],
        replicaset: nil,
        notifies: [] do
@@ -46,7 +45,7 @@ define :mongodb_instance,
   if new_resource.is_mongos
     provider = 'mongos'
     # mongos will fail to start if dbpath is set
-    node.default['mongodb']['config']['mongos']['storage']['dbpath'] = nil
+    node.default['mongodb']['config']['mongos']['storage']['dbPath'] = nil
 
     # Search for config servers
     unless node['mongodb']['config']['mongos']['sharding']['configDB']
@@ -61,6 +60,7 @@ define :mongodb_instance,
     end
     new_resource.config = node['mongodb']['config']['mongos'].to_hash
     new_resource.dbconfig_file = node['mongodb']['dbconfig_file']['mongos']
+    new_resource.dbpath = nil
     new_resource.sysconfig_file = node['mongodb']['sysconfig_file']['mongos']
     new_resource.sysconfig_vars = node['mongodb']['sysconfig']['mongos']
   else
@@ -75,12 +75,16 @@ define :mongodb_instance,
       new_resource.config['sharding'] ||= {}
       new_resource.config['sharding']['clusterRole'] = 'shardsvr'
     end
+
+    if node['mongodb']['config']['mongod']['storage']['dbPath'].nil?
+      node.default['mongodb']['config']['mongod']['storage']['dbPath'] = '/data'
+    end
+    new_resource.dbpath = node['mongodb']['config']['mongod']['storage']['dbPath']
   end
 
   node.default['mongodb']['config']['configsvr'] = true if node['mongodb']['is_configserver']
 
   new_resource.name                       = params[:name]
-  new_resource.dbpath                     = params[:dbpath]
   new_resource.logpath                    = params[:logpath]
   new_resource.replicaset                 = params[:replicaset]
   new_resource.service_action             = params[:action]
@@ -175,14 +179,15 @@ define :mongodb_instance,
     not_if { new_resource.logpath.nil? || new_resource.logpath.empty? }
   end
 
-  # dbpath dir [make sure it exists]
-  directory new_resource.dbpath do
-    owner new_resource.mongodb_user
-    group new_resource.mongodb_group
-    mode '0755'
-    action :create
-    recursive true
-    not_if { new_resource.is_mongos }
+  # dbpath dir [make sure it exists] unless it is a mongos
+  unless new_resource.is_mongos
+    directory new_resource.dbpath do
+      owner new_resource.mongodb_user
+      group new_resource.mongodb_group
+      mode '0755'
+      action :create
+      recursive true
+    end
   end
 
   # Reload systemctl for RHEL 7+ after modifying the init file.

@@ -212,8 +212,8 @@ describe 'sc-mongodb::default' do
         )
       end
 
-      it 'should create "/data" directory' do
-        expect(chef_run).to create_directory('/data').with(
+      it 'should create dbPath directory' do
+        expect(chef_run).to create_directory(mongod_conf['storage']['dbPath']).with(
           owner: file_owner,
           group: file_owner,
           mode: '0755'
