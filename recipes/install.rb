@@ -31,11 +31,12 @@ build_essential 'build-tools'
 config_type = node['mongodb']['is_mongos'] ? 'mongos' : 'mongod'
 
 # prevent-install defaults, but don't overwrite
-file node['mongodb']['sysconfig_file'][config_type] do
+file "#{node['mongodb']['sysconfig_file'][config_type]} install" do
+  path node['mongodb']['sysconfig_file'][config_type]
   content 'ENABLE_MONGODB=no'
   group node['mongodb']['root_group']
   owner 'root'
-  mode 0644
+  mode '0644'
   action :create_if_missing
 end
 
@@ -46,7 +47,7 @@ template "#{node['mongodb']['dbconfig_file'][config_type]} install" do
   source node['mongodb']['dbconfig_file']['template']
   group node['mongodb']['root_group']
   owner 'root'
-  mode 0644
+  mode '0644'
   variables(
     config: node['mongodb']['config'][config_type]
   )
@@ -55,7 +56,7 @@ template "#{node['mongodb']['dbconfig_file'][config_type]} install" do
 end
 
 # and we install our own init file
-if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
+if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
   init_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}.conf")
   mode = '0644'
 else
@@ -82,8 +83,7 @@ template "#{init_file} install" do
     sysconfig_file: node['mongodb']['sysconfig_file'][config_type],
     ulimit: node['mongodb']['ulimit'],
     bind_ip: node['mongodb']['config'][config_type]['net']['bindIp'],
-    port: node['mongodb']['config'][config_type]['net']['port'],
-    user: node['mongodb']['user']
+    port: node['mongodb']['config'][config_type]['net']['port']
   )
   action :create_if_missing
 
