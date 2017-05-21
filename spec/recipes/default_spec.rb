@@ -2,6 +2,9 @@ require 'spec_helper'
 
 describe 'sc-mongodb::default' do
   context 'with default node attributes' do
+    # mongod_conf_XXXX: the variables are a copy of what is in the default
+    # attributes file so that the OS's can be tested for correct attribute
+    # assignments
     let(:mongod_conf_rhel) do
       {
         'net' => {
@@ -66,6 +69,7 @@ describe 'sc-mongodb::default' do
       }
     end
 
+    # mongod_init: Cookbook supports 2 different init systems right now
     let(:mongod_init_sysvinit) do
       '/etc/init.d/mongod'
     end
@@ -74,6 +78,7 @@ describe 'sc-mongodb::default' do
       '/etc/init/mongod.conf'
     end
 
+    # mongod_packager_options: pkg install options for mongo per OS
     let(:mongod_packager_options_rhel) do
       '--nogpgcheck'
     end
@@ -82,6 +87,7 @@ describe 'sc-mongodb::default' do
       '-o Dpkg::Options::="--force-confold" --force-yes'
     end
 
+    # mongod_sysconfig_file: sysconfig file location for mongo per OS
     let(:mongod_sysconfig_file_debian) do
       '/etc/default/mongodb'
     end
@@ -90,6 +96,7 @@ describe 'sc-mongodb::default' do
       '/etc/sysconfig/mongodb'
     end
 
+    # mongod_version: RHEL appends a release and OS versions to their versions
     let(:mongod_version_rhel) do
       '3.2.10-1.el7'
     end
@@ -98,6 +105,7 @@ describe 'sc-mongodb::default' do
       '3.2.10'
     end
 
+    # All tests in this section run for all OS's
     shared_examples_for 'default recipe' do
       it 'should include "sc-mongodb::install" recipe' do
         expect_any_instance_of(Chef::Recipe).to receive(:include_recipe).with('sc-mongodb::install')
