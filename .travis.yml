@@ -49,7 +49,7 @@ after_failure:
 
 matrix:
   allow_failures:
-    - env: INSTANCE=mms-agent-centos-7
+    - env: INSTANCE=mms-agent-centos-6
   include:
     - script:
       - /opt/chefdk/bin/chef exec rake
