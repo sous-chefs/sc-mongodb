@@ -63,31 +63,21 @@ suites:
           sharding:
             configDB: 127.0.0.1:27019
 
-- name: mms_monitoring_agent
+- name: mms_agent
   run_list:
-  - "recipe[sc-mongodb::mms_monitoring_agent]"
+  - recipe[sc-mongodb::mms_automation_agent]
+  - recipe[sc-mongodb::mms_backup_agent]
+  - recipe[sc-mongodb::mms_monitoring_agent]
   attributes:
     mongodb:
       mms_agent:
-        api_key: "random key"
-        monitoring:
-          sslRequireValidServerCertificates: false
+        api_key: randomkey
+        automation:
+          config:
+            mmsGroupId: randomgroup
   excludes:
-    # Upstart is not present
     - debian-7.11
-
-- name: mms_backup_agent
-  run_list:
-  - "recipe[sc-mongodb::mms_backup_agent]"
-  attributes:
-    mongodb:
-      mms_agent:
-        api_key: "random key"
-        backup:
-          sslRequireValidServerCertificates: false
-  excludes:
-    # Upstart is not present
-    - debian-7.11
+    - debian-8.6
 
 - name: user_management
   run_list:

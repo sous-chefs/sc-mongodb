@@ -90,34 +90,21 @@ Several important attributes to note:
 ### shared MMS Agent attributes
 
 * `node['mongodb']['mms_agent']['api_key']` - MMS Agent API Key. No default, required.
-* `node['mongodb']['mms_agent']['monitoring']['version']` - Version of the MongoDB MMS Monitoring Agent package to download and install. Default is '2.0.0.17-1', required.
-* `node['mongodb']['mms_agent']['monitoring'][<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.
-* `node['mongodb']['mms_agent']['backup']['version']` - Version of the MongoDB MMS Backup Agent package to download and install. Default is '1.4.3.28-1', required.
-* `node['mongodb']['mms_agent']['backup'][<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.
+* `node['mongodb']['mms_agent']['automation']['config'][<setting>]` - General MongoDB MMS Automation Agent configuration file option.
+* `node['mongodb']['mms_agent']['backup']['config'][<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.
+* `node['mongodb']['mms_agent']['monitoring']['config'][<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.
 
-### User management attributes
-
-* `node['mongodb']['config']['auth']` - Require authentication to access or modify the database (`True` or `False`), Default is `nil`
-* `node['mongodb']['admin']` - The admin user with userAdmin privileges that allows user management
-* `node['mongodb']['users']` - Array of users to add when running the user management recipe
-
-#### Monitoring Agent Settings
+#### Automation Agent Settings
 
 The defaults values installed by the package are:
 
 ```
 mmsBaseUrl=https://mms.mongodb.com
-configCollectionsEnabled=true
-configDatabasesEnabled=true
-throttlePassesShardChunkCounts = 10
-throttlePassesDbstats = 20
-throttlePassesOplog = 10
-disableProfileDataCollection=false
-disableGetLogsDataCollection=false
-disableLocksAndRecordStatsDataCollection=false
-enableMunin=true
-useSslForAllConnections=false
-sslRequireValidServerCertificates=false
+logFile=/var/log/mongodb-mms-automation/automation-agent.log
+mmsConfigBackup=/var/lib/mongodb-mms-automation/mms-cluster-config-backup.json
+logLevel=INFO
+maxLogFiles=10
+maxLogFileSize=268435456
 ```
 
 #### Backup Agent Settings
@@ -127,8 +114,21 @@ The defaults values installed by the package are:
 ```
 mothership=api-backup.mongodb.com
 https=true
-sslRequireValidServerCertificates=false
 ```
+
+#### Monitoring Agent Settings
+
+The defaults values installed by the package are:
+
+```
+mmsBaseUrl=https://mms.mongodb.com
+```
+
+### User management attributes
+
+* `node['mongodb']['config']['auth']` - Require authentication to access or modify the database (`True` or `False`), Default is `nil`
+* `node['mongodb']['admin']` - The admin user with userAdmin privileges that allows user management
+* `node['mongodb']['users']` - Array of users to add when running the user management recipe
 
 ## USAGE:
 
@@ -226,7 +226,7 @@ For more details, you can find a [tutorial for Sharding + Replication](https://g
 This cookbook also includes support for
 [MongoDB Monitoring System (MMS)](https://mms.mongodb.com/)
 agent. MMS is a hosted monitoring service, provided by MongoDB, Inc. Once
-the small python agent program is installed on the MongoDB host, it
+the small agent program is installed on the MongoDB host, it
 automatically collects the metrics and uploads them to the MMS server.
 The graphs of these metrics are shown on the web page. It helps a lot
 for tackling MongoDB related problems, so MMS is the baseline for all
@@ -235,8 +235,21 @@ production MongoDB deployments.
 
 To setup MMS, simply set your keys in
 `node['mongodb']['mms_agent']['api_key']` and then add the
-`sc-mongodb::mms-agent` recipe to your run list. Your current keys should
-be available at your [MMS Settings page](https://mms.mongodb.com/settings).
+`sc-mongodb::mms_monitoring_agent` recipe to your run list. Your current keys
+should be available at your [MMS Settings page](https://mms.mongodb.com/settings).
+
+The agent install and configurations is also available via a custom resource for
+wrapper cookbooks.  This allows for further customization outside of this
+cookbook
+
+```ruby
+mongodb_agent 'monitoring' do
+  config {} # Key and value pairs that will be in the config file
+  group 'group' # Group to own the config file
+  package_url 'package_url' # Download URL of the agent package
+  user 'user' # User to own the config file
+end
+```
 
 ### User Management
 
