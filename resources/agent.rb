@@ -62,5 +62,22 @@ action :create do
 end
 
 action :delete do
-  # TODO
+  filename = new_resource.package_url.split('/').last
+  full_file_path = "#{Chef::Config[:file_cache_path]}/#{filename}"
+
+  file full_file_path do
+    action :delete
+  end
+
+  service "mongodb-mms-#{new_resource.type}-agent" do
+    action [:disable, :stop]
+  end
+
+  package "mongodb-mms-#{new_resource.type}-agent" do
+    action :remove
+  end
+
+  file "/etc/mongodb-mms/#{new_resource.type}-agent.config" do
+    action :delete
+  end
 end
