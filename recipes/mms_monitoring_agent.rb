@@ -23,6 +23,9 @@
 
 Chef::Log.warn 'Found empty mms_agent.api_key attribute' if node['mongodb']['mms_agent']['api_key'].nil?
 
+# The MMS agent is hard coded for a specific version of libsasl that is newer
+# on RHEL 7
+# See http://stackoverflow.com/a/26242879
 link '/usr/lib64/libsasl2.so.2 mms_monitoring_agent' do
   to '/usr/lib64/libsasl2.so.3'
   target_file '/usr/lib64/libsasl2.so.2'
