@@ -14,7 +14,6 @@ install: echo "skip bundle install"
 branches:
   only:
     - master
-    - rewrite_v1
 
 services: docker
 

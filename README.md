@@ -26,8 +26,8 @@ This cookbook depends on these external cookbooks
 
 As of 1.0 This Cookbook requires
 
-- Chef > 12
-- Ruby > 2.1
+- Chef > 12.5
+- Ruby > 2.3
 
 As of 0.16 This Cookbook requires
 
@@ -156,7 +156,6 @@ name on the same node
 ```ruby
 mongodb_instance "my_instance" do
   port node['mongodb']['port'] + 100
-  dbpath "/data/"
 end
 ```
 
