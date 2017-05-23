@@ -27,6 +27,10 @@ env:
   - INSTANCE=default-fedora-latest
   - INSTANCE=default-ubuntu-1404
   - INSTANCE=default-ubuntu-1604
+  - INSTANCE=mms-agent-centos-6
+  - INSTANCE=mms-agent-centos-7
+  - INSTANCE=mms-agent-ubuntu-1404
+  - INSTANCE=mms-agent-ubuntu-1604
 
 # Ensure we make ChefDK's Ruby the default
 before_script:
@@ -44,6 +48,8 @@ after_failure:
   - cat .kitchen/logs/kitchen.log
 
 matrix:
+  allow_failures:
+    - env: INSTANCE=mms-agent-centos-6
   include:
     - script:
       - /opt/chefdk/bin/chef exec rake
