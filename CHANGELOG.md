@@ -4,7 +4,7 @@
 
 ## v1.0.0 Changes (Released 2017-05-23)
 
-*WARNING:* This is a rewrite the contains many backwards incompatable changes.  Many attributes have changed defaults and/or the attribute key itself.
+*WARNING:* This is a rewrite that contains many backwards incompatable changes.  Many attributes have changed defaults and/or the attribute key itself.
 
 - Drop support for 10gen repo and default to mongo-org repo install
 - Remove Chef 10 and 11 support
