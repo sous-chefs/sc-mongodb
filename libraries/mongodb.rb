@@ -27,13 +27,8 @@ class Chef::ResourceDefinitionList::MongoDB
     require 'rubygems'
     require 'mongo'
 
-    if members.empty?
-      if Chef::Config[:solo]
-        Chef::Log.warn('Cannot search for member nodes with chef-solo, defaulting to single node replica set')
-      else
-        Chef::Log.warn("Cannot configure replicaset '#{name}', no member nodes found")
-        return
-      end
+    if members.empty? && Chef::Config[:solo]
+      Chef::Log.warn('Cannot search for member nodes with chef-solo, defaulting to single node replica set')
     end
 
     begin
@@ -53,7 +48,10 @@ class Chef::ResourceDefinitionList::MongoDB
     rs_members = []
     rs_options = {}
     members.each_index do |n|
-      host = "#{members[n]['fqdn']}:#{members[n]['mongodb']['config']['port']}"
+      # Ignore any vagrant hosts since we stub all of the nodes in testing
+      next if members[n]['fqdn'] =~ /\.vagrantup\.com$/
+
+      host = "#{members[n]['fqdn']}:#{members[n]['mongodb']['config']['mongod']['net']['port']}"
       rs_options[host] = {}
 
       rs_options[host]['arbiterOnly'] = true if members[n]['mongodb']['replica_arbiter_only']
@@ -76,6 +74,10 @@ class Chef::ResourceDefinitionList::MongoDB
 
     Chef::Log.info(
       "Configuring replicaset with members #{members.map { |n| n['hostname'] }.join(', ')}"
+    )
+
+    Chef::Log.debug(
+      "Configuring replicaset with config: #{rs_members}"
     )
 
     rs_member_ips = []
@@ -232,11 +234,11 @@ class Chef::ResourceDefinitionList::MongoDB
         # do not include hidden members when calling addShard
         # see https://jira.mongodb.org/browse/SERVER-9882
         next if n['mongodb']['replica_hidden']
-        key = "rs_#{n['mongodb']['shard_name']}"
+        key = n['mongodb']['config']['mongod']['replication']['replSetName'] || "rs_#{n['mongodb']['shard_name']}"
       else
         key = '_single'
       end
-      shard_groups[key] << "#{n['fqdn']}:#{n['mongodb']['config']['port']}"
+      shard_groups[key] << "#{n['fqdn']}:#{n['mongodb']['config']['mongod']['net']['port']}"
     end
     Chef::Log.info(shard_groups.inspect)
 
@@ -250,13 +252,15 @@ class Chef::ResourceDefinitionList::MongoDB
     end
     Chef::Log.info(shard_members.inspect)
 
+    mongo_port = node['mongodb']['config']['mongos']['net']['port']
+
     begin
       connection = nil
       rescue_connection_failure do
-        connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], op_timeout: 5)
+        connection = Mongo::Connection.new('localhost', mongo_port, op_timeout: 5)
       end
     rescue => e
-      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['config']['port']}', reason #{e}")
+      Chef::Log.warn("Could not connect to database: 'localhost:#{mongo_port}', reason #{e}")
       return
     end
 
@@ -274,12 +278,19 @@ class Chef::ResourceDefinitionList::MongoDB
     shard_members.each do |shard|
       cmd = BSON::OrderedHash.new
       cmd['addShard'] = shard
+      require 'pry'
+      # binding.pry
       begin
         result = admin.command(cmd, check_response: false)
       rescue Mongo::OperationTimeout
         result = "Adding shard '#{shard}' timed out, run the recipe again to check the result"
       end
-      Chef::Log.info(result.inspect)
+
+      if result['ok'] == 0.0
+        Chef::Log.error(result.inspect)
+      else
+        Chef::Log.info(result.inspect)
+      end
     end
   end
 
@@ -293,13 +304,15 @@ class Chef::ResourceDefinitionList::MongoDB
     require 'rubygems'
     require 'mongo'
 
+    mongo_port = node['mongodb']['config']['mongos']['net']['port']
+
     begin
       connection = nil
       rescue_connection_failure do
-        connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], op_timeout: 5)
+        connection = Mongo::Connection.new('localhost', mongo_port, op_timeout: 5)
       end
     rescue => e
-      Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['config']['port']}', reason #{e}")
+      Chef::Log.warn("Could not connect to database: 'localhost:#{mongo_port}', reason #{e}")
       return
     end
 

@@ -4,6 +4,8 @@
 #
 # Copyright 2011, edelight GmbH
 #
+# Copyright 2016-2017, Grant Ridder
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -17,8 +19,8 @@
 # limitations under the License.
 #
 
-node.set['mongodb']['is_replicaset'] = true
-node.set['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
+node.normal['mongodb']['is_replicaset'] = true
+node.normal['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
 
 include_recipe 'sc-mongodb::install'
 
@@ -31,13 +33,8 @@ ruby_block 'chef_gem_at_converge_time' do
   end
 end
 
-mongodb_instance node['mongodb']['instance_name'] do
+mongodb_instance node['mongodb']['instance_name']['mongod'] do
   mongodb_type 'mongod'
-  port         node['mongodb']['config']['port']
-  logpath      node['mongodb']['config']['logpath']
-  dbpath       node['mongodb']['config']['dbpath']
-  replicaset   node
-  enable_rest  node['mongodb']['config']['rest']
-  smallfiles   node['mongodb']['config']['smallfiles']
+  replicaset true
   not_if { node['mongodb']['is_shard'] }
 end

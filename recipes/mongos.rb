@@ -6,6 +6,8 @@
 # Authors:
 #       Markus Korn <markus.korn@edelight.de>
 #
+# Copyright 2016-2017, Grant Ridder
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -19,9 +21,7 @@
 # limitations under the License.
 #
 
-node.set['mongodb']['is_mongos'] = true
-node.set['mongodb']['shard_name'] = node['mongodb']['shard_name']
-node.override['mongodb']['instance_name'] = 'mongos'
+node.override['mongodb']['is_mongos'] = true
 
 include_recipe 'sc-mongodb::install'
 
@@ -32,10 +32,6 @@ ruby_block 'chef_gem_at_converge_time' do
       Chef::Provider::Package::Rubygems::GemEnvironment.new.install(version)
     end
   end
-end
-
-service node['mongodb']['default_init_name'] do
-  action [:disable, :stop]
 end
 
 configsrvs = search(
@@ -50,12 +46,7 @@ if configsrvs.length != 1 && configsrvs.length != 3
   raise 'Wrong number of configserver nodes' unless Chef::Config[:solo]
 end
 
-mongodb_instance node['mongodb']['instance_name'] do
+mongodb_instance node['mongodb']['instance_name']['mongos'] do
   mongodb_type 'mongos'
-  port         node['mongodb']['config']['port']
-  logpath      node['mongodb']['config']['logpath']
-  dbpath       node['mongodb']['config']['dbpath']
   configservers configsrvs
-  enable_rest  node['mongodb']['config']['rest']
-  smallfiles   node['mongodb']['config']['smallfiles']
 end

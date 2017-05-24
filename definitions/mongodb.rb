@@ -22,39 +22,69 @@
 define :mongodb_instance,
        mongodb_type: 'mongod',
        action: [:enable, :start],
-       logpath: '/var/log/mongodb/mongodb.log',
-       dbpath: '/data',
+       logpath: '/var/log/mongodb/mongod.log',
        configservers: [],
        replicaset: nil,
        notifies: [] do
   # TODO: this is the only remain use of params[:mongodb_type], is it still needed?
-  unless %w(mongod shard configserver mongos).include?(params[:mongodb_type])
-    raise ArgumentError, ":mongodb_type must be 'mongod', 'shard', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
+  unless %w(mongod configserver mongos).include?(params[:mongodb_type])
+    raise ArgumentError, ":mongodb_type must be 'mongod', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
   end
-
-  # Make changes to node['mongodb']['config'] before copying to new_resource. Chef 11 appears to resolve the attributes
-  # with precedence while Chef 10 copies to not (TBD: find documentation to support observed behavior).
-  if node['mongodb']['is_mongos']
-    provider = 'mongos'
-    # mongos will fail to start if dbpath is set
-    node.default['mongodb']['config']['dbpath'] = nil
-    unless node['mongodb']['config']['configdb']
-      node.default['mongodb']['config']['configdb'] = params[:configservers].map do |n|
-        "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['port']}"
-      end.sort.join(',')
-    end
-  else
-    provider = 'mongod'
-  end
-
-  node.default['mongodb']['config']['configsvr'] = true if node['mongodb']['is_configserver']
 
   require 'ostruct'
 
   new_resource = OpenStruct.new
 
+  # Determine type right away so we know if we need mongos or mognod installation
+  new_resource.is_mongos = params[:mongodb_type] == 'mongos'
+
+  # Determine if this will be part of a shard
+  new_resource.is_shard = node['mongodb']['is_shard']
+
+  # Make changes to node['mongodb']['config'] before copying to new_resource.
+  if new_resource.is_mongos
+    provider = 'mongos'
+    # mongos will fail to start if dbpath is set
+    node.default['mongodb']['config']['mongos']['storage']['dbPath'] = nil
+
+    # Search for config servers
+    unless node['mongodb']['config']['mongos']['sharding']['configDB']
+      node.default['mongodb']['config']['mongos']['sharding']['configDB'] = params[:configservers].map do |n|
+        "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['config']['mongod']['net']['port']}"
+      end.sort.join(',')
+
+      # TODO: handle 3.2 config server replicasets
+      # if node['mongodb']['package_version'].to_f >= 3.2
+      #   node.default['mongodb']['config']['sharding']['configDB']
+      # end
+    end
+    new_resource.config = node['mongodb']['config']['mongos'].to_hash
+    new_resource.dbconfig_file = node['mongodb']['dbconfig_file']['mongos']
+    new_resource.dbpath = nil
+    new_resource.sysconfig_file = node['mongodb']['sysconfig_file']['mongos']
+    new_resource.sysconfig_vars = node['mongodb']['sysconfig']['mongos']
+  else
+    provider = 'mongod'
+    new_resource.config = node['mongodb']['config']['mongod'].to_hash
+    new_resource.replicaset_name = new_resource.config['replication']['replSetName']
+    new_resource.dbconfig_file = node['mongodb']['dbconfig_file']['mongod']
+    new_resource.sysconfig_file = node['mongodb']['sysconfig_file']['mongod']
+    new_resource.sysconfig_vars = node['mongodb']['sysconfig']['mongod']
+
+    if new_resource.is_shard
+      new_resource.config['sharding'] ||= {}
+      new_resource.config['sharding']['clusterRole'] = 'shardsvr'
+    end
+
+    if node['mongodb']['config']['mongod']['storage']['dbPath'].nil?
+      node.default['mongodb']['config']['mongod']['storage']['dbPath'] = '/data'
+    end
+    new_resource.dbpath = node['mongodb']['config']['mongod']['storage']['dbPath']
+  end
+
+  node.default['mongodb']['config']['configsvr'] = true if node['mongodb']['is_configserver']
+
   new_resource.name                       = params[:name]
-  new_resource.dbpath                     = params[:dbpath]
   new_resource.logpath                    = params[:logpath]
   new_resource.replicaset                 = params[:replicaset]
   new_resource.service_action             = params[:action]
@@ -63,32 +93,26 @@ define :mongodb_instance,
   # TODO(jh): parameterize so we can make a resource provider
   new_resource.auto_configure_replicaset  = node['mongodb']['auto_configure']['replicaset']
   new_resource.auto_configure_sharding    = node['mongodb']['auto_configure']['sharding']
-  new_resource.bind_ip                    = node['mongodb']['config']['bind_ip']
+  new_resource.bind_ip                    = new_resource.config['net']['bindIp']
   new_resource.cluster_name               = node['mongodb']['cluster_name']
-  new_resource.config                     = node['mongodb']['config']
-  new_resource.dbconfig_file              = node['mongodb']['dbconfig_file']
-  new_resource.dbconfig_file_template     = node['mongodb']['dbconfig_file_template']
+  new_resource.dbconfig_file_template     = node['mongodb']['dbconfig_file']['template']
   new_resource.init_dir                   = node['mongodb']['init_dir']
   new_resource.init_script_template       = node['mongodb']['init_script_template']
   new_resource.is_replicaset              = node['mongodb']['is_replicaset']
-  new_resource.is_shard                   = node['mongodb']['is_shard']
   new_resource.is_configserver            = node['mongodb']['is_configserver']
-  new_resource.is_mongos                  = node['mongodb']['is_mongos']
   new_resource.mongodb_group              = node['mongodb']['group']
   new_resource.mongodb_user               = node['mongodb']['user']
-  new_resource.replicaset_name            = node['mongodb']['config']['replSet']
-  new_resource.port                       = node['mongodb']['config']['port']
+  new_resource.port                       = new_resource.config['net']['port']
   new_resource.root_group                 = node['mongodb']['root_group']
   new_resource.shard_name                 = node['mongodb']['shard_name']
   new_resource.sharded_collections        = node['mongodb']['sharded_collections']
-  new_resource.sysconfig_file             = node['mongodb']['sysconfig_file']
-  new_resource.sysconfig_file_template    = node['mongodb']['sysconfig_file_template']
-  new_resource.sysconfig_vars             = node['mongodb']['sysconfig']
+  new_resource.sysconfig_file_template    = node['mongodb']['sysconfig_file']['template']
   new_resource.template_cookbook          = node['mongodb']['template_cookbook']
   new_resource.ulimit                     = node['mongodb']['ulimit']
   new_resource.reload_action              = node['mongodb']['reload_action']
 
-  if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
+  # Upstart or sysvinit
+  if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
     mode = '0644'
   else
@@ -152,21 +176,22 @@ define :mongodb_instance,
     mode '0755'
     action :create
     recursive true
-    only_if { new_resource.logpath }
+    not_if { new_resource.logpath.nil? || new_resource.logpath.empty? }
   end
 
-  # dbpath dir [make sure it exists]
-  directory new_resource.dbpath do
-    owner new_resource.mongodb_user
-    group new_resource.mongodb_group
-    mode '0755'
-    action :create
-    recursive true
-    not_if { new_resource.is_mongos }
+  # dbpath dir [make sure it exists] unless it is a mongos
+  unless new_resource.is_mongos
+    directory new_resource.dbpath do
+      owner new_resource.mongodb_user
+      group new_resource.mongodb_group
+      mode '0755'
+      action :create
+      recursive true
+    end
   end
 
   # Reload systemctl for RHEL 7+ after modifying the init file.
-  execute 'mongodb-systemctl-daemon-reload' do
+  execute "mongodb-systemctl-daemon-reload-#{new_resource.name}" do
     command 'systemctl daemon-reload'
     action :nothing
   end
@@ -188,21 +213,13 @@ define :mongodb_instance,
     )
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
 
-    if platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7
-      notifies :run, 'execute[mongodb-systemctl-daemon-reload]', :immediately
+    if (platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7) || (node['platform'] == 'debian' && node['platform_version'].to_i >= 8)
+      notifies :run, "execute[mongodb-systemctl-daemon-reload-#{new_resource.name}]", :immediately
     end
   end
 
   # service
   service new_resource.name do
-    case node['platform']
-    when 'ubuntu'
-      if node['platform_version'].to_f >= 15.04
-        provider Chef::Provider::Service::Systemd
-      end
-    else
-      provider Chef::Provider::Service::Upstart if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
-    end
     supports status: true, restart: true
     action new_resource.service_action
     new_resource.service_notifies.each do |service_notify|
@@ -218,15 +235,15 @@ define :mongodb_instance,
   if new_resource.is_replicaset && new_resource.auto_configure_replicaset
     rs_nodes = search(
       :node,
-      "mongodb_cluster_name:#{new_resource.replicaset['mongodb']['cluster_name']} AND \
-       mongodb_is_replicaset:true AND \
-       mongodb_config_replSet:#{new_resource.replicaset['mongodb']['config']['replSet']} AND \
-       chef_environment:#{new_resource.replicaset.chef_environment}"
+      "mongodb_cluster_name:#{new_resource.cluster_name} AND "\
+      'mongodb_is_replicaset:true AND '\
+      "mongodb_config_mongod_replication_replSetName:#{new_resource.replicaset_name} AND "\
+      "chef_environment:#{node.chef_environment}"
     )
 
     ruby_block 'config_replicaset' do
       block do
-        MongoDB.configure_replicaset(new_resource.replicaset, replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
+        MongoDB.configure_replicaset(node, replicaset_name, rs_nodes) unless new_resource.replicaset.nil?
       end
       action :nothing
     end
@@ -244,10 +261,10 @@ define :mongodb_instance,
 
     shard_nodes = search(
       :node,
-      "mongodb_cluster_name:#{new_resource.cluster_name} AND \
-       mongodb_shard_name:#{new_resource.shard_name} AND \
-       mongodb_is_shard:true AND \
-       chef_environment:#{node.chef_environment}"
+      "mongodb_cluster_name:#{new_resource.cluster_name} AND "\
+      "mongodb_shard_name:#{new_resource.shard_name} AND "\
+      'mongodb_is_shard:true AND '\
+      "chef_environment:#{node.chef_environment}"
     )
 
     ruby_block 'config_sharding' do
@@ -256,6 +273,11 @@ define :mongodb_instance,
         MongoDB.configure_sharded_collections(node, new_resource.sharded_collections)
       end
       action :nothing
+    end
+
+    ruby_block 'run_config_sharding' do
+      block {}
+      notifies :create, 'ruby_block[config_sharding]'
     end
   end
 end

@@ -1,5 +1,21 @@
 # sc-mongodb Cookbook CHANGELOG
 
+## Unreleased
+
+## v1.0.0 Changes (Released 2017-05-23)
+
+*WARNING:* This is a rewrite that contains many backwards incompatable changes.  Many attributes have changed defaults and/or the attribute key itself.
+
+- Drop support for 10gen repo and default to mongo-org repo install
+- Remove Chef 10 and 11 support
+- Update Mongo default version to 3.2.10
+- Drop support for Mongo < 3.0
+- Convert all test-kitchen verification to inspec
+- Change `node['mongodb']['config']` to have `mongos` and `mongod` keys before actual config setting
+- Update apt and yum repo
+- Update MMS agent install to deb/rpm packages and add `mongodb_agent` resource
+- Fixup relicaset and shard helpers
+
 ## v0.18.1 Changes
 
 - Fix cookbook name in attributes file

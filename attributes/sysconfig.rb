@@ -1,12 +1,15 @@
 include_attribute 'sc-mongodb::default'
 
-default['mongodb']['sysconfig']['DAEMON'] = '/usr/bin/$NAME'
-default['mongodb']['sysconfig']['DAEMON_USER'] = node['mongodb']['user']
-default['mongodb']['sysconfig']['DAEMON_OPTS'] = "--config #{node['mongodb']['dbconfig_file']}"
-default['mongodb']['sysconfig']['CONFIGFILE'] = node['mongodb']['dbconfig_file']
-default['mongodb']['sysconfig']['ENABLE_MONGODB'] = 'yes'
+# mongod defaults
+default['mongodb']['sysconfig']['mongod']['DAEMON'] = '/usr/bin/$NAME'
+default['mongodb']['sysconfig']['mongod']['DAEMON_USER'] = node['mongodb']['user']
+default['mongodb']['sysconfig']['mongod']['DAEMON_OPTS'] = "--config #{node['mongodb']['dbconfig_file']['mongod']}"
+default['mongodb']['sysconfig']['mongod']['CONFIGFILE'] = node['mongodb']['dbconfig_file']['mongod']
+default['mongodb']['sysconfig']['mongod']['ENABLE_MONGODB'] = 'yes'
 
-# these are backward compat purposes
-default['mongodb']['sysconfig']['DAEMONUSER'] = node['mongodb']['sysconfig']['DAEMON_USER']
-default['mongodb']['sysconfig']['ENABLE_MONGOD'] = node['mongodb']['sysconfig']['ENABLE_MONGODB']
-default['mongodb']['sysconfig']['ENABLE_MONGO'] = node['mongodb']['sysconfig']['ENABLE_MONGODB']
+# mongos defaults
+default['mongodb']['sysconfig']['mongos']['DAEMON'] = '/usr/bin/$NAME'
+default['mongodb']['sysconfig']['mongos']['DAEMON_USER'] = node['mongodb']['user']
+default['mongodb']['sysconfig']['mongos']['DAEMON_OPTS'] = "--config #{node['mongodb']['dbconfig_file']['mongos']}"
+default['mongodb']['sysconfig']['mongos']['CONFIGFILE'] = node['mongodb']['dbconfig_file']['mongos']
+default['mongodb']['sysconfig']['mongos']['ENABLE_MONGODB'] = 'yes'

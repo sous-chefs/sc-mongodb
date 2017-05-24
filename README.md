@@ -10,8 +10,7 @@ Installs and configures MongoDB
 * Replication
 * Sharding
 * Replication and Sharding
-* 10gen repository package installation
-* 10gen MongoDB Monitoring System
+* MongoDB Monitoring System
 
 ## Community
 
@@ -24,6 +23,11 @@ This cookbook depends on these external cookbooks
 - apt
 - python
 - yum
+
+As of 1.0 This Cookbook requires
+
+- Chef > 12.5
+- Ruby > 2.3
 
 As of 0.16 This Cookbook requires
 
@@ -46,20 +50,21 @@ For examples see the USAGE section below.
 
 ### MongoDB setup
 
-* `default['mongodb']['install_method']` - This option can be "distro", "mongodb-org" or "none" - Default (distro)
+* `default['mongodb']['install_method']` - This option can be "mongodb-org" or "none" - Default ("mongodb-org")
 
 ### MongoDB Configuration
 
-Basically all settings defined in the Configuration File Options documentation page can be added to the `node['mongodb']['config'][<setting>]` attribute: http://docs.mongodb.org/manual/reference/configuration-options/
+The `node['mongodb']['config']` is split into 2 keys, `mongod` and `mongos` (i.e. node['mongodb']['config']['mongod']). They attributes are rendered out as a yaml config file. All settings defined in the Configuration File Options documentation page can be added to the `node['mongodb']['config'][<setting>]` attribute: https://docs.mongodb.com/manual/reference/configuration-options/
 
-* `node['mongodb']['config']['dbpath']` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
-* `node['mongodb']['config']['logpath']` - Path for the logfiles, default is "/var/log/mongodb/mongodb.log"
-* `node['mongodb']['config']['port']` - Port the mongod listens on, default is 27017
-* `node['mongodb']['config']['rest']` - Enable the ReST interface of the webserver
-* `node['mongodb']['config']['smallfiles']` - Modify MongoDB to use a smaller default data file size
-* `node['mongodb']['config']['oplogsize']` - Specifies a maximum size in megabytes for the replication operation log
-* `node['mongodb']['config']['bind_ip']` - Configure from which address to accept connections
-* `node['mongodb']['config'][<setting>]` - General MongoDB Configuration File option
+Several important attributes to note:
+
+* `node['mongodb']['config']['mongod']['net']['bindIp']` - Configure from which address to accept connections
+* `node['mongodb']['config']['mongod']['net']['port']` - Port the mongod listens on, default is 27017
+* `node['mongodb']['config']['mongod']['replication']['oplogSizeMB']` - Specifies a maximum size in megabytes for the replication operation log
+* `node['mongodb']['config']['mongod']['storage']['dbPath']` - Location for mongodb data directory, defaults to "/var/lib/mongodb"
+* `node['mongodb']['config']['mongod']['storage']['engine']` - Storage engine to use, default is `"wiredTiger"`
+* `node['mongodb']['config']['mongod']['systemLog']['path']` - Path for the logfiles, default is `"/var/lib/mongo"` for `rhel` and `fedora` and `"/var/log/mongodb/mongod.log"` for all others
+* `node['mongodb']['config']['mongod'][<setting>]` - General MongoDB Configuration File option
 
 ### Cookbook specific attributes
 
@@ -69,7 +74,7 @@ Basically all settings defined in the Configuration File Options documentation p
 
 ### Sharding and replication attributes
 
-* `node['mongodb']['config']['replSet']` - Define name of replicaset
+* `node['mongodb']['config']['mongod']['replication']['replSetName']` - Define name of replicaset
 * `node['mongodb']['cluster_name']` - Name of the cluster, all members of the cluster must reference to the same name, as this name is used internally to identify all members of a cluster.
 * `node['mongodb']['shard_name']` - Name of a shard, default is "default"
 * `node['mongodb']['sharded_collections']` - Define which collections are sharded
@@ -85,34 +90,21 @@ Basically all settings defined in the Configuration File Options documentation p
 ### shared MMS Agent attributes
 
 * `node['mongodb']['mms_agent']['api_key']` - MMS Agent API Key. No default, required.
-* `node['mongodb']['mms_agent']['monitoring']['version']` - Version of the MongoDB MMS Monitoring Agent package to download and install. Default is '2.0.0.17-1', required.
-* `node['mongodb']['mms_agent']['monitoring'][<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.
-* `node['mongodb']['mms_agent']['backup']['version']` - Version of the MongoDB MMS Backup Agent package to download and install. Default is '1.4.3.28-1', required.
-* `node['mongodb']['mms_agent']['backup'][<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.
+* `node['mongodb']['mms_agent']['automation']['config'][<setting>]` - General MongoDB MMS Automation Agent configuration file option.
+* `node['mongodb']['mms_agent']['backup']['config'][<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.
+* `node['mongodb']['mms_agent']['monitoring']['config'][<setting>]` - General MongoDB MMS Monitoring Agent configuration file option.
 
-### User management attributes
-
-* `node['mongodb']['config']['auth']` - Require authentication to access or modify the database
-* `node['mongodb']['admin']` - The admin user with userAdmin privileges that allows user management
-* `node['mongodb']['users']` - Array of users to add when running the user management recipe
-
-#### Monitoring Agent Settings
+#### Automation Agent Settings
 
 The defaults values installed by the package are:
 
 ```
 mmsBaseUrl=https://mms.mongodb.com
-configCollectionsEnabled=true
-configDatabasesEnabled=true
-throttlePassesShardChunkCounts = 10
-throttlePassesDbstats = 20
-throttlePassesOplog = 10
-disableProfileDataCollection=false
-disableGetLogsDataCollection=false
-disableLocksAndRecordStatsDataCollection=false
-enableMunin=true
-useSslForAllConnections=false
-sslRequireValidServerCertificates=false
+logFile=/var/log/mongodb-mms-automation/automation-agent.log
+mmsConfigBackup=/var/lib/mongodb-mms-automation/mms-cluster-config-backup.json
+logLevel=INFO
+maxLogFiles=10
+maxLogFileSize=268435456
 ```
 
 #### Backup Agent Settings
@@ -122,17 +114,23 @@ The defaults values installed by the package are:
 ```
 mothership=api-backup.mongodb.com
 https=true
-sslRequireValidServerCertificates=false
 ```
 
+#### Monitoring Agent Settings
+
+The defaults values installed by the package are:
+
+```
+mmsBaseUrl=https://mms.mongodb.com
+```
+
+### User management attributes
+
+* `node['mongodb']['config']['auth']` - Require authentication to access or modify the database (`True` or `False`), Default is `nil`
+* `node['mongodb']['admin']` - The admin user with userAdmin privileges that allows user management
+* `node['mongodb']['users']` - Array of users to add when running the user management recipe
+
 ## USAGE:
-
-### 10gen
-Adds the stable [10gen repo](http://www.mongodb.org/downloads#packages) for the
-corresponding platform. Currently only implemented for the Debian and Ubuntu repository.
-
-Usage: just add `recipe[sc-mongodb::10gen_repo]` to the node run_list *before* any other
-MongoDB recipe, and the mongodb-10gen **stable** packages will be installed instead of the distribution default.
 
 ### Single mongodb instance
 
@@ -158,7 +156,6 @@ name on the same node
 ```ruby
 mongodb_instance "my_instance" do
   port node['mongodb']['port'] + 100
-  dbpath "/data/"
 end
 ```
 
@@ -227,8 +224,8 @@ For more details, you can find a [tutorial for Sharding + Replication](https://g
 
 This cookbook also includes support for
 [MongoDB Monitoring System (MMS)](https://mms.mongodb.com/)
-agent. MMS is a hosted monitoring service, provided by 10gen, Inc. Once
-the small python agent program is installed on the MongoDB host, it
+agent. MMS is a hosted monitoring service, provided by MongoDB, Inc. Once
+the small agent program is installed on the MongoDB host, it
 automatically collects the metrics and uploads them to the MMS server.
 The graphs of these metrics are shown on the web page. It helps a lot
 for tackling MongoDB related problems, so MMS is the baseline for all
@@ -237,10 +234,27 @@ production MongoDB deployments.
 
 To setup MMS, simply set your keys in
 `node['mongodb']['mms_agent']['api_key']` and then add the
-`sc-mongodb::mms-agent` recipe to your run list. Your current keys should
-be available at your [MMS Settings page](https://mms.mongodb.com/settings).
+`sc-mongodb::mms_monitoring_agent` recipe to your run list. Your current keys
+should be available at your [MMS Settings page](https://mms.mongodb.com/settings).
+
+The agent install and configurations is also available via a custom resource for
+wrapper cookbooks.  This allows for further customization outside of this
+cookbook
+
+```ruby
+mongodb_agent 'monitoring' do
+  config {} # Key and value pairs that will be in the config file
+  group 'group' # Group to own the config file
+  package_url 'package_url' # Download URL of the agent package
+  user 'user' # User to own the config file
+end
+```
 
 ### User Management
+
+**NOTE:** Using the `sc-mongodb::user_management` is not secure since passwords are stored plain
+text in your node attributes.  Please concider using a wrapper recipe with encrypted data bags
+when using this cookbook in production.
 
 An optional recipe is `sc-mongodb::user_management` which will enable authentication in
 the configuration file by default and create any users in the `node['mongodb']['users']`.
