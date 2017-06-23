@@ -111,51 +111,9 @@ class Chef::ResourceDefinitionList::MongoDB
 
       # check if both configs are the same
       config = connection['local']['system']['replset'].find_one('_id' => name)
-      if config['_id'] == name && config['members'] == rs_members
+      if config['_id'] == name && (config['members'] == rs_members || config['members'] == rs_members_ips)
         # config is up-to-date, do nothing
         Chef::Log.info("Replicaset '#{name}' already configured")
-      elsif config['_id'] == name && config['members'] == rs_member_ips
-        # config is up-to-date, but ips are used instead of hostnames, change config to hostnames
-        Chef::Log.info("Need to convert ips to hostnames for replicaset '#{name}'")
-        old_members = config['members'].map { |m| m['host'] }
-        mapping = {}
-        rs_member_ips.each do |mem_h|
-          members.each do |n|
-            ip, prt = mem_h['host'].split(':')
-            mapping["#{ip}:#{prt}"] = "#{n['fqdn']}:#{prt}" if ip == n['ipaddress']
-          end
-        end
-        config['members'].map! do |m|
-          host = mapping[m['host']]
-          { '_id' => m['_id'], 'host' => host }.merge(rs_options[host])
-        end
-        config['version'] += 1
-
-        rs_connection = nil
-        rescue_connection_failure do
-          rs_connection = Mongo::ReplSetConnection.new(old_members)
-          rs_connection.database_names # check connection
-        end
-
-        admin = rs_connection['admin']
-        cmd = BSON::OrderedHash.new
-        cmd['replSetReconfig'] = config
-        result = nil
-        begin
-          result = admin.command(cmd, check_response: false)
-        rescue Mongo::ConnectionFailure
-          # reconfiguring destroys existing connections, reconnect
-          connection = Mongo::Connection.new('localhost', node['mongodb']['config']['port'], op_timeout: 5, slave_ok: true)
-          config = connection['local']['system']['replset'].find_one('_id' => name)
-          # Validate configuration change
-          if config['members'] == rs_members
-            Chef::Log.info("New config successfully applied: #{config.inspect}")
-          else
-            Chef::Log.error("Failed to apply new config. Current config: #{config.inspect} Target config #{rs_members}")
-            return
-          end
-        end
-        Chef::Log.error("configuring replicaset returned: #{result.inspect}") unless result.fetch('errmsg', nil).nil?
       else
         Chef::Log.info 'going to add and remove members from the replicaset'
         # remove removed members from the replicaset and add the new ones
