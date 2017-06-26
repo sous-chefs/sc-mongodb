@@ -22,6 +22,37 @@
 require 'json'
 
 class Chef::ResourceDefinitionList::MongoDB
+
+
+  def self.create_replicaset_member(node)
+    return {} if node['fqdn'] =~ /\.vagrantup\.com$/
+
+    port = node['mongodb']['config']['mongod']['net']['port']
+    host = node['mongodb']['use_ip_address'] ? node['ipaddress'] : node['fqdn']
+    address = "#{host}:#{port}"
+
+    member = {}
+    member['host'] = address
+    member['arbiterOnly'] = true if node['mongodb']['replica_arbiter_only']
+    member['buildIndexes'] = false unless node['mongodb']['replica_build_indexes']
+    member['hidden'] = true if node['mongodb']['replica_hidden']
+    slave_delay = node['mongodb']['replica_slave_delay']
+    member['slaveDelay'] = slave_delay if slave_delay > 0
+
+    priority = if member['buildIndexes'] == false || member['hidden'] || member['slaveDelay']
+                 0
+               else
+                 node['mongodb']['replica_priority']
+               end
+    member['priority'] = priority unless priority == 1
+    tags = node['mongodb']['replica_tags'].to_hash
+    member['tags'] = tags unless tags.empty?
+    votes = node['mongodb']['replica_votes']
+    member['votes'] = votes unless votes == 1
+
+    member
+  end
+
   def self.configure_replicaset(node, name, members)
     # lazy require, to move loading this modules to runtime of the cookbook
     require 'rubygems'
@@ -45,31 +76,9 @@ class Chef::ResourceDefinitionList::MongoDB
     # Want the node originating the connection to be included in the replicaset
     members << node unless members.any? { |m| m.name == node.name }
     members.sort! { |x, y| x.name <=> y.name }
-    rs_members = []
-    rs_options = {}
-    members.each_index do |n|
-      # Ignore any vagrant hosts since we stub all of the nodes in testing
-      next if members[n]['fqdn'] =~ /\.vagrantup\.com$/
 
-      host = "#{members[n]['fqdn']}:#{members[n]['mongodb']['config']['mongod']['net']['port']}"
-      rs_options[host] = {}
-
-      rs_options[host]['arbiterOnly'] = true if members[n]['mongodb']['replica_arbiter_only']
-      rs_options[host]['buildIndexes'] = false unless members[n]['mongodb']['replica_build_indexes']
-      rs_options[host]['hidden'] = true if members[n]['mongodb']['replica_hidden']
-      slave_delay = members[n]['mongodb']['replica_slave_delay']
-      rs_options[host]['slaveDelay'] = slave_delay if slave_delay > 0
-      priority = if rs_options[host]['buildIndexes'] == false || rs_options[host]['hidden'] || rs_options[host]['slaveDelay']
-                   0
-                 else
-                   members[n]['mongodb']['replica_priority']
-                 end
-      rs_options[host]['priority'] = priority unless priority == 1
-      tags = members[n]['mongodb']['replica_tags'].to_hash
-      rs_options[host]['tags'] = tags unless tags.empty?
-      votes = members[n]['mongodb']['replica_votes']
-      rs_options[host]['votes'] = votes unless votes == 1
-      rs_members << { '_id' => n, 'host' => host }.merge(rs_options[host])
+    rs_members = members.each_with_index.map do |member, n|
+      create_replicaset_member(member).merge('_id' => n)
     end
 
     Chef::Log.info(
@@ -80,17 +89,11 @@ class Chef::ResourceDefinitionList::MongoDB
       "Configuring replicaset with config: #{rs_members}"
     )
 
-    rs_member_ips = []
-    members.each_index do |n|
-      port = members[n]['mongodb']['config']['port']
-      rs_member_ips << { '_id' => n, 'host' => "#{members[n]['ipaddress']}:#{port}" }
-    end
-
     admin = connection['admin']
     cmd = BSON::OrderedHash.new
     cmd['replSetInitiate'] = {
       '_id' => name,
-      'members' => node['mongodb']['use_ip_address'] ? rs_member_ips : rs_members,
+      'members' => rs_members
     }
 
     begin
