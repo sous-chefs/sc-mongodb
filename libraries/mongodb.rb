@@ -22,8 +22,6 @@
 require 'json'
 
 class Chef::ResourceDefinitionList::MongoDB
-
-
   def self.create_replicaset_member(node)
     return {} if node['fqdn'] =~ /\.vagrantup\.com$/
 
@@ -93,7 +91,7 @@ class Chef::ResourceDefinitionList::MongoDB
     cmd = BSON::OrderedHash.new
     cmd['replSetInitiate'] = {
       '_id' => name,
-      'members' => rs_members
+      'members' => rs_members,
     }
 
     begin
