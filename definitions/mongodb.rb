@@ -233,6 +233,7 @@ define :mongodb_instance,
 
   # replicaset
   if new_resource.is_replicaset && new_resource.auto_configure_replicaset
+    rs_nodes = []
     rs_nodes = search(
       :node,
       "mongodb_cluster_name:#{new_resource.cluster_name} AND "\
@@ -240,6 +241,36 @@ define :mongodb_instance,
       "mongodb_config_mongod_replication_replSetName:#{new_resource.replicaset_name} AND "\
       "chef_environment:#{node.chef_environment}"
     )
+      if rs_nodes.length == 0
+      Chef::Log.info("Using OpsWorks mode") 
+      Chef::Log.info(node['environment']['name'])
+      Chef::Log.info(node['environment']['datacenter'])
+      # fake the resource for the sake of configure_replicaset method in opsworks.
+      dn = "#{node['environment']['name']}.#{node['environment']['datacenter']}" # this is our domain name suffix for DNS resolution
+      Chef::Log.info("Domain Name is #{dn}")
+      layer_ids = search("aws_opsworks_instance", "self:true").first[:layer_ids]
+      search("aws_opsworks_instance").each do |instance|
+        if instance[:status] == 'online'
+          instance[:layer_ids].each do |layer_id|
+            if layer_ids.include? layer_id
+              Chef::Log.info("#{instance[:hostname]} is part of the replicaset.")
+              n = {
+                'name' => instance[:hostname],
+                'fqdn' => "#{instance[:hostname]}.#{dn}",
+                'hostname' => instance[:hostname],
+                'ipaddress' => instance[:private_ip],
+                'mongodb' => node[:mongodb]
+              }
+              a = OpenStruct.new n
+              rs_nodes << a
+              break
+            end
+          end
+        end
+      end
+    else
+    Chef::Log.info("Not using OpsWorks mode") 
+    end
 
     ruby_block 'config_replicaset' do
       block do
