@@ -233,19 +233,27 @@ define :mongodb_instance,
 
   # replicaset
   if new_resource.is_replicaset && new_resource.auto_configure_replicaset
+
+    opsworks_stack = begin
+                      data_bag('aws_opsworks_stack')
+                    rescue Net::HTTPServerException, Chef::Exceptions::InvalidDataBagPath
+                      [] # empty array for length comparison
+                    end
+
+    Chef::Log.info(opsworks_stack)
     rs_nodes = []
-    rs_nodes = search(
-      :node,
-      "mongodb_cluster_name:#{new_resource.cluster_name} AND "\
-      'mongodb_is_replicaset:true AND '\
-      "mongodb_config_mongod_replication_replSetName:#{new_resource.replicaset_name} AND "\
-      "chef_environment:#{node.chef_environment}"
-    )
-      if rs_nodes.length == 0
+      if opsworks_stack.length == 0
+        Chef::Log.info("Not using OpsWorks mode") 
+        
+        rs_nodes = search(
+        :node,
+        "mongodb_cluster_name:#{new_resource.cluster_name} AND "\
+        'mongodb_is_replicaset:true AND '\
+        "mongodb_config_mongod_replication_replSetName:#{new_resource.replicaset_name} AND "\
+        "chef_environment:#{node.chef_environment}"
+        )
+      else 
       Chef::Log.info("Using OpsWorks mode") 
-      Chef::Log.info(node['environment']['name'])
-      Chef::Log.info(node['environment']['datacenter'])
-      # fake the resource for the sake of configure_replicaset method in opsworks.
       dn = "#{node['environment']['name']}.#{node['environment']['datacenter']}" # this is our domain name suffix for DNS resolution
       Chef::Log.info("Domain Name is #{dn}")
       layer_ids = search("aws_opsworks_instance", "self:true").first[:layer_ids]
@@ -268,8 +276,6 @@ define :mongodb_instance,
           end
         end
       end
-    else
-    Chef::Log.info("Not using OpsWorks mode") 
     end
 
     ruby_block 'config_replicaset' do
