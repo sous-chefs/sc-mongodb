@@ -240,33 +240,35 @@ define :mongodb_instance,
                       [] # empty array for length comparison
                     end
 
-    Chef::Log.info(opsworks_stack)
     rs_nodes = []
-      if opsworks_stack.length == 0
-        Chef::Log.info("Not using OpsWorks mode") 
-        
-        rs_nodes = search(
+
+    if opsworks_stack.length == 0
+      Chef::Log.info("Using Chef server's search(:node)")
+
+      rs_nodes = search(
         :node,
         "mongodb_cluster_name:#{new_resource.cluster_name} AND "\
         'mongodb_is_replicaset:true AND '\
         "mongodb_config_mongod_replication_replSetName:#{new_resource.replicaset_name} AND "\
         "chef_environment:#{node.chef_environment}"
-        )
-      else 
-      Chef::Log.info("Using OpsWorks mode") 
-      dn = "#{node['environment']['name']}.#{node['environment']['datacenter']}" # this is our domain name suffix for DNS resolution
-      Chef::Log.info("Domain Name is #{dn}")
-      layer_ids = search("aws_opsworks_instance", "self:true").first[:layer_ids]
-      search("aws_opsworks_instance").each do |instance|
-        if instance[:status] == 'online'
-          instance[:layer_ids].each do |layer_id|
-            if layer_ids.include? layer_id
-              Chef::Log.info("#{instance[:hostname]} is part of the replicaset.")
+      )
+
+    else
+      Chef::Log.info("Using Opsworks search(:aws_opsworks_instance)")
+
+      my_layer_ids = search("aws_opsworks_instance", "self:true").first[:layer_ids]
+      search("aws_opsworks_instance").each do |other_instance|
+        if ['requested', 'booting', 'running_setup', 'online'].include? other_instance[:status]
+          other_instance[:layer_ids].each do |other_layer_id|
+            if my_layer_ids.include? other_layer_id and search("aws_opsworks_layer", "layer_id:#{other_layer_id}").first['name'].start_with?('mongodb')
+              Chef::Log.info("#{other_instance[:hostname]} is part of the replicaset.")
+              # set domain name suffix for node[:fqdn] value
+              dn = node['environment'].nil? ? 'localdomain' : "#{node['environment']['name']}.#{node['environment']['datacenter']}"
               n = {
-                'name' => instance[:hostname],
-                'fqdn' => "#{instance[:hostname]}.#{dn}",
-                'hostname' => instance[:hostname],
-                'ipaddress' => instance[:private_ip],
+                'name' => other_instance[:hostname],
+                'fqdn' => "#{other_instance[:hostname]}.#{dn}",
+                'hostname' => other_instance[:hostname],
+                'ipaddress' => other_instance[:private_ip],
                 'mongodb' => node[:mongodb]
               }
               a = OpenStruct.new n
@@ -277,6 +279,9 @@ define :mongodb_instance,
         end
       end
     end
+
+    rs_nodes_members = rs_nodes.map { |n| n['hostname'] + ' ' }
+    Chef::Log.info("Found #{rs_nodes.length} replicaset members: #{rs_nodes_members}")
 
     ruby_block 'config_replicaset' do
       block do
