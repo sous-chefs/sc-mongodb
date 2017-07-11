@@ -245,6 +245,7 @@ define :mongodb_instance,
     if opsworks_stack.length == 0
       Chef::Log.info("Using Chef server's search(:node)")
 
+      # Run a search(:node) command, finding nodes with matching mongodb_cluster_name
       rs_nodes = search(
         :node,
         "mongodb_cluster_name:#{new_resource.cluster_name} AND "\
@@ -256,11 +257,15 @@ define :mongodb_instance,
     else
       Chef::Log.info("Using Opsworks search(:aws_opsworks_instance)")
 
+      # Run a search(:aws_opsworks_intance) command, finding nodes in the same Opsworks layer
+      # Notes:
+      #   a) Restrict search results to layers matching node['mongodb']['opsworks_layer_regex'] (if unset, matches all layers)
+      #   b) search(:aws_opsworks_intance) doesn't return FQDN, so we have to make up FQDN suffix: "#{node['environment']['name']}.#{node['environment']['datacenter']}" (if unset, ".localdomain" is used)
       my_layer_ids = search("aws_opsworks_instance", "self:true").first[:layer_ids]
       search("aws_opsworks_instance").each do |other_instance|
         if ['requested', 'booting', 'running_setup', 'online'].include? other_instance[:status]
           other_instance[:layer_ids].each do |other_layer_id|
-            if my_layer_ids.include? other_layer_id and search("aws_opsworks_layer", "layer_id:#{other_layer_id}").first['name'].start_with?('mongodb')
+            if my_layer_ids.include? other_layer_id and search("aws_opsworks_layer", "layer_id:#{other_layer_id}").first['name'].match (node['mongodb']['opsworks_layer_regex'] || '/.*/')
               Chef::Log.info("#{other_instance[:hostname]} is part of the replicaset.")
               # set domain name suffix for node[:fqdn] value
               dn = node['environment'].nil? ? 'localdomain' : "#{node['environment']['name']}.#{node['environment']['datacenter']}"
