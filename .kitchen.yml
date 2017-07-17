@@ -72,7 +72,13 @@ suites:
     mongodb:
       mms_agent:
         api_key: randomkey
+        backup:
+          config:
+            mmsGroupId: randomgroup
         automation:
+          config:
+            mmsGroupId: randomgroup
+        monitoring:
           config:
             mmsGroupId: randomgroup
   excludes:
