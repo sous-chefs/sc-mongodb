@@ -84,7 +84,7 @@ describe 'sc-mongodb::default' do
     end
 
     let(:mongod_packager_options_debian) do
-      ['-o', 'Dpkg::Options::="--force-confold"', '--force-yes']
+      ['-o', 'Dpkg::Options::=--force-confold', '--force-yes']
     end
 
     # mongod_sysconfig_file: sysconfig file location for mongo per OS
