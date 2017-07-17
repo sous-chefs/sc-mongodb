@@ -19,5 +19,5 @@ describe bash('mongo --eval "sh.status()"') do
   its(:stdout) { should match %r(.*^\s{2}shards:\n\t{  "_id" : "kitchen1",  "host" : "kitchen1/mongo1:27017,mongo2:27017,mongo3:27017" }$.*) }
 
   # Sharded collection
-  its(:stdout) { should match /.*^\t{  "_id" : "test",  "primary" : "kitchen1",  "partitioned" : true }\n\t{2}test.testing\n\t{3}shard key: { "_id" : 1 }$.*/ }
+  its(:stdout) { should match(/.*^\t{  "_id" : "test",  "primary" : "kitchen1",  "partitioned" : true }\n\t{2}test.testing\n\t{3}shard key: { "_id" : 1 }$.*/) }
 end
