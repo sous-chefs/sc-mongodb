@@ -22,6 +22,16 @@
 require 'json'
 
 class Chef::ResourceDefinitionList::MongoDB
+  # node['mongodb']['config']['mongod']['net']['port'] required for port
+  # if node['mongodb']['use_ip_address']
+  #   node['ipaddress'] is required
+  # else
+  #    node['fqdn'] is required
+  # end
+  #
+  # if node['fqnd'] is a vagrant host, ignore it
+  # node['mongodb']['replica_priority'] is required
+  #
   def self.create_replicaset_member(node)
     return {} if node['fqdn'] =~ /\.vagrantup\.com$/
 
@@ -48,7 +58,7 @@ class Chef::ResourceDefinitionList::MongoDB
     votes = node['mongodb']['replica_votes']
     member['votes'] = votes unless votes == 1
 
-    member
+    member.freeze
   end
 
   def self.configure_replicaset(node, name, members)
