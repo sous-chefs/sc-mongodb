@@ -80,11 +80,11 @@ describe 'sc-mongodb::default' do
 
     # mongod_packager_options: pkg install options for mongo per OS
     let(:mongod_packager_options_rhel) do
-      '--nogpgcheck'
+      ['--nogpgcheck']
     end
 
     let(:mongod_packager_options_debian) do
-      '-o Dpkg::Options::="--force-confold" --force-yes'
+      ['-o', 'Dpkg::Options::=--force-confold', '--force-yes']
     end
 
     # mongod_sysconfig_file: sysconfig file location for mongo per OS

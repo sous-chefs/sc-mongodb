@@ -44,7 +44,7 @@ script:
   - KITCHEN_LOCAL_YAML=.kitchen.dokken.yml /opt/chefdk/embedded/bin/kitchen verify ${INSTANCE}
 
 after_failure:
-  - cat .kitchen/logs/kitchen.log
+  - cat .kitchen/logs/*.log
 
 matrix:
   allow_failures:
