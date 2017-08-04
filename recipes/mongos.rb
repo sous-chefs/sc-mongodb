@@ -47,6 +47,6 @@ if configsrvs.length != 1 && configsrvs.length != 3
 end
 
 mongodb_instance node['mongodb']['instance_name']['mongos'] do
-  mongodb_type 'mongos'
+  is_mongos true
   configservers configsrvs
 end
