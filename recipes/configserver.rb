@@ -30,5 +30,4 @@ include_recipe 'sc-mongodb::install'
 # http://docs.mongodb.org/manual/reference/configuration-options/#sharded-cluster-options
 # we still explicitly set the port and small files.
 mongodb_instance node['mongodb']['instance_name']['mongod'] do
-  mongodb_type 'configserver'
 end

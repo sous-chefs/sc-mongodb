@@ -31,6 +31,5 @@ conflicting_recipes.each do |recipe|
 end
 
 mongodb_instance node['mongodb']['instance_name']['mongod'] do
-  mongodb_type 'mongod'
   only_if { allow_mongodb_instance_run }
 end

@@ -38,6 +38,5 @@ ruby_block 'chef_gem_at_converge_time' do
 end
 
 mongodb_instance node['mongodb']['instance_name']['mongod'] do
-  mongodb_type 'mongod'
   replicaset true
 end
