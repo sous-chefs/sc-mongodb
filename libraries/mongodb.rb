@@ -185,7 +185,7 @@ class Chef::ResourceDefinitionList::MongoDB
         ids = (0...256).to_a - old_ids
 
         new_members = new_members_by_host.map { |h, m| old_members_by_host.fetch(h, {}).merge(m) }
-                                     .map_values { |m| m.merge('_id' => (m['_id'] || ids.shift)) }
+                                         .map_values { |m| m.merge('_id' => (m['_id'] || ids.shift)) }
 
         new_config = config.dup
         new_config['members'] = new_members
