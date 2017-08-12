@@ -184,8 +184,8 @@ class Chef::ResourceDefinitionList::MongoDB
 
         ids = (0...256).to_a - old_ids
 
+        # use the _id value when present, use a generated one from ids otherwise
         new_members = new_members_by_host.map { |h, m| old_members_by_host.fetch(h, {}).merge(m) }
-                                         # use the _id value when present, use a generated one from ids otherwise
                                          .map_values { |m| m.merge('_id' => (m['_id'] || ids.shift)) }
 
         new_config = config.dup
