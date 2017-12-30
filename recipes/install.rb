@@ -118,6 +118,37 @@ package node['mongodb']['package_name'] do
   not_if { node['mongodb']['install_method'] == 'none' }
 end
 
+# Change needed so that updates work properly on debian based systems
+if node['platform_family'] == 'debian'
+  package node['mongodb']['package_name'] + '-server' do
+    options node['mongodb']['packager_options']
+    action :install
+    version package_version
+    not_if { node['mongodb']['install_method'] == 'none' }
+  end
+
+  package node['mongodb']['package_name'] + '-shell' do
+    options node['mongodb']['packager_options']
+    action :install
+    version package_version
+    not_if { node['mongodb']['install_method'] == 'none' }
+  end
+
+  package node['mongodb']['package_name'] + '-tools' do
+    options node['mongodb']['packager_options']
+    action :install
+    version package_version
+    not_if { node['mongodb']['install_method'] == 'none' }
+  end
+
+  package node['mongodb']['package_name'] + '-mongos' do
+    options node['mongodb']['packager_options']
+    action :install
+    version package_version
+    not_if { node['mongodb']['install_method'] == 'none' }
+  end
+end
+
 # Create keyFile if specified
 key_file_content = node['mongodb']['key_file_content']
 
