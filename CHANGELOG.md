@@ -2,8 +2,6 @@
 
 ## Unreleased
 
-## v1.0.1 Changes
-
 - Fixes issue where on debain based systems mongo is not updated if version is increased
 
 ## v1.0.0 Changes (Released 2017-05-23)
