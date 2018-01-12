@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v1.0.1 Changes
+
+- Refactor replicaset configuration
+
 ## v1.0.0 Changes (Released 2017-05-23)
 
 *WARNING:* This is a rewrite that contains many backwards incompatable changes.  Many attributes have changed defaults and/or the attribute key itself.
