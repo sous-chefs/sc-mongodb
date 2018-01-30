@@ -32,7 +32,7 @@ class Chef::ResourceDefinitionList::MongoDB
   # if node['fqnd'] is a vagrant host, ignore it
   # node['mongodb']['replica_priority'] is required
   #
-  def self.is_cluster_up_to_date?(from_server, expected)
+  def self.cluster_up_to_date?(from_server, expected)
     cut_down = from_server.map do |s|
       other = expected.select { |e| s['_id'] == e['_id'] }.first
       s.select { |k, _v| other.keys.include?(k) }
@@ -97,9 +97,7 @@ class Chef::ResourceDefinitionList::MongoDB
     members << node unless members.any? { |m| m.name == node.name }
     members.sort! { |x, y| x.name <=> y.name }
 
-    rs_members = members.each_with_index.map do |member, n|
-      create_replicaset_member(member).merge('_id' => n)
-    end.select { |m| m.has_key? 'host' }
+    rs_members = members.each_with_index.map { |member, n| create_replicaset_member(member).merge('_id' => n) }.select { |m| m.key? 'host' }
 
     Chef::Log.info(
       "Configuring replicaset with members #{members.map { |n| n['hostname'] }.join(', ')}"
@@ -135,15 +133,15 @@ class Chef::ResourceDefinitionList::MongoDB
         abort("Could not connect to database: '#{mongo_host}:#{mongo_port}'")
       end
 
-      rs_member_ips =	members.each_with_index.map do |member, n|		
-        port = member['mongodb']['config']['mongod']['net']['port']		
-        { '_id' => n, 'host' => "#{member['ipaddress']}:#{port}" }		
+      rs_member_ips =	members.each_with_index.map do |member, n|
+        port = member['mongodb']['config']['mongod']['net']['port']
+        { '_id' => n, 'host' => "#{member['ipaddress']}:#{port}" }
       end
 
       # check if both configs are the same
       config = connection['local']['system']['replset'].find_one('_id' => name)
       Chef::Log.debug "Current members are #{config['members']} and we expect #{rs_members}"
-      if config && is_cluster_up_to_date?(config['members'], rs_members)
+      if config && cluster_up_to_date?(config['members'], rs_members)
         # config is up-to-date, do nothing
         Chef::Log.info("Replicaset '#{name}' already configured")
       elsif config['_id'] == name && config['members'] == rs_member_ips
