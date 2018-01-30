@@ -71,7 +71,7 @@ class Chef::ResourceDefinitionList::MongoDB
     end
 
     mongo_host = 'localhost'
-    mongo_port = node['mongodb']['config']['net']['port']
+    mongo_port = node['mongodb']['config']['mongod']['net']['port']
 
     begin
       connection = nil
