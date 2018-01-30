@@ -93,7 +93,6 @@ class Chef::ResourceDefinitionList::MongoDB
       return
     end
 
-    Chef::Log.info("#{members.map(&:fqdn).join(', ')}")
     # Want the node originating the connection to be included in the replicaset
     members << node unless members.any? { |m| m.name == node.name }
     members.sort! { |x, y| x.name <=> y.name }
