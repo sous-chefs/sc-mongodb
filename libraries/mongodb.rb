@@ -220,7 +220,7 @@ class Chef::ResourceDefinitionList::MongoDB
             force = true
             rs_connection = Mongo::Connection.new(mongo_host, mongo_port, op_timeout: 5, slave_ok: true)
           else
-            rs_connection = Mongo::ReplSetConnection.new(old_members)
+            rs_connection = Mongo::ReplSetConnection.new(old_members.map { |m| m['host'] })
           end
           rs_connection.database_names # check connection
         end
