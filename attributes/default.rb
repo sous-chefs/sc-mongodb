@@ -117,3 +117,6 @@ default['mongodb']['ruby_gems'] = {
   mongo: '~> 1.12',
   bson_ext: nil,
 }
+
+# regular expression used when matching instance layers in Opsworks Stacks
+default['mongodb']['opsworks_layer_regex'] = '.*'

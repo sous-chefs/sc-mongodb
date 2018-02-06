@@ -233,13 +233,62 @@ define :mongodb_instance,
 
   # replicaset
   if new_resource.is_replicaset && new_resource.auto_configure_replicaset
-    rs_nodes = search(
-      :node,
-      "mongodb_cluster_name:#{new_resource.cluster_name} AND "\
-      'mongodb_is_replicaset:true AND '\
-      "mongodb_config_mongod_replication_replSetName:#{new_resource.replicaset_name} AND "\
-      "chef_environment:#{node.chef_environment}"
-    )
+
+    opsworks_stack = begin
+                      data_bag('aws_opsworks_stack')
+                    rescue Net::HTTPServerException, Chef::Exceptions::InvalidDataBagPath
+                      [] # empty array for length comparison
+                    end
+
+    rs_nodes = []
+
+    if opsworks_stack.length == 0
+      Chef::Log.info("Using Chef server's search(:node)")
+
+      # Run a search(:node) command, finding nodes with matching mongodb_cluster_name
+      rs_nodes = search(
+        :node,
+        "mongodb_cluster_name:#{new_resource.cluster_name} AND "\
+        'mongodb_is_replicaset:true AND '\
+        "mongodb_config_mongod_replication_replSetName:#{new_resource.replicaset_name} AND "\
+        "chef_environment:#{node.chef_environment}"
+      )
+
+    else
+      Chef::Log.info("Using Opsworks search(:aws_opsworks_instance)")
+
+      # Run a search(:aws_opsworks_intance) command, finding nodes in the same Opsworks layer
+      # Notes:
+      #   a) Restrict search results to layers matching node['mongodb']['opsworks_layer_regex'] (if unset, matches all layers)
+      #   b) search(:aws_opsworks_intance) doesn't return FQDN by default, so we have to make up FQDN suffix: "#{node['environment']['name']}.#{node['environment']['datacenter']}" (if unset, ".localdomain" is used)
+      my_layer_ids = search("aws_opsworks_instance", "self:true").first[:layer_ids]
+      search("aws_opsworks_instance").each do |other_instance|
+        if ['requested', 'booting', 'running_setup', 'online'].include? other_instance[:status]
+          other_instance[:layer_ids].each do |other_layer_id|
+            if my_layer_ids.include? other_layer_id
+              other_layer = search("aws_opsworks_layer", "layer_id:#{other_layer_id}").first
+              if other_layer[:name].match(/#{node['mongodb']['opsworks_layer_regex']}/)
+                Chef::Log.info("#{other_instance[:hostname]} is part of the replicaset.")
+                # set domain name suffix for node[:fqdn] value
+                dn = node['environment'].nil? ? 'localdomain' : "#{node['environment']['name']}.#{node['environment']['datacenter']}"
+                n = {
+                  'name' => other_instance[:hostname],
+                  'fqdn' => other_instance[:fqdn] || "#{other_instance[:hostname]}.#{dn}",
+                  'hostname' => other_instance[:hostname],
+                  'ipaddress' => other_instance[:private_ip],
+                  'mongodb' => node[:mongodb]
+                }
+                a = OpenStruct.new n
+                rs_nodes << a
+                break
+              end
+            end
+          end
+        end
+      end
+    end
+
+    Chef::Log.info("Found #{rs_nodes.length} replicaset members: " + rs_nodes.map {|n| n[:fqdn]}.sort.join(', '))
 
     ruby_block 'config_replicaset' do
       block do
