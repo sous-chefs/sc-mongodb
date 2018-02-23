@@ -311,8 +311,7 @@ describe 'sc-mongodb::default' do
           uri: 'http://repo.mongodb.org/apt/debian',
           distribution: 'wheezy/mongodb-org/3.2',
           components: ['main'],
-          keyserver: 'hkp://keyserver.ubuntu.com:80',
-          key: ['EA312927']
+          key: ['https://www.mongodb.org/static/pgp/server-3.2.asc']
         )
       end
     end
@@ -335,8 +334,7 @@ describe 'sc-mongodb::default' do
           uri: 'http://repo.mongodb.org/apt/debian',
           distribution: 'jessie/mongodb-org/3.2',
           components: ['main'],
-          keyserver: 'hkp://keyserver.ubuntu.com:80',
-          key: ['EA312927']
+          key: ['https://www.mongodb.org/static/pgp/server-3.2.asc']
         )
       end
     end
@@ -359,8 +357,7 @@ describe 'sc-mongodb::default' do
           uri: 'http://repo.mongodb.org/apt/ubuntu',
           distribution: 'trusty/mongodb-org/3.2',
           components: ['multiverse'],
-          keyserver: 'hkp://keyserver.ubuntu.com:80',
-          key: ['EA312927']
+          key: ['https://www.mongodb.org/static/pgp/server-3.2.asc']
         )
       end
     end
@@ -383,8 +380,7 @@ describe 'sc-mongodb::default' do
           uri: 'http://repo.mongodb.org/apt/ubuntu',
           distribution: 'xenial/mongodb-org/3.2',
           components: ['multiverse'],
-          keyserver: 'hkp://keyserver.ubuntu.com:80',
-          key: ['EA312927']
+          key: ['https://www.mongodb.org/static/pgp/server-3.2.asc']
         )
       end
     end
