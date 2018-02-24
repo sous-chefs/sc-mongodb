@@ -29,7 +29,7 @@ gcc = package 'gcc' do
 end
 gcc.run_action(:install)
 
-sasldev_pkg = if platform_family?('rhel')
+sasldev_pkg = if platform_family?('rhel', 'amazon')
                 'cyrus-sasl-devel'
               else
                 'libsasl2-dev'
