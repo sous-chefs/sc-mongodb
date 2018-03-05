@@ -312,7 +312,7 @@ describe 'sc-mongodb::default' do
           distribution: 'wheezy/mongodb-org/3.2',
           components: ['main'],
           keyserver: 'hkp://keyserver.ubuntu.com:80',
-          key: 'EA312927'
+          key: ['EA312927']
         )
       end
     end
@@ -336,7 +336,7 @@ describe 'sc-mongodb::default' do
           distribution: 'jessie/mongodb-org/3.2',
           components: ['main'],
           keyserver: 'hkp://keyserver.ubuntu.com:80',
-          key: 'EA312927'
+          key: ['EA312927']
         )
       end
     end
@@ -360,7 +360,7 @@ describe 'sc-mongodb::default' do
           distribution: 'trusty/mongodb-org/3.2',
           components: ['multiverse'],
           keyserver: 'hkp://keyserver.ubuntu.com:80',
-          key: 'EA312927'
+          key: ['EA312927']
         )
       end
     end
@@ -384,7 +384,7 @@ describe 'sc-mongodb::default' do
           distribution: 'xenial/mongodb-org/3.2',
           components: ['multiverse'],
           keyserver: 'hkp://keyserver.ubuntu.com:80',
-          key: 'EA312927'
+          key: ['EA312927']
         )
       end
     end
