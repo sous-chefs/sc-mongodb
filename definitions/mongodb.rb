@@ -20,26 +20,22 @@
 #
 
 define :mongodb_instance,
-       mongodb_type: 'mongod',
        action: [:enable, :start],
        logpath: '/var/log/mongodb/mongod.log',
        configservers: [],
        replicaset: nil,
+       is_mongos: nil,
        notifies: [] do
-  # TODO: this is the only remain use of params[:mongodb_type], is it still needed?
-  unless %w(mongod configserver mongos).include?(params[:mongodb_type])
-    raise ArgumentError, ":mongodb_type must be 'mongod', 'configserver' or 'mongos'; was #{params[:mongodb_type].inspect}"
-  end
 
   require 'ostruct'
 
   new_resource = OpenStruct.new
 
-  # Determine type right away so we know if we need mongos or mognod installation
-  new_resource.is_mongos = params[:mongodb_type] == 'mongos'
-
   # Determine if this will be part of a shard
   new_resource.is_shard = node['mongodb']['is_shard']
+
+  # Determine type right away so we know if we need mongos or mognod installation
+  new_resource.is_mongos = params[:is_mongos]
 
   # Make changes to node['mongodb']['config'] before copying to new_resource.
   if new_resource.is_mongos
