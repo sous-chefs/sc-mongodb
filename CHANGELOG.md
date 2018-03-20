@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fixes issue where on debain based systems mongo is not updated if version is increased
+
 ## v1.0.1 Changes
 
 - Refactor replicaset configuration

@@ -118,6 +118,23 @@ package node['mongodb']['package_name'] do
   not_if { node['mongodb']['install_method'] == 'none' }
 end
 
+# Change needed so that updates work properly on debian based systems
+if node['platform_family'] == 'debian'
+  deb_pkgs = %w(
+    server
+    shell
+    tools
+    mongos
+    ).map { |sfx| "#{node['mongodb']['package_name']}-#{sfx}" }
+
+  package deb_pkgs do
+    options node['mongodb']['packager_options']
+    action :install
+    version package_version
+    not_if { node['mongodb']['install_method'] == 'none' }
+  end
+end
+
 # Create keyFile if specified
 key_file_content = node['mongodb']['key_file_content']
 
