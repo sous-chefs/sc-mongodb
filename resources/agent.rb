@@ -38,9 +38,14 @@ action :create do
     source new_resource.package_url
   end
 
-  package "mongodb-mms-#{new_resource.type}-agent" do
-    provider Chef::Provider::Package::Dpkg if filename.split('.').last == 'deb'
-    source full_file_path
+  if filename.split('.').last == 'deb'
+    dpkg_package "mongodb-mms-#{new_resource.type}-agent" do
+      source full_file_path
+    end
+  else
+    package "mongodb-mms-#{new_resource.type}-agent" do
+      source full_file_path
+    end
   end
 
   template "/etc/mongodb-mms/#{new_resource.type}-agent.config" do

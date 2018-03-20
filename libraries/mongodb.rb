@@ -32,6 +32,15 @@ class Chef::ResourceDefinitionList::MongoDB
   # if node['fqnd'] is a vagrant host, ignore it
   # node['mongodb']['replica_priority'] is required
   #
+  def self.cluster_up_to_date?(from_server, expected)
+    cut_down = from_server.map do |s|
+      other = expected.select { |e| s['_id'] == e['_id'] }.first
+      s.select { |k, _v| other.keys.include?(k) }
+    end
+
+    cut_down == expected
+  end
+
   def self.create_replicaset_member(node)
     return {} if node['fqdn'] =~ /\.vagrantup\.com$/
 
@@ -71,7 +80,7 @@ class Chef::ResourceDefinitionList::MongoDB
     end
 
     mongo_host = 'localhost'
-    mongo_port = node['mongodb']['config']['net']['port']
+    mongo_port = node['mongodb']['config']['mongod']['net']['port']
 
     begin
       connection = nil
@@ -88,9 +97,7 @@ class Chef::ResourceDefinitionList::MongoDB
     members << node unless members.any? { |m| m.name == node.name }
     members.sort! { |x, y| x.name <=> y.name }
 
-    rs_members = members.each_with_index.map do |member, n|
-      create_replicaset_member(member).merge('_id' => n)
-    end
+    rs_members = members.each_with_index.map { |member, n| create_replicaset_member(member).merge('_id' => n) }.select { |m| m.key? 'host' }
 
     Chef::Log.info(
       "Configuring replicaset with members #{members.map { |n| n['hostname'] }.join(', ')}"
@@ -126,9 +133,15 @@ class Chef::ResourceDefinitionList::MongoDB
         abort("Could not connect to database: '#{mongo_host}:#{mongo_port}'")
       end
 
+      rs_member_ips =	members.each_with_index.map do |member, n|
+        port = member['mongodb']['config']['mongod']['net']['port']
+        { '_id' => n, 'host' => "#{member['ipaddress']}:#{port}" }
+      end
+
       # check if both configs are the same
       config = connection['local']['system']['replset'].find_one('_id' => name)
-      if config && config['members'] == rs_members
+      Chef::Log.debug "Current members are #{config['members']} and we expect #{rs_members}"
+      if config && cluster_up_to_date?(config['members'], rs_members)
         # config is up-to-date, do nothing
         Chef::Log.info("Replicaset '#{name}' already configured")
       elsif config['_id'] == name && config['members'] == rs_member_ips
@@ -179,14 +192,15 @@ class Chef::ResourceDefinitionList::MongoDB
         new_members = rs_members.dup
         old_ids = old_members.map { |m| m['_id'] }
 
-        old_members_by_host = old_members.group_by { |m| m['host'] }.map_values(&:first)
-        new_members_by_host = new_members.group_by { |m| m['host'] }.map_values(&:first)
+        old_members_by_host = old_members.each_with_object({}) { |m, hash| hash[m['host']] = m  }
+        new_members_by_host = new_members.each_with_object({}) { |m, hash| hash[m['host']] = m  }
 
         ids = (0...256).to_a - old_ids
 
         # use the _id value when present, use a generated one from ids otherwise
         new_members = new_members_by_host.map { |h, m| old_members_by_host.fetch(h, {}).merge(m) }
-                                         .map_values { |m| m.merge('_id' => (m['_id'] || ids.shift)) }
+
+        new_members.map! { |member| member.merge('_id' => (member['_id'] || ids.shift)) }
 
         new_config = config.dup
         new_config['members'] = new_members
@@ -203,7 +217,7 @@ class Chef::ResourceDefinitionList::MongoDB
             force = true
             rs_connection = Mongo::Connection.new(mongo_host, mongo_port, op_timeout: 5, slave_ok: true)
           else
-            rs_connection = Mongo::ReplSetConnection.new(old_members)
+            rs_connection = Mongo::ReplSetConnection.new(old_members.map { |m| m['host'] })
           end
           rs_connection.database_names # check connection
         end
