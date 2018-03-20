@@ -44,8 +44,7 @@ when 'debian'
     uri node['mongodb']['repo']
     distribution "#{node['lsb']['codename']}/mongodb-org/#{package_version_major}"
     components node['platform'] == 'ubuntu' ? ['multiverse'] : ['main']
-    keyserver 'hkp://keyserver.ubuntu.com:80'
-    key package_version_major >= 3.2 ? 'EA312927' : '7F0CEB10'
+    key "https://www.mongodb.org/static/pgp/server-#{package_version_major}.asc"
   end
 when 'amazon', 'fedora', 'rhel'
   # RHEL: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/
