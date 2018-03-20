@@ -80,11 +80,11 @@ describe 'sc-mongodb::default' do
 
     # mongod_packager_options: pkg install options for mongo per OS
     let(:mongod_packager_options_rhel) do
-      ['--nogpgcheck']
+      '--nogpgcheck'
     end
 
     let(:mongod_packager_options_debian) do
-      ['-o', 'Dpkg::Options::=--force-confold', '--force-yes']
+      '-o Dpkg::Options::="--force-confold" --force-yes'
     end
 
     # mongod_sysconfig_file: sysconfig file location for mongo per OS
@@ -98,11 +98,11 @@ describe 'sc-mongodb::default' do
 
     # mongod_version: RHEL appends a release and OS versions to their versions
     let(:mongod_version_rhel) do
-      '3.2.10-1.el7'
+      '3.2.18-1.el7'
     end
 
     let(:mongod_version_debian) do
-      '3.2.10'
+      '3.2.18'
     end
 
     # All tests in this section run for all OS's
@@ -268,6 +268,36 @@ describe 'sc-mongodb::default' do
       end
     end
 
+    shared_examples_for 'debian based install' do
+      it 'should install "mongodb-org-server" package' do
+        expect(chef_run).to install_package('mongodb-org-server').with(
+          options: mongod_packager_options,
+          version: mongod_version
+        )
+      end
+
+      it 'should install "mongodb-org-shell" package' do
+        expect(chef_run).to install_package('mongodb-org-shell').with(
+          options: mongod_packager_options,
+          version: mongod_version
+        )
+      end
+
+      it 'should install "mongodb-org-tools" package' do
+        expect(chef_run).to install_package('mongodb-org-tools').with(
+          options: mongod_packager_options,
+          version: mongod_version
+        )
+      end
+
+      it 'should install "mongodb-org-mongos" package' do
+        expect(chef_run).to install_package('mongodb-org-mongos').with(
+          options: mongod_packager_options,
+          version: mongod_version
+        )
+      end
+    end
+
     context 'CentOS' do
       let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'centos', version: '7.3.1611').converge(described_recipe) }
 
@@ -306,6 +336,11 @@ describe 'sc-mongodb::default' do
         let(:mongod_version) { mongod_version_debian }
       end
 
+      it_behaves_like 'debian based install' do
+        let(:mongod_packager_options) { mongod_packager_options_debian }
+        let(:mongod_version) { mongod_version_debian }
+      end
+
       it 'should create "mongodb" yum_repository' do
         expect(chef_run).to add_apt_repository('mongodb').with(
           uri: 'http://repo.mongodb.org/apt/debian',
@@ -326,6 +361,11 @@ describe 'sc-mongodb::default' do
         let(:mongod_init_source) { 'debian-mongodb.init.erb' }
         let(:mongod_packager_options) { mongod_packager_options_debian }
         let(:mongod_sysconfig_file) { mongod_sysconfig_file_debian }
+        let(:mongod_version) { mongod_version_debian }
+      end
+
+      it_behaves_like 'debian based install' do
+        let(:mongod_packager_options) { mongod_packager_options_debian }
         let(:mongod_version) { mongod_version_debian }
       end
 
@@ -352,6 +392,11 @@ describe 'sc-mongodb::default' do
         let(:mongod_version) { mongod_version_debian }
       end
 
+      it_behaves_like 'debian based install' do
+        let(:mongod_packager_options) { mongod_packager_options_debian }
+        let(:mongod_version) { mongod_version_debian }
+      end
+
       it 'should create "mongodb" yum_repository' do
         expect(chef_run).to add_apt_repository('mongodb').with(
           uri: 'http://repo.mongodb.org/apt/ubuntu',
@@ -372,6 +417,11 @@ describe 'sc-mongodb::default' do
         let(:mongod_init_source) { 'debian-mongodb.init.erb' }
         let(:mongod_packager_options) { mongod_packager_options_debian }
         let(:mongod_sysconfig_file) { mongod_sysconfig_file_debian }
+        let(:mongod_version) { mongod_version_debian }
+      end
+
+      it_behaves_like 'debian based install' do
+        let(:mongod_packager_options) { mongod_packager_options_debian }
         let(:mongod_version) { mongod_version_debian }
       end
 
