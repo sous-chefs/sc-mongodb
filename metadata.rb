@@ -4,7 +4,7 @@ maintainer_email  'help@sous-chefs.org'
 license           'Apache-2.0'
 description       'Installs and configures mongodb'
 long_description  IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version           '1.0.1'
+version           '1.0.2'
 
 recipe 'sc-mongodb', 'Installs and configures a single node mongodb instance'
 recipe 'sc-mongodb::mongos', 'Installs and configures a mongos which can be used in a sharded setup'
