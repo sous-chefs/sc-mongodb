@@ -4,8 +4,8 @@ default['mongodb']['authentication']['username'] = 'admin'
 default['mongodb']['authentication']['password'] = 'admin'
 
 default['mongodb']['admin'] = {
-  'username' => default['mongodb']['authentication']['username'],
-  'password' => default['mongodb']['authentication']['password'],
+  'username' => lazy{ node['mongodb']['authentication']['username']},
+  'password' => lazy{ node['mongodb']['authentication']['password']},
   'roles' => %w(userAdminAnyDatabase dbAdminAnyDatabase clusterAdmin),
   'database' => 'admin',
 }
