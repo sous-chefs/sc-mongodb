@@ -243,7 +243,9 @@ def retrieve_db(attempt = 0)
       @new_resource.connection['host'],
       @new_resource.connection['port'],
       connect_timeout: 15,
-      slave_ok: true
+      slave_ok: true,
+      ssl_verify: false,
+      ssl: true
     )
   rescue Mongo::ConnectionFailure
     if attempt < @new_resource.connection['user_management']['connection']['retries']
