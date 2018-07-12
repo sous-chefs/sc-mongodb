@@ -240,7 +240,7 @@ def retrieve_db(attempt = 0)
 
   begin
     Mongo::MongoClient.new(
-      @new_resource.connection['host'],
+      '127.0.0.1',
       @new_resource.connection['port'],
       connect_timeout: 15,
       slave_ok: true,
