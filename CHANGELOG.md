@@ -1,8 +1,12 @@
 # sc-mongodb Cookbook CHANGELOG
 
-## Unreleased
+## v1.2.0
 
 - Fixes issue where on debain based systems mongo is not updated if version is increased
+- Correct attribute usage (#186)
+- Fix Invalid Keyfile Option (#191)
+- Fix for issue where mongo would not upgrade on debian based systems (#181)
+- Use pgp keyfiles for debian packages (#193)
 
 ## v1.0.1 Changes
 
@@ -10,7 +14,7 @@
 
 ## v1.0.0 Changes (Released 2017-05-23)
 
-*WARNING:* This is a rewrite that contains many backwards incompatable changes.  Many attributes have changed defaults and/or the attribute key itself.
+_WARNING:_ This is a rewrite that contains many backwards incompatable changes. Many attributes have changed defaults and/or the attribute key itself.
 
 - Drop support for 10gen repo and default to mongo-org repo install
 - Remove Chef 10 and 11 support
@@ -30,7 +34,7 @@
 
 - Rename cookbook from mongodb to sc-mongodb (no attribute changes, should be 100% compatable with mongodb cookbook on supermarket)
 
-**NOTE** v0.18.0 is the same as v0.17.0 with the exception of the cookbook name.  All attributes have keped the `mongodb` namespace while the cookbook has been renamed `sc-mongodb`
+**NOTE** v0.18.0 is the same as v0.17.0 with the exception of the cookbook name. All attributes have keped the `mongodb` namespace while the cookbook has been renamed `sc-mongodb`
 
 ## v0.17.0 Changes
 
@@ -86,6 +90,7 @@
   - remove <= limit for all other dep
 
 - update to Berkshelf 3
+
 - # 280 fix install for centos (missing build-essentials)
 
 ## v0.15.2 End of Ruby 1.8, Chef 10 support
@@ -112,8 +117,11 @@
   - see #261 for new-recipes
 
 - use node.set to make sure is_* attributes are available for search
+
 - 'key_file' -> 'key_file_content'
+
 - allow pinning for gems, pip packages
+
 - # 261 new mms agent recipe based on new packaging in upstream
 
 - # 256 Allow mms_agent to be run as non-root user
