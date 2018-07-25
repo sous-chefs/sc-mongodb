@@ -125,7 +125,7 @@ if node['platform_family'] == 'debian'
     shell
     tools
     mongos
-    ).map { |sfx| "#{node['mongodb']['package_name']}-#{sfx}" }
+  ).map { |sfx| "#{node['mongodb']['package_name']}-#{sfx}" }
 
   package deb_pkgs do
     options node['mongodb']['packager_options']

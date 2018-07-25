@@ -20,15 +20,10 @@
 provides :mongodb_agent
 
 property :type, String, name_property: true, equal_to: %w(automation backup monitoring)
-
 property :config, Hash
 property :group, String
 property :package_url, String
 property :user, String
-
-load_current_value do
-  # TODO
-end
 
 action :create do
   filename = new_resource.package_url.split('/').last
