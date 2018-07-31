@@ -136,20 +136,18 @@ running() {
 
 start_server() {
 # Start the process using the wrapper
-            start-stop-daemon --background --start --quiet --pidfile $PIDFILE \
-                        --make-pidfile --chuid $DAEMON_USER \
-                        --exec $NUMACTL $DAEMON $DAEMON_OPTS
-            errcode=$?
+    start-stop-daemon --background --start --pidfile $PIDFILE \
+		--chuid $DAEMON_USER \
+		--exec $NUMACTL $DAEMON $DAEMON_OPTS
+    errcode=$?
     return $errcode
 }
 
 stop_server() {
 # Stop the process using the wrapper
-            start-stop-daemon --stop --quiet --pidfile $PIDFILE \
-                        --retry 300 \
-                        --user $DAEMON_USER \
-                        --exec $DAEMON
-            errcode=$?
+    start-stop-daemon --stop --oknodo --pidfile $PIDFILE \
+		--retry 300 --remove-pidfile
+    errcode=$?
     return $errcode
 }
 
