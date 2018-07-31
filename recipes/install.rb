@@ -144,3 +144,10 @@ if key_file_content
 end
 
 node.default['mongodb']['config'][config_type]['security']['keyFile'] = nil if key_file_content.nil?
+
+# create directory for pidfile
+directory File.dirname(node['mongodb']['config']['mongod']['processManagement']['pidFilePath']) do
+  owner node['mongodb']['user']
+  group node['mongodb']['group']
+  mode  '0755'
+end
