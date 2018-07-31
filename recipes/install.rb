@@ -68,12 +68,6 @@ else
   mode = '0755'
 end
 
-# Reload systemctl for RHEL 7+ after modifying the init file.
-execute 'mongodb-systemctl-daemon-reload' do
-  command 'systemctl daemon-reload'
-  action :nothing
-end
-
 template "#{init_file} install" do
   path init_file
   cookbook node['mongodb']['template_cookbook']
@@ -90,10 +84,11 @@ template "#{init_file} install" do
     port: config['net']['port']
   )
   action :create_if_missing
+end
 
-  if (platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7) || (node['platform'] == 'debian' && node['platform_version'].to_i >= 8)
-    notifies :run, 'execute[mongodb-systemctl-daemon-reload]', :immediately
-  end
+service 'mongod' do
+  supports start: true, stop: true, restart: true, status: true
+  action :enable
 end
 
 # Adjust the version number for RHEL style if needed
