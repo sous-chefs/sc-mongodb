@@ -59,6 +59,11 @@ template "#{dbconfig_file} install" do
   action :create_if_missing
 end
 
+# this package required by init script
+package 'netcat' do
+  only_if { node['platform_family'] == 'debian' }
+end
+
 # and we install our own init file
 if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
   init_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}.conf")
