@@ -5,27 +5,28 @@ cache: bundler
 addons:
   apt:
     sources:
-      - chef-stable-trusty
+    - chef-stable-trusty
     packages:
-      - chefdk
+    - chefdk
 
 branches:
   only:
-    - master
+  - master
 
 services: docker
 
 env:
-- INSTANCE=add-to-list-centos-7
-- INSTANCE=add-to-list-ubuntu-1604
-- INSTANCE=append-if-no-line-centos-7
-- INSTANCE=append-if-no-line-ubuntu-1604
-- INSTANCE=delete-from-list-centos-7
-- INSTANCE=delete-from-list-ubuntu-1604
-- INSTANCE=delete-lines-centos-7
-- INSTANCE=delete-lines-ubuntu-1604
-- INSTANCE=replace-or-add-centos-7
-- INSTANCE=replace-or-add-ubuntu-1604
+- INSTANCE=default-centos-6
+- INSTANCE=default-centos-7
+- INSTANCE=default-debian-7
+- INSTANCE=default-debian-8
+- INSTANCE=default-fedora-latest
+- INSTANCE=default-ubuntu-1404
+- INSTANCE=default-ubuntu-1604
+- INSTANCE=mms-agent-centos-6
+- INSTANCE=mms-agent-centos-7
+- INSTANCE=mms-agent-ubuntu-1404
+- INSTANCE=mms-agent-ubuntu-1604
 
 before_script:
 - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
