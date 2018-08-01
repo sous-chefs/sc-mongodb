@@ -53,7 +53,7 @@ default['mongodb']['dbconfig_file']['mongod'] = '/etc/mongod.conf'
 default['mongodb']['dbconfig_file']['mongos'] = '/etc/mongos.conf'
 
 default['mongodb']['package_name'] = 'mongodb'
-default['mongodb']['package_version'] = '3.2.18'
+default['mongodb']['package_version'] = '3.6.6'
 
 default['mongodb']['default_init_name'] = 'mongod'
 default['mongodb']['instance_name']['mongod'] = 'mongod'
