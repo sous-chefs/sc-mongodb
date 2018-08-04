@@ -127,11 +127,13 @@ if node['platform_family'] == 'debian'
     mongos
     ).map { |sfx| "#{node['mongodb']['package_name']}-#{sfx}" }
 
-  package deb_pkgs do
-    options node['mongodb']['packager_options']
-    action :install
-    version package_version
-    not_if { node['mongodb']['install_method'] == 'none' }
+  deb_pkgs.each do |pkg|
+    package pkg do
+      options node['mongodb']['packager_options']
+      action :install
+      version package_version
+      not_if { node['mongodb']['install_method'] == 'none' }
+    end
   end
 end
 
