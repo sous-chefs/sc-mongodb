@@ -6,12 +6,13 @@ Documentation=https://docs.mongodb.org/manual
 [Service]
 User=mongodb
 Group=mongodb
+EnvironmentFile=-/etc/default/mongodb
 ExecStart=/usr/bin/mongod --config /etc/mongod.conf
-PIDFile=/var/run/mongodb/mongod.pid
+PIDFile=<%= @pid_file %>
 
 # Run ExecStartPre with root-permissions
 PermissionsStartOnly=true
-ExecStartPre=-/bin/mkdir /var/run/mongodb
+ExecStartPre=-/bin/mkdir -p /var/run/mongodb
 ExecStartPre=/bin/chown -R mongodb:mongodb /var/run/mongodb
 
 # file size
@@ -25,7 +26,7 @@ LimitNOFILE=<%= @ulimit['nofile'] %>
 # processes/threads
 LimitNPROC=<%= @ulimit['nproc'] %>
 # locked memory
-LimitMEMLOCK=<%= @ulimit['nproc'] %>
+LimitMEMLOCK=infinity
 # total threads (user+kernel)
 TasksMax=infinity
 TasksAccounting=false

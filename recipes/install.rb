@@ -73,29 +73,6 @@ else
   mode = '0755'
 end
 
-template "#{init_file} install" do
-  path init_file
-  cookbook node['mongodb']['template_cookbook']
-  source node['mongodb']['init_script_template']
-  group node['mongodb']['root_group']
-  owner 'root'
-  mode mode
-  variables(
-    provides: 'mongod',
-    dbconfig_file: dbconfig_file,
-    sysconfig_file: sysconfig_file,
-    ulimit: node['mongodb']['ulimit'],
-    bind_ip: config['net']['bindIp'],
-    port: config['net']['port']
-  )
-  action :create_if_missing
-end
-
-service 'mongod' do
-  supports start: true, stop: true, restart: true, status: true
-  action :enable
-end
-
 # Adjust the version number for RHEL style if needed
 package_version = case node['platform_family']
                   when 'rhel'
@@ -150,9 +127,29 @@ end
 
 node.default['mongodb']['config'][config_type]['security']['keyFile'] = nil if key_file_content.nil?
 
-# create directory for pidfile
-directory File.dirname(node['mongodb']['config']['mongod']['processManagement']['pidFilePath']) do
-  owner node['mongodb']['user']
-  group node['mongodb']['group']
-  mode  '0755'
+template "#{init_file} install" do
+  path init_file
+  cookbook node['mongodb']['template_cookbook']
+  source node['mongodb']['init_script_template']
+  group node['mongodb']['root_group']
+  mode mode
+  variables(
+    provides: 'mongod',
+    dbconfig_file: dbconfig_file,
+    sysconfig_file: sysconfig_file,
+    ulimit: node['mongodb']['ulimit'],
+    bind_ip: config['net']['bindIp'],
+    port: config['net']['port'],
+    pid_file: node['mongodb']['config']['mongod']['processManagement']['pidFilePath']
+  )
+
+  if (platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7) || (node['platform'] == 'debian' && node['platform_version'].to_i >= 8)
+    notifies :run, "execute[mongodb-systemctl-daemon-reload-mongod]", :immediately
+  end
+end
+
+# Reload systemctl for all OSs
+execute "mongodb-systemctl-daemon-reload-mongod" do
+  command 'systemctl daemon-reload'
+  action :nothing
 end

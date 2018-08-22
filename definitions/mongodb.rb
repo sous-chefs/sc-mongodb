@@ -116,7 +116,7 @@ define :mongodb_instance,
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
     mode = '0644'
   else
-    new_resource.init_file = File.join(node['mongodb']['init_dir'], new_resource.name)
+    new_resource.init_file = File.join(node['mongodb']['init_dir'], node['mongodb']['default_init_name'])
     mode = '0755'
   end
 
@@ -209,7 +209,8 @@ define :mongodb_instance,
       sysconfig_file: new_resource.sysconfig_file,
       ulimit: new_resource.ulimit,
       bind_ip: new_resource.bind_ip,
-      port: new_resource.port
+      port: new_resource.port,
+      pid_file: node['mongodb']['config']['mongod']['processManagement']['pidFilePath']
     )
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
 
