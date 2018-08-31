@@ -9,7 +9,7 @@ issues_url        'https://github.com/sous-chefs/mongodb/issues' if respond_to?(
 chef_version      '>= 12.5' if respond_to?(:chef_version)
 version           '1.2.0'
 
-# TODO: rm once chef_version >= 14 
+# TODO: rm once chef_version >= 14
 depends 'apt', '>= 1.8.2'
 depends 'yum', '>= 3.0'
 depends 'build-essential', '>= 5.0.0'
