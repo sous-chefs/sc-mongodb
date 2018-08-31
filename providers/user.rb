@@ -1,5 +1,3 @@
-use_inline_resources
-
 def user_exists?(username, connection)
   connection['admin']['system.users'].find(user: username).count > 0
 end
