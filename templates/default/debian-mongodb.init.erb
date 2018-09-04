@@ -136,6 +136,8 @@ running() {
 
 start_server() {
 # Start the process using the wrapper
+    PID_PATH=$(dirname $PIDFILE)
+    test $PID_PATH != "/var/run" && mkdir -p $PID_PATH && chown $DAEMON_USER $PID_PATH
     start-stop-daemon --background --start --pidfile $PIDFILE \
 		--chuid $DAEMON_USER \
 		--exec $NUMACTL $DAEMON $DAEMON_OPTS

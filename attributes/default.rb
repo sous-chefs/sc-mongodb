@@ -17,6 +17,14 @@
 # limitations under the License.
 #
 
+# http://docs.mongodb.org/manual/reference/ulimit/#recommended-settings
+default['mongodb']['ulimit']['fsize'] = 'unlimited' # file_size
+default['mongodb']['ulimit']['cpu'] = 'unlimited' # cpu_time
+default['mongodb']['ulimit']['as'] = 'unlimited' # virtual memory
+default['mongodb']['ulimit']['nofile'] = 64_000 # number_files
+default['mongodb']['ulimit']['rss'] = 'unlimited' # memory_size
+default['mongodb']['ulimit']['nproc'] = 64_000 # processes
+
 # cluster identifier
 default['mongodb']['client_roles'] = []
 default['mongodb']['cluster_name'] = nil
@@ -42,6 +50,8 @@ default['mongodb']['root_group'] = 'root'
 default['mongodb']['user'] = 'mongodb'
 default['mongodb']['group'] = 'mongodb'
 
+# init system
+default['mongodb']['init_system'] = 'systemd'
 default['mongodb']['init_dir'] = '/etc/init.d'
 default['mongodb']['init_script_template'] = 'debian-mongodb.init.erb'
 default['mongodb']['sysconfig_file']['mongod'] = '/etc/default/mongodb'
@@ -95,11 +105,13 @@ when 'debian'
   if node['platform'] == 'ubuntu'
     default['mongodb']['repo'] = 'http://repo.mongodb.org/apt/ubuntu'
 
-    # Upstart
+    # Upstart for 14.04
     if node['platform_version'].to_f < 15.04
-      default['mongodb']['init_dir'] = '/etc/init/'
-      default['mongodb']['init_script_template'] = 'debian-mongodb.upstart.erb'
+      default['mongodb']['init_system'] = 'upstart'
+    else
+      default['mongodb']['init_system'] = 'systemd'
     end
+
   elsif node['platform'] == 'debian'
     default['mongodb']['repo'] = 'http://repo.mongodb.org/apt/debian'
   end
@@ -117,3 +129,20 @@ default['mongodb']['ruby_gems'] = {
   mongo: '~> 1.12',
   bson_ext: nil,
 }
+
+case node['mongodb']['init_system']
+when 'upstart'
+  default['mongodb']['init_dir'] = '/etc/init/'
+  default['mongodb']['init_script_template'] = 'debian-mongodb.upstart.erb'
+when 'init'
+  default['mongodb']['init_dir'] = '/etc/init.d/'
+  default['mongodb']['init_script_template'] = 'debian-mongodb.init.erb'
+when 'systemd'
+  default['mongodb']['ulimit']['fsize'] = 'infinity'
+  default['mongodb']['ulimit']['cpu'] = 'infinity'
+  default['mongodb']['ulimit']['as'] = 'infinity'
+  default['mongodb']['ulimit']['rss'] = 'infinity'
+  default['mongodb']['init_dir'] = '/lib/systemd/system/'
+  default['mongodb']['init_script_template'] = 'debian-mongodb.systemd.erb'
+  default['mongodb']['default_init_name'] = 'mongod.service'
+end
