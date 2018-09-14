@@ -103,6 +103,7 @@ define :mongodb_instance,
   new_resource.mongodb_group              = node['mongodb']['group']
   new_resource.mongodb_user               = node['mongodb']['user']
   new_resource.port                       = new_resource.config['net']['port']
+  new_resource.pid                        = new_resource.config['processManagement']['pidFilePath']
   new_resource.root_group                 = node['mongodb']['root_group']
   new_resource.shard_name                 = node['mongodb']['shard_name']
   new_resource.sharded_collections        = node['mongodb']['sharded_collections']
@@ -115,6 +116,8 @@ define :mongodb_instance,
   if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
     mode = '0644'
+  elsif node['platform'] == 'debian' &&  node['platform_version'].to_f > 8
+    new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.service")
   else
     new_resource.init_file = File.join(node['mongodb']['init_dir'], new_resource.name)
     mode = '0755'
@@ -209,7 +212,8 @@ define :mongodb_instance,
       sysconfig_file: new_resource.sysconfig_file,
       ulimit: new_resource.ulimit,
       bind_ip: new_resource.bind_ip,
-      port: new_resource.port
+      port: new_resource.port,
+      pid_file: new_resource.pid
     )
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
 

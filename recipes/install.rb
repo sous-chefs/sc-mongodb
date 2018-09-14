@@ -28,74 +28,6 @@ include_recipe 'sc-mongodb::mongodb_org_repo' if node['mongodb']['install_method
 # yum_package[autoconf, bison, flex, gcc, gcc-c++, gettext, kernel-devel, make, m4, ncurses-devel, patch]
 build_essential 'build-tools'
 
-config_type = node['mongodb']['is_mongos'] ? 'mongos' : 'mongod'
-
-config = node['mongodb']['config'][config_type]
-dbconfig_file = node['mongodb']['dbconfig_file'][config_type]
-sysconfig_file = node['mongodb']['sysconfig_file'][config_type]
-
-# prevent-install defaults, but don't overwrite
-file "#{sysconfig_file} install" do
-  path sysconfig_file
-  content 'ENABLE_MONGODB=no'
-  group node['mongodb']['root_group']
-  owner 'root'
-  mode '0644'
-  action :create_if_missing
-end
-
-# just-in-case config file drop
-template "#{dbconfig_file} install" do
-  path dbconfig_file
-  cookbook node['mongodb']['template_cookbook']
-  source node['mongodb']['dbconfig_file']['template']
-  group node['mongodb']['root_group']
-  owner 'root'
-  mode '0644'
-  variables(
-    config: config
-  )
-  helpers MongoDBConfigHelpers
-  action :create_if_missing
-end
-
-# this package required by init script
-package 'netcat' do
-  only_if { node['platform_family'] == 'debian' }
-end
-
-# and we install our own init file
-if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
-  init_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}.conf")
-  mode = '0644'
-else
-  init_file = File.join(node['mongodb']['init_dir'], node['mongodb']['default_init_name'])
-  mode = '0755'
-end
-
-template "#{init_file} install" do
-  path init_file
-  cookbook node['mongodb']['template_cookbook']
-  source node['mongodb']['init_script_template']
-  group node['mongodb']['root_group']
-  owner 'root'
-  mode mode
-  variables(
-    provides: 'mongod',
-    dbconfig_file: dbconfig_file,
-    sysconfig_file: sysconfig_file,
-    ulimit: node['mongodb']['ulimit'],
-    bind_ip: config['net']['bindIp'],
-    port: config['net']['port']
-  )
-  action :create_if_missing
-end
-
-service 'mongod' do
-  supports start: true, stop: true, restart: true, status: true
-  action :enable
-end
-
 # Adjust the version number for RHEL style if needed
 package_version = case node['platform_family']
                   when 'rhel'
@@ -133,6 +65,75 @@ if node['platform_family'] == 'debian'
     version package_version
     not_if { node['mongodb']['install_method'] == 'none' }
   end
+end
+
+# this package required by init script
+package 'netcat' do
+  only_if { node['platform_family'] == 'debian' }
+end
+
+config_type = node['mongodb']['is_mongos'] ? 'mongos' : 'mongod'
+
+config = node['mongodb']['config'][config_type]
+dbconfig_file = node['mongodb']['dbconfig_file'][config_type]
+sysconfig_file = node['mongodb']['sysconfig_file'][config_type]
+
+# prevent-install defaults, but don't overwrite
+file "#{sysconfig_file} install" do
+  path sysconfig_file
+  content 'ENABLE_MONGODB=no'
+  group node['mongodb']['root_group']
+  owner 'root'
+  mode '0644'
+  action :create_if_missing
+end
+
+# just-in-case config file drop
+template "#{dbconfig_file} install" do
+  path dbconfig_file
+  cookbook node['mongodb']['template_cookbook']
+  source node['mongodb']['dbconfig_file']['template']
+  group node['mongodb']['root_group']
+  owner 'root'
+  mode '0644'
+  variables(
+    config: config
+  )
+  helpers MongoDBConfigHelpers
+  action :create_if_missing
+end
+
+# and we install our own init file
+if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
+  init_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}.conf")
+  mode = '0644'
+else
+  init_file = File.join(node['mongodb']['init_dir'], node['mongodb']['default_init_name'])
+  mode = '0755'
+end
+
+template "#{init_file} install" do
+  path init_file
+  cookbook node['mongodb']['template_cookbook']
+  source node['mongodb']['init_script_template']
+  group node['mongodb']['root_group']
+  owner 'root'
+  mode mode
+  variables(
+    provides: 'mongod',
+    dbconfig_file: dbconfig_file,
+    sysconfig_file: sysconfig_file,
+    ulimit: node['mongodb']['ulimit'],
+    bind_ip: config['net']['bindIp'],
+    port: config['net']['port'],
+    pid_file: node['mongodb']['config']['mongod']['processManagement']['pidFilePath']
+  )
+  action :create_if_missing
+end
+
+service 'mongod' do
+  supports start: true, stop: true, restart: true, status: true
+  action :enable
 end
 
 # Create keyFile if specified

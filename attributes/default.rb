@@ -102,6 +102,12 @@ when 'debian'
     end
   elsif node['platform'] == 'debian'
     default['mongodb']['repo'] = 'http://repo.mongodb.org/apt/debian'
+
+    if node['platform_version'].to_f > 8
+			default['mongodb']['init_dir'] = '/lib/systemd/system/'
+			default['mongodb']['init_script_template'] = 'debian-mongodb.systemd.erb'
+			default['mongodb']['default_init_name'] = 'mongod.service'
+    end
   end
 else
   Chef::Log.error("Unsupported Platform Family: #{node['platform_family']}")
