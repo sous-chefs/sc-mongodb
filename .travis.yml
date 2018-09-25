@@ -41,7 +41,7 @@ before_script:
   - /opt/chefdk/embedded/bin/foodcritic --version
 
 script:
-  - KITCHEN_LOCAL_YAML=.kitchen.dokken.yml /opt/chefdk/embedded/bin/kitchen verify ${INSTANCE}
+  - KITCHEN_LOCAL_YAML=.kitchen.docker.yml /opt/chefdk/embedded/bin/kitchen verify ${INSTANCE}
 
 after_failure:
   - cat .kitchen/logs/*.log
