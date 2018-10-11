@@ -6,6 +6,6 @@ end
 
 if node['platform_family'] == 'rhel' && node['platform_version'].to_i == 7
   execute 'fix_network' do
-    command 'service NetworkManager stop && service network restart'
+    command 'sudo service NetworkManager stop && service network restart'
   end
 end

@@ -32,7 +32,7 @@ default['mongodb']['replica_tags'] = {}
 default['mongodb']['replica_votes'] = 1
 
 default['mongodb']['auto_configure']['replicaset'] = true
-default['mongodb']['auto_configure']['sharding'] = true
+default['mongodb']['auto_configure']['sharding'] = false
 
 # don't use the node's fqdn, but this url instead; something like 'ec2-x-y-z-z.aws.com' or 'cs1.domain.com' (no port)
 # if not provided, will fall back to the FQDN
@@ -75,9 +75,9 @@ end
 # this option can be "mongodb-org" or "none"
 default['mongodb']['install_method'] = 'mongodb-org'
 
-default['mongodb']['is_replicaset'] = nil
-default['mongodb']['is_shard'] = nil
-default['mongodb']['is_configserver'] = nil
+default['mongodb']['is_replicaset'] = true
+default['mongodb']['is_shard'] = false
+default['mongodb']['is_configserver'] = false
 
 default['mongodb']['reload_action'] = 'restart' # or "nothing"
 
@@ -117,3 +117,21 @@ default['mongodb']['ruby_gems'] = {
   mongo: '~> 1.12',
   bson_ext: nil,
 }
+
+# Backup info
+default['mongodb']['backup']['name'] = 'ServiceDBs'
+default['mongodb']['backup']['script_dir'] = '/opt/dbas/scripts'
+default['mongodb']['backup']['days_to_keep'] = 14 # The amount of days to keep the backups for
+
+
+# Additional Storage for Stage and Prod
+# NOTE: We decided to try out keeping the logs and backups together since they have the same name. We can allows change if needed
+# If it exists, then leverage that for the backups
+if Dir.exist?('/logs')
+  # TODO: Leverage S3 for backups and logs vs directly on the box	
+  default['mongodb']['backup']['tar_dir'] = '/logs/backups'
+  default['mongodb']['backup']['log_dir'] = '/logs/backups'
+else
+  default['mongodb']['backup']['tar_dir'] = '/opt/mongo/backups'
+  default['mongodb']['backup']['log_dir'] = '/opt/mongo/backups'
+end

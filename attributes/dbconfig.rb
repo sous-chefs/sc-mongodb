@@ -29,10 +29,10 @@ default['mongodb']['config']['mongod']['storage']['dbPath'] = case node['platfor
 
 default['mongodb']['config']['mongod']['storage']['engine'] = 'wiredTiger'
 
-default['mongodb']['config']['mongod']['replication']['oplogSizeMB'] = nil
-default['mongodb']['config']['mongod']['replication']['replSetName'] = nil
+default['mongodb']['config']['mongod']['replication']['oplogSizeMB'] = 3000
+default['mongodb']['config']['mongod']['replication']['replSetName'] = 'kitchen'
 default['mongodb']['config']['mongod']['replication']['secondaryIndexPrefetch'] = nil
-default['mongodb']['config']['mongod']['replication']['enableMajorityReadConcern'] = nil
+default['mongodb']['config']['mongod']['replication']['enableMajorityReadConcern'] = true
 
 default['mongodb']['config']['mongod']['security']['keyFile'] = nil
 
