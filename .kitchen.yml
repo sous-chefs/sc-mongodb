@@ -1,304 +1,294 @@
+#ec2 kitchen configs 
+
 ---
 driver:
-  name: vagrant
-  linked_clone: true
+  name: ec2
+  aws_ssh_key_id: 'Integrations'
+  security_group_ids: ["sg-2717275f","sg-29093951"]
+  region: us-east-1
+  availability_zone: c
+  subnet_id: subnet-e33dadde
+  instance_type: t2.large
+  associate_public_ip: false
+  retryable_tries: 200
+  retryable_sleep: 8
+  block_device_mappings:
+      - device_name: /dev/sda1
+        ebs:
+          volume_type: gp2
+          volume_size: 50
+          delete_on_termination: true
+      - device_name: xvdb
+        ebs:
+          volume_type: gp2
+          volume_size: 50
+          delete_on_termination: true
+      - device_name: xvdc
+        ebs:
+          volume_type: gp2
+          volume_size: 10
+          delete_on_termination: true
+  tags: 
+    Created_by: "test-kitchen"
+    Application: "Systems MongoDB Testing"
+    Owner: "<%= ENV['user'] %>@frontlineed.com"
+    Cookbook: <%= Dir.pwd.scan( /\/[a-zA-Z\-\_]+/).last.reverse.chop.reverse %>
+    Name: "Chef-Test-Kitchen"
 
-verifier:
-  name: inspec
+transport:
+  ssh_key: '../../.chef/Integrations.pem'
 
-client_rb:
-  treat_deprecation_warnings_as_errors: true
-  resource_cloning: false
+provisioner:
+  name: chef_zero
+  require_chef_omnibus: 12.21.4
+  retry_on_exit_code:
+    - 213
+  max_retries: 1
+  wait_for_retry: 1
+  client_rb:
+    exit_status: :enabled
+    client_fork: false
+    environments_path: '/test/integration/environments' 
+    environment: testing
 
 platforms:
-- name: centos-6.8
+#- name: centos-6.8
 - name: centos-7.3
-- name: debian-8.6
-- name: debian-9.5
-- name: fedora-25
-- name: ubuntu-14.04
-- name: ubuntu-16.04
+  driver: 
+    image_id: ami-9887c6e7
+  
+#- name: debian-8.6
+#- name: debian-9.5
+#- name: fedora-25
+#- name: ubuntu-14.04
+#- name: ubuntu-16.04
 
 suites:
-- name: default
-  run_list:
-  - "recipe[sc-mongodb]"
+  - name: default
+    run_list:
+    - "recipe[sc-mongodb]"
 
-- name: replicaset
-  run_list:
-  - "recipe[sc-mongodb::replicaset]"
-  attributes:
-    mongodb:
-      cluster_name: kitchen
-      config:
-        mongod:
-          replication:
-            replSetName: kitchen
-
-- name: configserver
-  run_list:
-  - "recipe[sc-mongodb::configserver]"
-
-- name: mongos
-  run_list:
-  - "recipe[sc-mongodb::configserver]"
-  - "recipe[sc-mongodb::mongos]"
-  attributes:
-    mongodb:
-      cluster_name: default
-      config:
-        mongod:
-          net:
-            # use this port since mongos will use 27017 instead
-            port: 27019
-        mongos:
-          sharding:
-            configDB: 127.0.0.1:27019
-
-- name: mms_agent
-  run_list:
-  - recipe[sc-mongodb::mms_automation_agent]
-  - recipe[sc-mongodb::mms_backup_agent]
-  - recipe[sc-mongodb::mms_monitoring_agent]
-  attributes:
-    mongodb:
-      mms_agent:
-        api_key: randomkey
-        backup:
-          config:
-            mmsGroupId: randomgroup
-        automation:
-          config:
-            mmsGroupId: randomgroup
-        monitoring:
-          config:
-            mmsGroupId: randomgroup
-  excludes:
-    - debian-7.11
-    - debian-8.6
-
-- name: user_management
-  run_list:
-  - "recipe[sc-mongodb::default]"
-  - "recipe[sc-mongodb::user_management]"
-  attributes:
-    mongodb:
-      config:
-        auth: true
-      users:
-        - username: kitchen
-          password: blah123
-          roles:
-            - read
-          database: admin
-  includes:
+  - name: replicaset
+    driver:
+      availability_zone: c
+      subnet_id: subnet-e33dadde
+    run_list:
+     # - recipe[mongodb_spec::set_hostname]
+      - recipe[sc-mongodb::replicaset]
+    attributes:
+      mongodb:
+        auto_configure:
+          replicaset: false
+        cluster_name: kitchen
+        config:
+          mongod:
+            replication:
+              replSetName: kitchen
+    includes:
     # Only need to test this on one OS since this is
     # purely to test mongo ruby driver code
     - centos-7.3
 
-- name: user_management_v2
-  run_list:
-  - recipe[sc-mongodb::default]
-  - recipe[sc-mongodb::user_management]
-  attributes:
-    mongodb:
-      config:
-        auth: true
-      ruby_gems:
-        mongo: ~> 2.0
-      users:
-        - username: kitchen
-          password: blah123
-          roles:
-            - read
-          database: admin
-  includes:
+  - name: configserver
+    driver:
+      availability_zone: c
+      subnet_id: subnet-e33dadde
+    run_list:
+      - "recipe[sc-mongodb::configserver]"
+    attributes:
+      mongodb:
+        auto_configure:
+          replicaset: false
+        cluster_name: kitchen
+        config:
+          mongod:
+            replication:
+              replSetName: kitchen
+    includes:
     # Only need to test this on one OS since this is
     # purely to test mongo ruby driver code
     - centos-7.3
 
-- name: user_management_v2_delete
-  run_list:
-  - recipe[sc-mongodb::default]
-  - recipe[sc-mongodb::user_management]
-  - recipe[mongodb_spec::user_delete]
-  attributes:
-    mongodb:
-      config:
-        auth: true
-      ruby_gems:
-        mongo: ~> 2.0
-      users:
-        - username: kitchen
-          password: blah123
-          roles:
-            - read
-          database: admin
-  includes:
+  - name: mongos
+    driver:
+      availability_zone: c
+      subnet_id: subnet-e33dadde
+    run_list:
+      - "recipe[sc-mongodb::configserver]"
+      - "recipe[sc-mongodb::mongos]"
+    attributes:
+      mongodb:
+        auto_configure:
+          replicaset: false
+        cluster_name: kitchen
+        config:
+          mongod:
+            replication:
+              replSetName: kitchen
+    includes:
     # Only need to test this on one OS since this is
     # purely to test mongo ruby driver code
     - centos-7.3
 
-- name: replicaset1
-  driver:
-    network:
-      private_network:
-        ip: 192.168.10.10
-  run_list:
-  - recipe[mongodb_spec::set_hostname]
-  - recipe[sc-mongodb::replicaset]
-  attributes:
-    mongodb:
-      auto_configure:
-        replicaset: false
-      cluster_name: kitchen
-      config:
-        mongod:
-          replication:
-            replSetName: kitchen
-  includes:
+  - name: mms_agent
+    driver:
+      availability_zone: c
+      subnet_id: subnet-e33dadde
+    run_list:
+    - recipe[sc-mongodb::mms_automation_agent]
+    - recipe[sc-mongodb::mms_backup_agent]
+    - recipe[sc-mongodb::mms_monitoring_agent]
+    attributes:
+      mongodb:
+        mms_agent:
+          api_key: randomkey
+          backup:
+            config:
+              mmsGroupId: randomgroup
+          automation:
+            config:
+              mmsGroupId: randomgroup
+          monitoring:
+            config:
+              mmsGroupId: randomgroup
+    excludes:
+      - debian-7.11
+      - debian-8.6
+
+  - name: user_management
+    driver:
+      availability_zone: c
+      subnet_id: subnet-e33dadde
+    run_list:
+    - "recipe[sc-mongodb::default]"
+    - "recipe[sc-mongodb::user_management]"
+    attributes:
+      mongodb:
+        config:
+          auth: true
+        users:
+          - username: kitchen
+            password: blah123
+            roles:
+              - read
+            database: admin
+    includes:
+      # Only need to test this on one OS since this is
+      # purely to test mongo ruby driver code
+      - centos-7.3
+
+  - name: user_management_v2
+    driver:
+      availability_zone: c
+      subnet_id: subnet-e33dadde
+    run_list:
+    - recipe[sc-mongodb::default]
+    - recipe[sc-mongodb::user_management]
+    attributes:
+      mongodb:
+        config:
+          auth: true
+        ruby_gems:
+          mongo: ~> 2.0
+        users:
+          - username: kitchen
+            password: blah123
+            roles:
+              - read
+            database: admin
+    includes:
+      # Only need to test this on one OS since this is
+      # purely to test mongo ruby driver code
+      - centos-7.3
+
+  - name: user_management_v2_delete
+    driver:
+      availability_zone: c
+      subnet_id: subnet-e33dadde
+    run_list:
+    - recipe[sc-mongodb::default]
+    - recipe[sc-mongodb::user_management]
+    - recipe[mongodb_spec::user_delete]
+    attributes:
+      mongodb:
+        config:
+          auth: true
+        ruby_gems:
+          mongo: ~> 2.0
+        users:
+          - username: kitchen
+            password: blah123
+            roles:
+              - read
+            database: admin
+    includes:
+      # Only need to test this on one OS since this is
+      # purely to test mongo ruby driver code
+      - centos-7.3
+
+  - name: replicaset1
+    driver:
+      availability_zone: c
+      subnet_id: subnet-fa824a8c 
+    run_list:
+     # - recipe[mongodb_spec::set_hostname]
+      - recipe[sc-mongodb::replicaset]
+    attributes:
+      mongodb:
+        auto_configure:
+          replicaset: false
+        cluster_name: kitchen
+        config:
+          mongod:
+            replication:
+              replSetName: kitchen
+    includes:
     # Only need to test this on one OS since this is
     # purely to test mongo ruby driver code
     - centos-7.3
 
-- name: replicaset2
-  driver:
-    network:
-      private_network:
-        ip: 192.168.10.20
-  run_list:
-  - recipe[mongodb_spec::set_hostname]
-  - recipe[sc-mongodb::replicaset]
-  attributes:
-    mongodb:
-      auto_configure:
-        replicaset: false
-      cluster_name: kitchen
-      config:
-        mongod:
-          replication:
-            replSetName: kitchen
-  includes:
+  - name: replicaset2
+    driver:
+      availability_zone: d
+      subnet_id: subnet-3226c86a
+    run_list:
+   #   - recipe[mongodb_spec::set_hostname]
+      - recipe[sc-mongodb::replicaset]
+    attributes:
+      mongodb:
+        auto_configure:
+          replicaset: false
+        cluster_name: kitchen
+        config:
+          mongod:
+            replication:
+              replSetName: kitchen
+    includes:
     # Only need to test this on one OS since this is
     # purely to test mongo ruby driver code
     - centos-7.3
 
-- name: replicaset3
-  driver:
-    network:
-      private_network:
-        ip: 192.168.10.30
-  run_list:
-  - recipe[mongodb_spec::set_hostname]
-  - recipe[sc-mongodb::replicaset]
-  attributes:
-    mongodb:
-      auto_configure:
-        replicaset: true
-      cluster_name: kitchen
-      config:
-        mongod:
-          replication:
-            replSetName: kitchen
-  includes:
+  - name: replicaset3
+    driver:
+      availability_zone: e
+      subnet_id: subnet-e33dadde
+    run_list:
+    #  - recipe[mongodb_spec::set_hostname]
+      - recipe[sc-mongodb::replicaset]
+    attributes:
+      mongodb:
+        auto_configure:
+          replicaset: false
+        cluster_name: kitchen
+        config:
+          mongod:
+            replication:
+              replSetName: kitchen
+    includes:
     # Only need to test this on one OS since this is
     # purely to test mongo ruby driver code
     - centos-7.3
 
-- name: shard1-n1
-  driver:
-    network:
-      private_network:
-        ip: 192.168.10.10
-  run_list:
-  - recipe[mongodb_spec::set_hostname]
-  - recipe[sc-mongodb::shard]
-  attributes:
-    mongodb:
-      auto_configure:
-        replicaset: false
-      cluster_name: kitchen1
-      config:
-        mongod:
-          replication:
-            replSetName: kitchen1
-      is_replicaset: true
-  includes:
-    # Only need to test this on one OS since this is
-    # purely to test mongo ruby driver code
-    - centos-7.3
-
-- name: shard1-n2
-  driver:
-    network:
-      private_network:
-        ip: 192.168.10.20
-  run_list:
-  - recipe[mongodb_spec::set_hostname]
-  - recipe[sc-mongodb::shard]
-  attributes:
-    mongodb:
-      auto_configure:
-        replicaset: false
-      cluster_name: kitchen1
-      config:
-        mongod:
-          replication:
-            replSetName: kitchen1
-      is_replicaset: true
-  includes:
-    # Only need to test this on one OS since this is
-    # purely to test mongo ruby driver code
-    - centos-7.3
-
-- name: shard1-n3
-  driver:
-    network:
-      private_network:
-        ip: 192.168.10.30
-  run_list:
-  - recipe[mongodb_spec::set_hostname]
-  - recipe[sc-mongodb::shard]
-  attributes:
-    mongodb:
-      auto_configure:
-        replicaset: true
-      cluster_name: kitchen1
-      config:
-        mongod:
-          replication:
-            replSetName: kitchen1
-      is_replicaset: true
-  includes:
-    # Only need to test this on one OS since this is
-    # purely to test mongo ruby driver code
-    - centos-7.3
-
-- name: shard-mongos
-  driver:
-    network:
-      private_network:
-        ip: 192.168.10.99
-  run_list:
-  - recipe[mongodb_spec::set_hostname]
-  - recipe[sc-mongodb::configserver]
-  - recipe[sc-mongodb::mongos]
-  attributes:
-    mongodb:
-      cluster_name: kitchen1
-      config:
-        mongod:
-          net:
-            # use this port since mongos will use 27017 instead
-            port: 27019
-          sharding:
-            clusterRole: configsvr
-        mongos:
-          sharding:
-            configDB: mongos:27019
-      sharded_collections:
-        test.testing: _id
-  includes:
-    # Only need to test this on one OS since this is
-    # purely to test mongo ruby driver code
-    - centos-7.3
+  - name: backup
+    run_list:
+      - recipe[sc-mongodb::backup]

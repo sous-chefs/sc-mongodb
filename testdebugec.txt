@@ -1,0 +1,2447 @@
+-----> Starting Kitchen (v1.17.0)
+D      Berksfile found at /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile, loading Berkshelf
+D      Berkshelf 6.3.1 library loaded
+D      Berksfile found at /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile, loading Berkshelf
+D      Berkshelf 6.3.1 previously loaded
+D      Berksfile found at /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile, loading Berkshelf
+D      Berkshelf 6.3.1 previously loaded
+D      Berksfile found at /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile, loading Berkshelf
+D      Berkshelf 6.3.1 previously loaded
+D      Berksfile found at /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile, loading Berkshelf
+D      Berkshelf 6.3.1 previously loaded
+D      Berksfile found at /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile, loading Berkshelf
+D      Berkshelf 6.3.1 previously loaded
+D      Berksfile found at /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile, loading Berkshelf
+D      Berkshelf 6.3.1 previously loaded
+D      Berksfile found at /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile, loading Berkshelf
+D      Berkshelf 6.3.1 previously loaded
+D      Berksfile found at /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile, loading Berkshelf
+D      Berkshelf 6.3.1 previously loaded
+D      Berksfile found at /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile, loading Berkshelf
+D      Berkshelf 6.3.1 previously loaded
+D      Berksfile found at /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile, loading Berkshelf
+D      Berkshelf 6.3.1 previously loaded
+D      Berksfile found at /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile, loading Berkshelf
+D      Berkshelf 6.3.1 previously loaded
+-----> Creating <replicaset1-centos-73>...
+D      Image for replicaset1-centos-73: CentOS Linux 7 x86_64 HVM EBS ENA 1805_01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-77ec9308.4.  Architecture: x86_64, Virtualization: hvm, Storage: ebs gp2, Created: 2018-06-13T15:53:24.000Z
+       Detected platform: centos version 7 on x86_64. Instance Type: t2.large. Default username: centos (default).
+D      No SSH username specified: using default username centos  for image ami-9887c6e7, which we detected as centos 7 x86_64.
+       If you are not using an account that qualifies under the AWS
+free-tier, you may be charged to run these suites. The charge
+should be minimal, but neither Test Kitchen nor its maintainers
+are responsible for your incurred costs.
+
+D      Creating EC2 instance in region us-east-1 with properties:
+D      - instance_type = "t2.large"
+D      - ebs_optimized = false
+D      - image_id = "ami-9887c6e7"
+D      - key_name = "Integrations"
+D      - private_ip_address = nil
+D      - placement = {:availability_zone=>"us-east-1c", :tenancy=>"default"}
+D      - block_device_mappings = [{:device_name=>"/dev/sda1", :ebs=>{:volume_type=>"gp2", :volume_size=>50, :delete_on_termination=>true}}, {:device_name=>"xvdb", :ebs=>{:volume_type=>"gp2", :volume_size=>50, :delete_on_termination=>true}}, {:device_name=>"xvdc", :ebs=>{:volume_type=>"gp2", :volume_size=>10, :delete_on_termination=>true}}]
+D      - network_interfaces = [{:device_index=>0, :associate_public_ip_address=>false, :delete_on_termination=>true, :subnet_id=>"subnet-fa824a8c", :groups=>["sg-2717275f", "sg-29093951"]}]
+       Instance <i-0eaba1cec6378475f> requested.
+       Polling AWS for existence, attempt 0...
+       Attempting to tag the instance, 0 retries
+       EC2 instance <i-0eaba1cec6378475f> created.
+       Waited 0/1600s for instance <i-0eaba1cec6378475f> volumes to be ready.
+       Waited 0/1600s for instance <i-0eaba1cec6378475f> to become ready.
+       Waited 8/1600s for instance <i-0eaba1cec6378475f> to become ready.
+       Waited 16/1600s for instance <i-0eaba1cec6378475f> to become ready.
+       Waited 24/1600s for instance <i-0eaba1cec6378475f> to become ready.
+       EC2 instance <i-0eaba1cec6378475f> ready.
+D      [SSH] opening connection to centos@10.111.38.34<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"]}>
+D      [SSH] connection failed (#<Errno::ECONNREFUSED: Connection refused - connect(2) for 10.111.38.34:22>)
+       Waiting for SSH service on 10.111.38.34:22, retrying in 3 seconds
+D      [SSH] opening connection to centos@10.111.38.34<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a25123d40 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a25123cf0 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a25123ca0 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a25123c28>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+D      [SSH] centos@10.111.38.34<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a25123d40 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a25123cf0 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a25123ca0 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a25123c28>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (echo '[SSH] Established')
+       [SSH] Established
+D      Using sudo_command='sudo -E' for ohai hints
+D      [SSH] reusing existing connection centos@10.111.38.34<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a25123d40 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a25123cf0 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a25123ca0 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a25123c28>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+D      [SSH] centos@10.111.38.34<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a25123d40 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a25123cf0 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a25123ca0 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a25123c28>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (sudo -E mkdir -p /etc/chef/ohai/hints; sudo -E touch /etc/chef/ohai/hints/ec2.json)
+D      ec2:create '10.111.38.34'
+       Finished creating <replicaset1-centos-73> (0m42.06s).
+-----> Converging <replicaset1-centos-73>...
+       Preparing files for transfer
+D      Creating local sandbox in /var/folders/9n/78q28xzj6q3_c3k90hqlb58j6mx2w9/T/replicaset1-centos-73-sandbox-20181008-87875-1cht31g
+       Preparing dna.json
+D      Creating dna.json from {:mongodb=>{:auto_configure=>{:replicaset=>false}, :cluster_name=>"kitchen", :config=>{:mongod=>{:replication=>{:replSetName=>"kitchen"}}}}, :run_list=>["recipe[sc-mongodb::replicaset]"]}
+       Resolving cookbook dependencies with Berkshelf 6.3.1...
+D      Using Berksfile from /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile
+       Removing non-cookbook files before transfer
+       Preparing environments
+D      Using environments from /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/test/integration/environments
+       Preparing nodes
+D      Using nodes from /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/test/integration/nodes
+       Preparing validation.pem
+D      Using a dummy validation.pem
+       Preparing client.rb
+D      Creating client.rb from {:node_name=>"replicaset1-centos-73", :checksum_path=>"/tmp/kitchen/checksums", :file_cache_path=>"/tmp/kitchen/cache", :file_backup_path=>"/tmp/kitchen/backup", :cookbook_path=>["/tmp/kitchen/cookbooks", "/tmp/kitchen/site-cookbooks"], :data_bag_path=>"/tmp/kitchen/data_bags", :environment_path=>"/tmp/kitchen/environments", :node_path=>"/tmp/kitchen/nodes", :role_path=>"/tmp/kitchen/roles", :client_path=>"/tmp/kitchen/clients", :user_path=>"/tmp/kitchen/users", :validation_key=>"/tmp/kitchen/validation.pem", :client_key=>"/tmp/kitchen/client.pem", :chef_server_url=>"http://127.0.0.1:8889", :encrypted_data_bag_secret=>"/tmp/kitchen/encrypted_data_bag_secret", :treat_deprecation_warnings_as_errors=>false, :exit_status=>":enabled", :client_fork=>false, :environments_path=>"/test/integration/environments", :environment=>"testing", :named_run_list=>{}}
+D      [SSH] reusing existing connection centos@10.111.38.34<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a25123d40 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a25123cf0 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a25123ca0 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a25123c28>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+D      [SSH] centos@10.111.38.34<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a25123d40 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a25123cf0 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a25123ca0 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a25123c28>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (sudo -E sh -c '
+
+chef_omnibus_root="/opt/chef"
+chef_omnibus_url="https://omnitruck.chef.io/install.sh"
+install_flags="-v 12.21.4"
+pretty_version="12.21.4"
+sudo_sh="sudo -E sh"
+version="12.21.4"
+
+tmp_stderr="/tmp/stderr";
+
+# capture_tmp_stderr SOURCE
+capture_tmp_stderr() {
+  # spool up $tmp_stderr from all the commands we called
+  if test -f "$tmp_stderr"; then
+    output="`cat $tmp_stderr`";
+    stderr_results="${stderr_results}\nSTDERR from $1:\n\n${output}\n";
+    rm $tmp_stderr;
+  fi
+}
+
+# do_curl URL FILENAME
+do_curl() {
+  echo "Trying curl...";
+  curl -sL -D "$tmp_stderr" "$1" > "$2";
+  ec=$?;
+  # check for 404
+  grep "404 Not Found" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "curl";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# do_download URL FILENAME
+do_download() {
+  echo "Downloading ${1} to file ${2}";
+
+  exists wget;
+  if test $? -eq 0; then
+    do_wget "$1" "$2" && return 0;
+  fi
+
+  exists curl;
+  if test $? -eq 0; then
+    do_curl "$1" "$2" && return 0;
+  fi
+
+  exists fetch;
+  if test $? -eq 0; then
+    do_fetch "$1" "$2" && return 0;
+  fi
+
+  exists python;
+  if test $? -eq 0; then
+    do_python "$1" "$2" && return 0;
+  fi
+
+  exists perl;
+  if test $? -eq 0; then
+    do_perl "$1" "$2" && return 0;
+  fi
+
+  unable_to_download "$1" "$2";
+}
+
+# do_fetch URL FILENAME
+do_fetch() {
+  echo "Trying fetch...";
+  fetch -o "$2" "$1" 2>"$tmp_stderr";
+  ec=$?;
+  # check for 404
+  grep "Not Found" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "fetch";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# do_perl URL FILENAME
+do_perl() {
+  echo "Trying perl...";
+  perl -e "use LWP::Simple; getprint(\$ARGV[0]);" "$1" > "$2" 2>"$tmp_stderr";
+  ec=$?;
+  # check for 404
+  grep "404 Not Found" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "perl";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# do_python URL FILENAME
+do_python() {
+  echo "Trying python...";
+  python -c "import sys,urllib2 ; sys.stdout.write(urllib2.urlopen(sys.argv[1]).read())" "$1" > "$2" 2>"$tmp_stderr";
+  ec=$?;
+  # check for 404
+  grep "HTTP Error 404" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "python";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# do_wget URL FILENAME
+do_wget() {
+  echo "Trying wget...";
+  wget -O "$2" "$1" 2>"$tmp_stderr";
+  ec=$?;
+  # check for 404
+  grep "ERROR 404" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "wget";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# exists COMMAND
+exists() {
+  if command -v "$1" >/dev/null 2>&1; then
+    return 0;
+  else
+    return 1;
+  fi
+}
+
+# http_404_error URL
+http_404_error() {
+  echo ">>>>>> Downloading ${1} resulted in an HTTP/404, aborting";
+  exit 40;
+}
+
+# should_update_chef ROOT VERSION
+should_update_chef() {
+  if test ! -d "$1"; then
+    return 0;
+  elif test "$2" = "true"; then
+    return 1;
+  elif test "$2" = "latest"; then
+    return 0;
+  fi
+
+  if test -f "${1}/version-manifest.txt"; then
+    chef_version="`head -n 1 ${1}/version-manifest.txt | cut -d \" \" -f 2`";
+  else
+    chef_version="`${1}/bin/chef-solo -v | cut -d \" \" -f 2`";
+  fi
+
+  echo "$chef_version" | grep "^${2}" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    return 1;
+  else
+    echo "${2}" | grep "^$chef_version" 2>&1 >/dev/null;
+    if test $? -eq 0; then
+      return 1;
+    else
+      return 0;
+    fi
+  fi
+}
+
+# unable_to_download URL FILE
+unable_to_download() {
+  echo "Unable to download $1 to $2, aborting";
+
+  if test "x${stderr_results}" != "x"; then
+    echo "\nDEBUG OUTPUT FOLLOWS:\n${stderr_results}";
+  fi
+
+  exit 10;
+}
+
+# main
+main() {
+  should_update_chef "$chef_omnibus_root" "$version"
+  if test $? -eq 0; then
+    echo "-----> Installing Chef Omnibus (${pretty_version})";
+
+    # solaris 10 lacks recent enough credentials, so http url is used
+    platform="`/usr/bin/uname -s 2>/dev/null`";
+    platform_version="`/usr/bin/uname -r 2>/dev/null`";
+    if test "x${platform}" = "xSunOS" && test "x${platform_version}" = "x5.10"; then
+      chef_omnibus_url=`echo "$chef_omnibus_url" | sed -e "s/https/http/"`;
+    fi
+
+    do_download "$chef_omnibus_url" /tmp/install.sh;
+    $sudo_sh /tmp/install.sh $install_flags;
+  else
+    echo "-----> Chef Omnibus installation detected (${pretty_version})";
+  fi
+}
+
+# augment path in an attempt to find a download program
+PATH="${PATH}:/opt/local/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/sfw/bin";
+export PATH;
+
+main
+')
+-----> Installing Chef Omnibus (12.21.4)
+       Downloading https://omnitruck.chef.io/install.sh to file /tmp/install.sh
+       Trying curl...
+       Download complete.
+       el 7 x86_64
+       Getting information for chef stable 12.21.4 for el...
+       downloading https://omnitruck.chef.io/stable/chef/metadata?v=12.21.4&p=el&pv=7&m=x86_64
+         to file /tmp/install.sh.5158/metadata.txt
+       trying curl...
+       sha1	d58dc9b6b459bf43b5dfd842b436534f16dd0576
+       sha256	e368c75155b76d30976657e8794f13d932725eae798214b9a0e02bf4773fd1ea
+       url	https://packages.chef.io/files/stable/chef/12.21.4/el/7/chef-12.21.4-1.el7.x86_64.rpm
+       version	12.21.4
+       downloaded metadata file looks valid...
+       downloading https://packages.chef.io/files/stable/chef/12.21.4/el/7/chef-12.21.4-1.el7.x86_64.rpm
+         to file /tmp/install.sh.5158/chef-12.21.4-1.el7.x86_64.rpm
+       trying curl...
+       Comparing checksum with sha256sum...
+       Installing chef 12.21.4
+       installing with rpm...
+       warning: /tmp/install.sh.5158/chef-12.21.4-1.el7.x86_64.rpm: Header V4 DSA/SHA1 Signature, key ID 83ef826a: NOKEY
+       Preparing...                                                            (100%)#                                 (100%)##                                (100%)###                               (100%)####                              (100%)#####                             (100%)######                            (100%)#######                           (100%)########                          (100%)#########                         (100%)##########                        (100%)###########                       (100%)############                      (100%)#############                     (100%)##############                    (100%)###############                   (100%)################                  (100%)#################                 (100%)##################                (100%)###################               (100%)####################              (100%)#####################             (100%)######################            (100%)#######################           (100%)########################          (100%)#########################         (100%)##########################        (100%)###########################       (100%)############################      (100%)#############################     (100%)##############################    (100%)###############################   (100%)################################  (100%)################################# (100%)################################# [100%]
+       Updating / installing...
+          1:chef-12.21.4-1.el7                                                 (  1%)#                                 (  4%)##                                (  7%)###                               ( 10%)####                              ( 13%)#####                             ( 16%)######                            ( 19%)#######                           ( 22%)########                          ( 25%)#########                         ( 28%)##########                        ( 31%)###########                       ( 34%)############                      ( 37%)#############                     ( 40%)##############                    ( 43%)###############                   ( 46%)################                  ( 49%)#################                 ( 51%)##################                ( 54%)###################               ( 57%)####################              ( 60%)#####################             ( 63%)######################            ( 66%)#######################           ( 69%)########################          ( 72%)#########################         ( 75%)##########################        ( 78%)###########################       ( 81%)############################      ( 84%)#############################     ( 87%)##############################    ( 90%)###############################   ( 93%)################################  ( 96%)################################# ( 99%)################################# [100%]
+       Thank you for installing Chef!
+D      [SSH] centos@10.111.38.34<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a25123d40 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a25123cf0 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a25123ca0 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a25123c28>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (sh -c '
+TEST_KITCHEN="1"; export TEST_KITCHEN
+sudo_rm="sudo -E rm"
+dirs="/tmp/kitchen/clients /tmp/kitchen/cookbooks /tmp/kitchen/data /tmp/kitchen/data_bags /tmp/kitchen/encrypted_data_bag_secret /tmp/kitchen/environments /tmp/kitchen/roles"
+root_path="/tmp/kitchen"
+
+$sudo_rm -rf $dirs
+mkdir -p $root_path
+')
+       Transferring files to <replicaset1-centos-73>
+D      TIMING: scp async upload (Kitchen::Transport::Ssh)
+D      TIMING: scp async upload (Kitchen::Transport::Ssh) took (0m46.49s)
+D      Transfer complete
+D      Attempting to execute command - try 1 of 1.
+D      [SSH] centos@10.111.38.34<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a25123d40 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a25123cf0 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a25123ca0 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a25123c28>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (sh -c '
+TEST_KITCHEN="1"; export TEST_KITCHEN
+sudo -E /opt/chef/bin/chef-client --local-mode --config /tmp/kitchen/client.rb --log_level auto --force-formatter --no-color --json-attributes /tmp/kitchen/dna.json --chef-zero-port 8889 
+')
+       Starting Chef Client, version 12.21.4
+       [2018-10-08T21:10:50+00:00] INFO: *** Chef 12.21.4 ***
+       [2018-10-08T21:10:50+00:00] INFO: Platform: x86_64-linux
+       [2018-10-08T21:10:50+00:00] INFO: Chef-client pid: 9618
+       [2018-10-08T21:10:50+00:00] INFO: The plugin path /etc/chef/ohai/plugins does not exist. Skipping...
+       Creating a new client identity for replicaset1-centos-73 using the validator key.
+       [2018-10-08T21:10:51+00:00] INFO: Client key /tmp/kitchen/client.pem is not present - registering
+       [2018-10-08T21:10:51+00:00] INFO: HTTP Request Returned 404 Not Found: Object not found: chefzero://localhost:8889/nodes/replicaset1-centos-73
+       [2018-10-08T21:10:51+00:00] INFO: Setting the run_list to ["recipe[sc-mongodb::replicaset]"] from CLI options
+       [2018-10-08T21:10:51+00:00] INFO: Run List is [recipe[sc-mongodb::replicaset]]
+       [2018-10-08T21:10:51+00:00] INFO: Run List expands to [sc-mongodb::replicaset]
+       [2018-10-08T21:10:51+00:00] INFO: Starting Chef Run for replicaset1-centos-73
+       [2018-10-08T21:10:51+00:00] INFO: Running start handlers
+       [2018-10-08T21:10:51+00:00] INFO: Start handlers complete.
+       [2018-10-08T21:10:51+00:00] INFO: HTTP Request Returned 404 Not Found: Object not found: 
+       resolving cookbooks for run list: ["sc-mongodb::replicaset"]
+       [2018-10-08T21:10:51+00:00] INFO: Loading cookbooks [sc-mongodb@1.2.0, apt@7.1.0, yum@5.1.0, build-essential@8.2.1, seven_zip@3.0.0, mingw@2.1.0, windows@5.1.1]
+       Synchronizing Cookbooks:
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/resources/agent.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mms_backup_agent.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mms_automation_agent.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mongo_gem.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/default.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mongodb_org_repo.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/providers/user.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/configserver.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mongos.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/shard.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/user_management.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/install.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/resources/user.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/default.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/libraries/mongodb_config_helpers.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mms_monitoring_agent.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/mms_agent.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/debian-mongodb.upstart.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/dbconfig.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/libraries/mongodb.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/users.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/replicaset.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/debian-mongodb.init.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/mms_agent_config.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/sv-mms-agent-run.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/mongodb.conf.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/definitions/mongodb.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/redhat-mongodb.init.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/recipes/cacher-client.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/recipes/cacher-ng.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/README.md in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/recipes/unattended-upgrades.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/sv-mms-agent-log-run.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/ulimit.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/sysconfig.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/mongodb.sysconfig.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/recipes/default.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/sc-mongodb/metadata.json in the cache.
+         - sc-mongodb (1.2.0)
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/files/apt-proxy-v2.conf in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/files/15update-stamp in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/templates/01proxy.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/libraries/helpers.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/templates/10recommends.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/templates/20auto-upgrades.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/templates/10dpkg-options.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/yum/resources/globalconfig.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/metadata.json in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/templates/unattended-upgrades.seed.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/yum/recipes/dnf_yum_compat.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/attributes/default.rb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/yum/templates/main.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/yum/metadata.json in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/templates/acng.conf.erb in the cache.
+       [2018-10-08T21:10:51+00:00] INFO: Storing updated cookbooks/apt/README.md in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/yum/recipes/default.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/yum/attributes/main.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/apt/templates/50unattended-upgrades.erb in the cache.
+         - apt (7.1.0)
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/build-essential/attributes/default.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/build-essential/recipes/_windows.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/yum/libraries/matchers.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/build-essential/recipes/default.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/build-essential/resources/xcode_command_line_tools.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/build-essential/resources/build_essential.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/build-essential/README.md in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/build-essential/metadata.json in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/seven_zip/metadata.json in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/seven_zip/libraries/matchers.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/seven_zip/attributes/default.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/yum/README.md in the cache.
+         - yum (5.1.0)
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/seven_zip/providers/archive.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/seven_zip/README.md in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/seven_zip/resources/archive.rb in the cache.
+         - build-essential (8.2.1)[2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/seven_zip/recipes/default.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/mingw/resources/msys2_package.rb in the cache.
+       
+         - seven_zip (3.0.0)[2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/mingw/attributes/default.rb in the cache.
+       
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/mingw/files/default/custom_prefix.sh in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/mingw/files/default/custom-upgrade.sh in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/mingw/libraries/_helper.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/mingw/resources/tdm_gcc.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/mingw/files/default/bash.bat in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/mingw/recipes/default.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/mingw/resources/get.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/mingw/files/default/time.h in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/mingw/files/default/pthread.h in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/mingw/README.md in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/auto_run.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/dns.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/feature.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/mingw/metadata.json in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/certificate_binding.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/feature_dism.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/certificate.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/http_acl.rb in the cache.
+         - mingw (2.1.0)
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/pagefile.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/printer_port.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/font.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/feature_powershell.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/share.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/printer.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/user_privilege.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/zipfile.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/resources/shortcut.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/providers/dns.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/recipes/default.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/libraries/registry_helper.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/libraries/windows_helper.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/libraries/powershell_helper.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/libraries/version.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/libraries/version_helper.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/libraries/wmi_helper.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/libraries/windows_privileged.rb in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/README.md in the cache.
+       [2018-10-08T21:10:52+00:00] INFO: Storing updated cookbooks/windows/metadata.json in the cache.
+         - windows (5.1.1)
+       Installing Cookbook Gems:
+       Compiling Cookbooks...
+       [2018-10-08T21:10:52+00:00] INFO: HTTP Request Returned 404 Not Found: Object not found: 
+       Converging 17 resources
+       Recipe: sc-mongodb::mongodb_org_repo
+         * yum_repository[mongodb] action create[2018-10-08T21:10:52+00:00] INFO: Processing yum_repository[mongodb] action create (sc-mongodb::mongodb_org_repo line 52)
+       
+           * template[/etc/yum.repos.d/mongodb.repo] action create[2018-10-08T21:10:52+00:00] INFO: Processing template[/etc/yum.repos.d/mongodb.repo] action create (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 42)
+       [2018-10-08T21:10:52+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] created file /etc/yum.repos.d/mongodb.repo
+       
+             - create new file /etc/yum.repos.d/mongodb.repo[2018-10-08T21:10:52+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] updated file contents /etc/yum.repos.d/mongodb.repo
+       
+             - update content in file /etc/yum.repos.d/mongodb.repo from none to 4294ab
+             --- /etc/yum.repos.d/mongodb.repo	2018-10-08 21:10:52.227130651 +0000
+             +++ /etc/yum.repos.d/.chef-mongodb20181008-9618-6ydh1q.repo	2018-10-08 21:10:52.227130651 +0000
+             @@ -1 +1,12 @@
+             +# This file was generated by Chef
+             +# Do NOT modify this file by hand.
+             +
+             +[mongodb]
+             +name=mongodb RPM Repository
+             +baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.6/x86_64
+             +enabled=1
+             +fastestmirror_enabled=0
+             +gpgcheck=1
+             +gpgkey=https://www.mongodb.org/static/pgp/server-3.6.asc
+             +sslverify=true[2018-10-08T21:10:52+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] mode changed to 644
+       
+             - change mode from '' to '0644'
+             - restore selinux security context
+       [2018-10-08T21:10:52+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] sending run action to execute[yum clean metadata mongodb] (immediate)
+           * execute[yum clean metadata mongodb] action run[2018-10-08T21:10:52+00:00] INFO: Processing execute[yum clean metadata mongodb] action run (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 59)
+       
+             [execute] Loaded plugins: fastestmirror
+                Cleaning repos: mongodb
+                0 metadata files removed
+                0 sqlite files removed
+                0 metadata files removed
+       [2018-10-08T21:10:52+00:00] INFO: execute[yum clean metadata mongodb] ran successfully
+             - execute yum clean metadata --disablerepo=* --enablerepo=mongodb
+       [2018-10-08T21:10:52+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] sending run action to execute[yum-makecache-mongodb] (immediate)
+           * execute[yum-makecache-mongodb] action run[2018-10-08T21:10:52+00:00] INFO: Processing execute[yum-makecache-mongodb] action run (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 65)
+       [2018-10-08T21:10:53+00:00] INFO: execute[yum-makecache-mongodb] ran successfully
+       
+             - execute yum -q -y makecache --disablerepo=* --enablerepo=mongodb
+       [2018-10-08T21:10:53+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] sending create action to ruby_block[yum-cache-reload-mongodb] (immediate)
+           * ruby_block[yum-cache-reload-mongodb] action create[2018-10-08T21:10:53+00:00] INFO: Processing ruby_block[yum-cache-reload-mongodb] action create (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 72)
+       [2018-10-08T21:10:53+00:00] INFO: ruby_block[yum-cache-reload-mongodb] called
+       
+             - execute the ruby block yum-cache-reload-mongodb
+           * execute[yum clean metadata mongodb] action nothing[2018-10-08T21:10:53+00:00] INFO: Processing execute[yum clean metadata mongodb] action nothing (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 59)
+        (skipped due to action :nothing)
+           * execute[yum-makecache-mongodb] action nothing[2018-10-08T21:10:53+00:00] INFO: Processing execute[yum-makecache-mongodb] action nothing (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 65)
+        (skipped due to action :nothing)
+           * ruby_block[yum-cache-reload-mongodb] action nothing[2018-10-08T21:10:53+00:00] INFO: Processing ruby_block[yum-cache-reload-mongodb] action nothing (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 72)
+        (skipped due to action :nothing)
+         
+       Recipe: sc-mongodb::install
+         * build_essential[build-tools] action install[2018-10-08T21:10:53+00:00] INFO: Processing build_essential[build-tools] action install (sc-mongodb::install line 29)
+       
+           * yum_package[autoconf, bison, flex, gcc, gcc-c++, gettext, kernel-devel, make, m4, ncurses-devel, patch] action install[2018-10-08T21:10:53+00:00] INFO: Processing yum_package[autoconf, bison, flex, gcc, gcc-c++, gettext, kernel-devel, make, m4, ncurses-devel, patch] action install (/tmp/kitchen/cache/cookbooks/build-essential/resources/build_essential.rb line 31)
+       [2018-10-08T21:10:57+00:00] INFO: yum_package[autoconf, bison, flex, gcc, gcc-c++, gettext, kernel-devel, make, m4, ncurses-devel, patch] installing autoconf-2.69-11.el7 from base repository bison-3.0.4-1.el7 from base repository flex-2.5.37-3.el7 from base repository gcc-4.8.5-28.el7_5.1 from updates repository gcc-c++-4.8.5-28.el7_5.1 from updates repository kernel-devel-3.10.0-862.14.4.el7 from updates repository m4-1.4.16-10.el7 from base repository ncurses-devel-5.9-14.20130511.el7_4 from base repository patch-2.7.1-10.el7_5 from updates repository
+       [2018-10-08T21:11:26+00:00] INFO: yum_package[autoconf, bison, flex, gcc, gcc-c++, gettext, kernel-devel, make, m4, ncurses-devel, patch] installed ["autoconf", "bison", "flex", "gcc", "gcc-c++", nil, "kernel-devel", nil, "m4", "ncurses-devel", "patch"] at ["2.69-11.el7", "3.0.4-1.el7", "2.5.37-3.el7", "4.8.5-28.el7_5.1", "4.8.5-28.el7_5.1", nil, "3.10.0-862.14.4.el7", nil, "1.4.16-10.el7", "5.9-14.20130511.el7_4", "2.7.1-10.el7_5"]
+       
+             - install version 2.69-11.el7 of package autoconf
+             - install version 3.0.4-1.el7 of package bison
+             - install version 2.5.37-3.el7 of package flex
+             - install version 4.8.5-28.el7_5.1 of package gcc
+             - install version 4.8.5-28.el7_5.1 of package gcc-c++
+             - install version 3.10.0-862.14.4.el7 of package kernel-devel
+             - install version 1.4.16-10.el7 of package m4
+             - install version 5.9-14.20130511.el7_4 of package ncurses-devel
+             - install version 2.7.1-10.el7_5 of package patch
+         
+         * file[/etc/sysconfig/mongodb install] action create_if_missing[2018-10-08T21:11:26+00:00] INFO: Processing file[/etc/sysconfig/mongodb install] action create_if_missing (sc-mongodb::install line 38)
+       [2018-10-08T21:11:26+00:00] INFO: file[/etc/sysconfig/mongodb install] created file /etc/sysconfig/mongodb
+       
+           - create new file /etc/sysconfig/mongodb[2018-10-08T21:11:26+00:00] INFO: file[/etc/sysconfig/mongodb install] updated file contents /etc/sysconfig/mongodb
+       
+           - update content in file /etc/sysconfig/mongodb from none to a35762
+           --- /etc/sysconfig/mongodb	2018-10-08 21:11:26.268357827 +0000
+           +++ /etc/sysconfig/.chef-mongodb20181008-9618-1slfma3	2018-10-08 21:11:26.268357827 +0000
+           @@ -1 +1,2 @@
+           +ENABLE_MONGODB=no[2018-10-08T21:11:26+00:00] INFO: file[/etc/sysconfig/mongodb install] owner changed to 0
+       [2018-10-08T21:11:26+00:00] INFO: file[/etc/sysconfig/mongodb install] group changed to 0
+       [2018-10-08T21:11:26+00:00] INFO: file[/etc/sysconfig/mongodb install] mode changed to 644
+       
+           - change mode from '' to '0644'
+           - change owner from '' to 'root'
+           - change group from '' to 'root'
+           - restore selinux security context
+         * template[/etc/mongod.conf install] action create_if_missing[2018-10-08T21:11:26+00:00] INFO: Processing template[/etc/mongod.conf install] action create_if_missing (sc-mongodb::install line 48)
+       [2018-10-08T21:11:26+00:00] INFO: template[/etc/mongod.conf install] created file /etc/mongod.conf
+       
+           - create new file /etc/mongod.conf[2018-10-08T21:11:26+00:00] INFO: template[/etc/mongod.conf install] updated file contents /etc/mongod.conf
+       
+           - update content in file /etc/mongod.conf from none to e0bbc2
+           --- /etc/mongod.conf	2018-10-08 21:11:26.297349502 +0000
+           +++ /etc/.chef-mongod20181008-9618-4t8681.conf	2018-10-08 21:11:26.296349789 +0000
+           @@ -1 +1,26 @@
+           +#
+           +# Automatically Generated by Chef, do not edit directly!
+           +#
+           +
+           +---
+           +net:
+           +  port: 27017
+           +  bindIp: 0.0.0.0
+           +systemLog:
+           +  destination: file
+           +  logAppend: true
+           +  path: "/var/log/mongodb/mongod.log"
+           +processManagement:
+           +  fork: true
+           +  pidFilePath: "/var/run/mongodb/mongod.pid"
+           +storage:
+           +  journal:
+           +    enabled: true
+           +  dbPath: "/var/lib/mongo"
+           +  engine: wiredTiger
+           +replication:
+           +  oplogSizeMB: 3000
+           +  replSetName: kitchen
+           +  enableMajorityReadConcern: true
+           +[2018-10-08T21:11:26+00:00] INFO: template[/etc/mongod.conf install] owner changed to 0
+       [2018-10-08T21:11:26+00:00] INFO: template[/etc/mongod.conf install] group changed to 0
+       [2018-10-08T21:11:26+00:00] INFO: template[/etc/mongod.conf install] mode changed to 644
+       
+           - change mode from '' to '0644'
+           - change owner from '' to 'root'
+           - change group from '' to 'root'
+           - restore selinux security context
+         * yum_package[netcat] action install[2018-10-08T21:11:26+00:00] INFO: Processing yum_package[netcat] action install (sc-mongodb::install line 63)
+        (skipped due to only_if)
+         * template[/etc/init.d/mongod install] action create_if_missing[2018-10-08T21:11:26+00:00] INFO: Processing template[/etc/init.d/mongod install] action create_if_missing (sc-mongodb::install line 76)
+       [2018-10-08T21:11:26+00:00] INFO: template[/etc/init.d/mongod install] created file /etc/init.d/mongod
+       
+           - create new file /etc/init.d/mongod[2018-10-08T21:11:26+00:00] INFO: template[/etc/init.d/mongod install] updated file contents /etc/init.d/mongod
+       
+           - update content in file /etc/init.d/mongod from none to 86fc31
+           --- /etc/init.d/mongod	2018-10-08 21:11:26.323342039 +0000
+           +++ /etc/init.d/.chef-mongod20181008-9618-1t80hai	2018-10-08 21:11:26.323342039 +0000
+           @@ -1 +1,107 @@
+           +#!/bin/bash
+           +
+           +# mongod - Startup script for mongod
+           +
+           +# chkconfig: 35 85 15
+           +# description: Mongo is a scalable, document-oriented database.
+           +# processname: mongod
+           +# config: /etc/mongod.conf
+           +
+           +. /etc/rc.d/init.d/functions
+           +
+           +NAME=mongod
+           +SYSCONFIG=/etc/sysconfig/mongodb
+           +DAEMON_USER=
+           +ENABLE_MONGODB=yes
+           +
+           +SUBSYS_LOCK_FILE=/var/lock/subsys/mongod
+           +
+           +if [ -f "$SYSCONFIG" ]; then
+           +    . "$SYSCONFIG"
+           +fi
+           +
+           +# FIXME: 1.9.x has a --shutdown flag that parses the config file and
+           +# shuts down the correct running pid, but that's unavailable in 1.8
+           +# for now.  This can go away when this script stops supporting 1.8.
+           +DBPATH=`awk -F= '/^dbpath[[:blank:]]*=[[:blank:]]*/{print $2}' "$CONFIGFILE"`
+           +PIDFILE=`awk -F= '/^pidfilepath[[:blank:]]*=[[:blank:]]*/{print $2}' "$CONFIGFILE"`
+           +
+           +# Handle NUMA access to CPUs (SERVER-3574)
+           +# This verifies the existence of numactl as well as testing that the command works
+           +NUMACTL_ARGS="--interleave=all"
+           +if which numactl >/dev/null 2>/dev/null && numactl $NUMACTL_ARGS ls / >/dev/null 2>/dev/null
+           +then
+           +    NUMACTL="numactl $NUMACTL_ARGS"
+           +else
+           +    NUMACTL=""
+           +fi
+           +
+           +start()
+           +{
+           +  ulimit -f unlimited
+           +  ulimit -t unlimited
+           +  ulimit -v unlimited
+           +  ulimit -n 64000
+           +  ulimit -m unlimited
+           +  ulimit -u 32000
+           +
+           +  echo -n $"Starting mongod: "
+           +  daemon --user "$DAEMON_USER" $NUMACTL $DAEMON $DAEMON_OPTS
+           +  RETVAL=$?
+           +  echo
+           +  [ $RETVAL -eq 0 ] && touch $SUBSYS_LOCK_FILE
+           +}
+           +
+           +stop()
+           +{
+           +  echo -n $"Stopping mongod: "
+           +  if test "x$PIDFILE" != "x"; then
+           +    killproc -p $PIDFILE -d 300 $DAEMON
+           +  else
+           +    killproc -d 300 $DAEMON
+           +  fi
+           +  RETVAL=$?
+           +  echo
+           +  [ $RETVAL -eq 0 ] && rm -f $SUBSYS_LOCK_FILE
+           +}
+           +
+           +restart () {
+           +  stop
+           +  start
+           +}
+           +
+           +RETVAL=0
+           +
+           +if test "x$ENABLE_MONGODB" != "xyes"; then
+           +    exit $RETVAL
+           +fi
+           +
+           +case "$1" in
+           +  start)
+           +    start
+           +    ;;
+           +  stop)
+           +    stop
+           +    ;;
+           +  restart|reload|force-reload)
+           +    restart
+           +    ;;
+           +  condrestart)
+           +    [ -f $SUBSYS_LOCK_FILE ] && restart || :
+           +    ;;
+           +  status)
+           +    if test "x$PIDFILE" != "x"; then
+           +      status -p $PIDFILE $DAEMON
+           +    else
+           +      status $DAEMON
+           +    fi
+           +    RETVAL=$?
+           +    ;;
+           +  *)
+           +    echo "Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
+           +    RETVAL=1
+           +esac
+           +
+           +exit $RETVAL
+           +[2018-10-08T21:11:26+00:00] INFO: template[/etc/init.d/mongod install] owner changed to 0
+       [2018-10-08T21:11:26+00:00] INFO: template[/etc/init.d/mongod install] group changed to 0
+       [2018-10-08T21:11:26+00:00] INFO: template[/etc/init.d/mongod install] mode changed to 755
+       
+           - change mode from '' to '0755'
+           - change owner from '' to 'root'
+           - change group from '' to 'root'
+           - restore selinux security context
+         * service[mongod] action enable[2018-10-08T21:11:26+00:00] INFO: Processing service[mongod] action enable (sc-mongodb::install line 94)
+       [2018-10-08T21:11:26+00:00] INFO: service[mongod] enabled
+       
+           - enable service service[mongod]
+         * yum_package[mongodb-org] action install[2018-10-08T21:11:26+00:00] INFO: Processing yum_package[mongodb-org] action install (sc-mongodb::install line 114)
+       [2018-10-08T21:11:26+00:00] INFO: yum_package[mongodb-org] installing mongodb-org-3.6.6-1.el7 from mongodb repository
+       [2018-10-08T21:11:32+00:00] INFO: yum_package[mongodb-org] installed mongodb-org at 3.6.6-1.el7
+       
+           - install version 3.6.6-1.el7 of package mongodb-org
+         * directory[/var/run/mongodb] action create[2018-10-08T21:11:32+00:00] INFO: Processing directory[/var/run/mongodb] action create (sc-mongodb::install line 154)
+        (up to date)
+       Recipe: sc-mongodb::replicaset
+         * ruby_block[chef_gem_at_converge_time] action run[2018-10-08T21:11:32+00:00] INFO: Processing ruby_block[chef_gem_at_converge_time] action run (sc-mongodb::replicaset line 27)
+       [2018-10-08T21:11:38+00:00] INFO: ruby_block[chef_gem_at_converge_time] called
+       
+           - execute the ruby block chef_gem_at_converge_time
+         * template[/etc/sysconfig/mongodb] action create[2018-10-08T21:11:38+00:00] INFO: Processing template[/etc/sysconfig/mongodb] action create (sc-mongodb::replicaset line 146)
+       [2018-10-08T21:11:38+00:00] INFO: template[/etc/sysconfig/mongodb] backed up to /tmp/kitchen/backup/etc/sysconfig/mongodb.chef-20181008211138.696814
+       [2018-10-08T21:11:38+00:00] INFO: template[/etc/sysconfig/mongodb] updated file contents /etc/sysconfig/mongodb
+       
+           - update content in file /etc/sysconfig/mongodb from a35762 to 803da0
+           --- /etc/sysconfig/mongodb	2018-10-08 21:11:26.268357827 +0000
+           +++ /etc/sysconfig/.chef-mongodb20181008-9618-xjuh4	2018-10-08 21:11:38.694789721 +0000
+           @@ -1,2 +1,10 @@
+           -ENABLE_MONGODB=no
+           +#
+           +# Automatically Generated by Chef, do not edit directly!
+           +#
+           +
+           +CONFIGFILE="/etc/mongod.conf"
+           +DAEMON="/usr/bin/$NAME"
+           +DAEMON_OPTS="--config /etc/mongod.conf"
+           +DAEMON_USER="mongod"
+           +ENABLE_MONGODB="yes"
+           - restore selinux security context
+         * template[/etc/mongod.conf] action create[2018-10-08T21:11:38+00:00] INFO: Processing template[/etc/mongod.conf] action create (sc-mongodb::replicaset line 159)
+        (up to date)
+         * directory[/var/log/mongodb] action create[2018-10-08T21:11:38+00:00] INFO: Processing directory[/var/log/mongodb] action create (sc-mongodb::replicaset line 173)
+        (up to date)
+         * directory[/var/lib/mongo] action create[2018-10-08T21:11:38+00:00] INFO: Processing directory[/var/lib/mongo] action create (sc-mongodb::replicaset line 184)
+        (up to date)
+         * execute[mongodb-systemctl-daemon-reload-mongod] action nothing[2018-10-08T21:11:38+00:00] INFO: Processing execute[mongodb-systemctl-daemon-reload-mongod] action nothing (sc-mongodb::replicaset line 194)
+        (skipped due to action :nothing)
+         * template[/etc/init.d/mongod] action create[2018-10-08T21:11:38+00:00] INFO: Processing template[/etc/init.d/mongod] action create (sc-mongodb::replicaset line 200)
+        (up to date)
+         * service[mongod] action enable[2018-10-08T21:11:38+00:00] INFO: Processing service[mongod] action enable (sc-mongodb::replicaset line 222)
+        (up to date)
+         * service[mongod] action start[2018-10-08T21:11:38+00:00] INFO: Processing service[mongod] action start (sc-mongodb::replicaset line 222)
+       [2018-10-08T21:11:39+00:00] INFO: service[mongod] started
+       
+           - start service service[mongod]
+       [2018-10-08T21:11:39+00:00] INFO: template[/etc/sysconfig/mongodb] sending restart action to service[mongod] (delayed)
+         * service[mongod] action restart[2018-10-08T21:11:39+00:00] INFO: Processing service[mongod] action restart (sc-mongodb::replicaset line 222)
+       [2018-10-08T21:11:41+00:00] INFO: service[mongod] restarted
+       
+           - restart service service[mongod]
+       [2018-10-08T21:11:41+00:00] INFO: Chef Run complete in 49.923577719 seconds
+       
+       Running handlers:
+       [2018-10-08T21:11:41+00:00] INFO: Running report handlers
+       Running handlers complete
+       [2018-10-08T21:11:41+00:00] INFO: Report handlers complete
+       
+       Deprecated features used!
+         Cloning resource attributes for service[mongod] from prior resource
+       Previous service[mongod]: /tmp/kitchen/cache/cookbooks/sc-mongodb/recipes/install.rb:94:in `from_file'
+       Current  service[mongod]: /tmp/kitchen/cache/cookbooks/sc-mongodb/definitions/mongodb.rb:222:in `block in from_file' at 1 location:
+           - /tmp/kitchen/cache/cookbooks/sc-mongodb/definitions/mongodb.rb:222:in `block in from_file'
+          See https://docs.chef.io/deprecations_resource_cloning.html for further details.
+       
+       Chef Client finished, 16/27 resources updated in 51 seconds
+D      Cleaning up local sandbox in /var/folders/9n/78q28xzj6q3_c3k90hqlb58j6mx2w9/T/replicaset1-centos-73-sandbox-20181008-87875-1cht31g
+       Finished converging <replicaset1-centos-73> (1m47.02s).
+D      [SSH] shutting previous connection centos@10.111.38.34<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a25123d40 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a25123cf0 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a25123ca0 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a25123c28>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+D      [SSH] closing connection to centos@10.111.38.34<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a25123d40 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a25123cf0 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a25123ca0 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a25123c28>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+-----> Creating <replicaset2-centos-73>...
+D      Image for replicaset2-centos-73: CentOS Linux 7 x86_64 HVM EBS ENA 1805_01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-77ec9308.4.  Architecture: x86_64, Virtualization: hvm, Storage: ebs gp2, Created: 2018-06-13T15:53:24.000Z
+       Detected platform: centos version 7 on x86_64. Instance Type: t2.large. Default username: centos (default).
+D      No SSH username specified: using default username centos  for image ami-9887c6e7, which we detected as centos 7 x86_64.
+       If you are not using an account that qualifies under the AWS
+free-tier, you may be charged to run these suites. The charge
+should be minimal, but neither Test Kitchen nor its maintainers
+are responsible for your incurred costs.
+
+D      Creating EC2 instance in region us-east-1 with properties:
+D      - instance_type = "t2.large"
+D      - ebs_optimized = false
+D      - image_id = "ami-9887c6e7"
+D      - key_name = "Integrations"
+D      - private_ip_address = nil
+D      - placement = {:availability_zone=>"us-east-1d", :tenancy=>"default"}
+D      - block_device_mappings = [{:device_name=>"/dev/sda1", :ebs=>{:volume_type=>"gp2", :volume_size=>50, :delete_on_termination=>true}}, {:device_name=>"xvdb", :ebs=>{:volume_type=>"gp2", :volume_size=>50, :delete_on_termination=>true}}, {:device_name=>"xvdc", :ebs=>{:volume_type=>"gp2", :volume_size=>10, :delete_on_termination=>true}}]
+D      - network_interfaces = [{:device_index=>0, :associate_public_ip_address=>false, :delete_on_termination=>true, :subnet_id=>"subnet-3226c86a", :groups=>["sg-2717275f", "sg-29093951"]}]
+       Instance <i-03378e6b636bd3129> requested.
+       Polling AWS for existence, attempt 0...
+       Attempting to tag the instance, 0 retries
+       EC2 instance <i-03378e6b636bd3129> created.
+       Waited 0/1600s for instance <i-03378e6b636bd3129> volumes to be ready.
+       Waited 0/1600s for instance <i-03378e6b636bd3129> to become ready.
+       Waited 8/1600s for instance <i-03378e6b636bd3129> to become ready.
+       Waited 16/1600s for instance <i-03378e6b636bd3129> to become ready.
+       Waited 24/1600s for instance <i-03378e6b636bd3129> to become ready.
+       EC2 instance <i-03378e6b636bd3129> ready.
+D      [SSH] opening connection to centos@10.111.68.51<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"]}>
+D      [SSH] connection failed (#<Errno::ECONNREFUSED: Connection refused - connect(2) for 10.111.68.51:22>)
+       Waiting for SSH service on 10.111.68.51:22, retrying in 3 seconds
+D      [SSH] opening connection to centos@10.111.68.51<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a21c3dba8 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a21c3d658 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a21c3d158 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a21c3d068>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+D      [SSH] centos@10.111.68.51<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a21c3dba8 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a21c3d658 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a21c3d158 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a21c3d068>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (echo '[SSH] Established')
+       [SSH] Established
+D      Using sudo_command='sudo -E' for ohai hints
+D      [SSH] reusing existing connection centos@10.111.68.51<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a21c3dba8 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a21c3d658 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a21c3d158 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a21c3d068>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+D      [SSH] centos@10.111.68.51<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a21c3dba8 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a21c3d658 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a21c3d158 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a21c3d068>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (sudo -E mkdir -p /etc/chef/ohai/hints; sudo -E touch /etc/chef/ohai/hints/ec2.json)
+D      ec2:create '10.111.68.51'
+       Finished creating <replicaset2-centos-73> (0m38.02s).
+-----> Converging <replicaset2-centos-73>...
+       Preparing files for transfer
+D      Creating local sandbox in /var/folders/9n/78q28xzj6q3_c3k90hqlb58j6mx2w9/T/replicaset2-centos-73-sandbox-20181008-87875-17u7dvv
+       Preparing dna.json
+D      Creating dna.json from {:mongodb=>{:auto_configure=>{:replicaset=>false}, :cluster_name=>"kitchen", :config=>{:mongod=>{:replication=>{:replSetName=>"kitchen"}}}}, :run_list=>["recipe[sc-mongodb::replicaset]"]}
+       Resolving cookbook dependencies with Berkshelf 6.3.1...
+D      Using Berksfile from /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile
+       Removing non-cookbook files before transfer
+       Preparing environments
+D      Using environments from /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/test/integration/environments
+       Preparing nodes
+D      Using nodes from /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/test/integration/nodes
+       Preparing validation.pem
+D      Using a dummy validation.pem
+       Preparing client.rb
+D      Creating client.rb from {:node_name=>"replicaset2-centos-73", :checksum_path=>"/tmp/kitchen/checksums", :file_cache_path=>"/tmp/kitchen/cache", :file_backup_path=>"/tmp/kitchen/backup", :cookbook_path=>["/tmp/kitchen/cookbooks", "/tmp/kitchen/site-cookbooks"], :data_bag_path=>"/tmp/kitchen/data_bags", :environment_path=>"/tmp/kitchen/environments", :node_path=>"/tmp/kitchen/nodes", :role_path=>"/tmp/kitchen/roles", :client_path=>"/tmp/kitchen/clients", :user_path=>"/tmp/kitchen/users", :validation_key=>"/tmp/kitchen/validation.pem", :client_key=>"/tmp/kitchen/client.pem", :chef_server_url=>"http://127.0.0.1:8889", :encrypted_data_bag_secret=>"/tmp/kitchen/encrypted_data_bag_secret", :treat_deprecation_warnings_as_errors=>false, :exit_status=>":enabled", :client_fork=>false, :environments_path=>"/test/integration/environments", :environment=>"testing", :named_run_list=>{}}
+D      [SSH] reusing existing connection centos@10.111.68.51<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a21c3dba8 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a21c3d658 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a21c3d158 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a21c3d068>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+D      [SSH] centos@10.111.68.51<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a21c3dba8 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a21c3d658 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a21c3d158 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a21c3d068>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (sudo -E sh -c '
+
+chef_omnibus_root="/opt/chef"
+chef_omnibus_url="https://omnitruck.chef.io/install.sh"
+install_flags="-v 12.21.4"
+pretty_version="12.21.4"
+sudo_sh="sudo -E sh"
+version="12.21.4"
+
+tmp_stderr="/tmp/stderr";
+
+# capture_tmp_stderr SOURCE
+capture_tmp_stderr() {
+  # spool up $tmp_stderr from all the commands we called
+  if test -f "$tmp_stderr"; then
+    output="`cat $tmp_stderr`";
+    stderr_results="${stderr_results}\nSTDERR from $1:\n\n${output}\n";
+    rm $tmp_stderr;
+  fi
+}
+
+# do_curl URL FILENAME
+do_curl() {
+  echo "Trying curl...";
+  curl -sL -D "$tmp_stderr" "$1" > "$2";
+  ec=$?;
+  # check for 404
+  grep "404 Not Found" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "curl";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# do_download URL FILENAME
+do_download() {
+  echo "Downloading ${1} to file ${2}";
+
+  exists wget;
+  if test $? -eq 0; then
+    do_wget "$1" "$2" && return 0;
+  fi
+
+  exists curl;
+  if test $? -eq 0; then
+    do_curl "$1" "$2" && return 0;
+  fi
+
+  exists fetch;
+  if test $? -eq 0; then
+    do_fetch "$1" "$2" && return 0;
+  fi
+
+  exists python;
+  if test $? -eq 0; then
+    do_python "$1" "$2" && return 0;
+  fi
+
+  exists perl;
+  if test $? -eq 0; then
+    do_perl "$1" "$2" && return 0;
+  fi
+
+  unable_to_download "$1" "$2";
+}
+
+# do_fetch URL FILENAME
+do_fetch() {
+  echo "Trying fetch...";
+  fetch -o "$2" "$1" 2>"$tmp_stderr";
+  ec=$?;
+  # check for 404
+  grep "Not Found" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "fetch";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# do_perl URL FILENAME
+do_perl() {
+  echo "Trying perl...";
+  perl -e "use LWP::Simple; getprint(\$ARGV[0]);" "$1" > "$2" 2>"$tmp_stderr";
+  ec=$?;
+  # check for 404
+  grep "404 Not Found" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "perl";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# do_python URL FILENAME
+do_python() {
+  echo "Trying python...";
+  python -c "import sys,urllib2 ; sys.stdout.write(urllib2.urlopen(sys.argv[1]).read())" "$1" > "$2" 2>"$tmp_stderr";
+  ec=$?;
+  # check for 404
+  grep "HTTP Error 404" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "python";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# do_wget URL FILENAME
+do_wget() {
+  echo "Trying wget...";
+  wget -O "$2" "$1" 2>"$tmp_stderr";
+  ec=$?;
+  # check for 404
+  grep "ERROR 404" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "wget";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# exists COMMAND
+exists() {
+  if command -v "$1" >/dev/null 2>&1; then
+    return 0;
+  else
+    return 1;
+  fi
+}
+
+# http_404_error URL
+http_404_error() {
+  echo ">>>>>> Downloading ${1} resulted in an HTTP/404, aborting";
+  exit 40;
+}
+
+# should_update_chef ROOT VERSION
+should_update_chef() {
+  if test ! -d "$1"; then
+    return 0;
+  elif test "$2" = "true"; then
+    return 1;
+  elif test "$2" = "latest"; then
+    return 0;
+  fi
+
+  if test -f "${1}/version-manifest.txt"; then
+    chef_version="`head -n 1 ${1}/version-manifest.txt | cut -d \" \" -f 2`";
+  else
+    chef_version="`${1}/bin/chef-solo -v | cut -d \" \" -f 2`";
+  fi
+
+  echo "$chef_version" | grep "^${2}" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    return 1;
+  else
+    echo "${2}" | grep "^$chef_version" 2>&1 >/dev/null;
+    if test $? -eq 0; then
+      return 1;
+    else
+      return 0;
+    fi
+  fi
+}
+
+# unable_to_download URL FILE
+unable_to_download() {
+  echo "Unable to download $1 to $2, aborting";
+
+  if test "x${stderr_results}" != "x"; then
+    echo "\nDEBUG OUTPUT FOLLOWS:\n${stderr_results}";
+  fi
+
+  exit 10;
+}
+
+# main
+main() {
+  should_update_chef "$chef_omnibus_root" "$version"
+  if test $? -eq 0; then
+    echo "-----> Installing Chef Omnibus (${pretty_version})";
+
+    # solaris 10 lacks recent enough credentials, so http url is used
+    platform="`/usr/bin/uname -s 2>/dev/null`";
+    platform_version="`/usr/bin/uname -r 2>/dev/null`";
+    if test "x${platform}" = "xSunOS" && test "x${platform_version}" = "x5.10"; then
+      chef_omnibus_url=`echo "$chef_omnibus_url" | sed -e "s/https/http/"`;
+    fi
+
+    do_download "$chef_omnibus_url" /tmp/install.sh;
+    $sudo_sh /tmp/install.sh $install_flags;
+  else
+    echo "-----> Chef Omnibus installation detected (${pretty_version})";
+  fi
+}
+
+# augment path in an attempt to find a download program
+PATH="${PATH}:/opt/local/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/sfw/bin";
+export PATH;
+
+main
+')
+-----> Installing Chef Omnibus (12.21.4)
+       Downloading https://omnitruck.chef.io/install.sh to file /tmp/install.sh
+       Trying curl...
+       Download complete.
+       el 7 x86_64
+       Getting information for chef stable 12.21.4 for el...
+       downloading https://omnitruck.chef.io/stable/chef/metadata?v=12.21.4&p=el&pv=7&m=x86_64
+         to file /tmp/install.sh.4117/metadata.txt
+       trying curl...
+       sha1	d58dc9b6b459bf43b5dfd842b436534f16dd0576
+       sha256	e368c75155b76d30976657e8794f13d932725eae798214b9a0e02bf4773fd1ea
+       url	https://packages.chef.io/files/stable/chef/12.21.4/el/7/chef-12.21.4-1.el7.x86_64.rpm
+       version	12.21.4
+       downloaded metadata file looks valid...
+       downloading https://packages.chef.io/files/stable/chef/12.21.4/el/7/chef-12.21.4-1.el7.x86_64.rpm
+         to file /tmp/install.sh.4117/chef-12.21.4-1.el7.x86_64.rpm
+       trying curl...
+       Comparing checksum with sha256sum...
+       Installing chef 12.21.4
+       installing with rpm...
+       warning: /tmp/install.sh.4117/chef-12.21.4-1.el7.x86_64.rpm: Header V4 DSA/SHA1 Signature, key ID 83ef826a: NOKEY
+       Preparing...                                                            (100%)#                                 (100%)##                                (100%)###                               (100%)####                              (100%)#####                             (100%)######                            (100%)#######                           (100%)########                          (100%)#########                         (100%)##########                        (100%)###########                       (100%)############                      (100%)#############                     (100%)##############                    (100%)###############                   (100%)################                  (100%)#################                 (100%)##################                (100%)###################               (100%)####################              (100%)#####################             (100%)######################            (100%)#######################           (100%)########################          (100%)#########################         (100%)##########################        (100%)###########################       (100%)############################      (100%)#############################     (100%)##############################    (100%)###############################   (100%)################################  (100%)################################# (100%)################################# [100%]
+       Updating / installing...
+          1:chef-12.21.4-1.el7                                                 (  1%)#                                 (  4%)##                                (  7%)###                               ( 10%)####                              ( 13%)#####                             ( 16%)######                            ( 19%)#######                           ( 22%)########                          ( 25%)#########                         ( 28%)##########                        ( 31%)###########                       ( 34%)############                      ( 37%)#############                     ( 40%)##############                    ( 43%)###############                   ( 46%)################                  ( 49%)#################                 ( 51%)##################                ( 54%)###################               ( 57%)####################              ( 60%)#####################             ( 63%)######################            ( 66%)#######################           ( 69%)########################          ( 72%)#########################         ( 75%)##########################        ( 78%)###########################       ( 81%)############################      ( 84%)#############################     ( 87%)##############################    ( 90%)###############################   ( 93%)################################  ( 96%)################################# ( 99%)################################# [100%]
+       Thank you for installing Chef!
+D      [SSH] centos@10.111.68.51<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a21c3dba8 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a21c3d658 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a21c3d158 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a21c3d068>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (sh -c '
+TEST_KITCHEN="1"; export TEST_KITCHEN
+sudo_rm="sudo -E rm"
+dirs="/tmp/kitchen/clients /tmp/kitchen/cookbooks /tmp/kitchen/data /tmp/kitchen/data_bags /tmp/kitchen/encrypted_data_bag_secret /tmp/kitchen/environments /tmp/kitchen/roles"
+root_path="/tmp/kitchen"
+
+$sudo_rm -rf $dirs
+mkdir -p $root_path
+')
+       Transferring files to <replicaset2-centos-73>
+D      TIMING: scp async upload (Kitchen::Transport::Ssh)
+D      TIMING: scp async upload (Kitchen::Transport::Ssh) took (0m46.83s)
+D      Transfer complete
+D      Attempting to execute command - try 1 of 1.
+D      [SSH] centos@10.111.68.51<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a21c3dba8 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a21c3d658 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a21c3d158 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a21c3d068>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (sh -c '
+TEST_KITCHEN="1"; export TEST_KITCHEN
+sudo -E /opt/chef/bin/chef-client --local-mode --config /tmp/kitchen/client.rb --log_level auto --force-formatter --no-color --json-attributes /tmp/kitchen/dna.json --chef-zero-port 8889 
+')
+       Starting Chef Client, version 12.21.4
+       [2018-10-08T21:13:14+00:00] INFO: *** Chef 12.21.4 ***
+       [2018-10-08T21:13:14+00:00] INFO: Platform: x86_64-linux
+       [2018-10-08T21:13:14+00:00] INFO: Chef-client pid: 9648
+       [2018-10-08T21:13:14+00:00] INFO: The plugin path /etc/chef/ohai/plugins does not exist. Skipping...
+       Creating a new client identity for replicaset2-centos-73 using the validator key.
+       [2018-10-08T21:13:16+00:00] INFO: Client key /tmp/kitchen/client.pem is not present - registering
+       [2018-10-08T21:13:16+00:00] INFO: HTTP Request Returned 404 Not Found: Object not found: chefzero://localhost:8889/nodes/replicaset2-centos-73
+       [2018-10-08T21:13:16+00:00] INFO: Setting the run_list to ["recipe[sc-mongodb::replicaset]"] from CLI options
+       [2018-10-08T21:13:16+00:00] INFO: Run List is [recipe[sc-mongodb::replicaset]]
+       [2018-10-08T21:13:16+00:00] INFO: Run List expands to [sc-mongodb::replicaset]
+       [2018-10-08T21:13:16+00:00] INFO: Starting Chef Run for replicaset2-centos-73
+       [2018-10-08T21:13:16+00:00] INFO: Running start handlers
+       [2018-10-08T21:13:16+00:00] INFO: Start handlers complete.
+       [2018-10-08T21:13:16+00:00] INFO: HTTP Request Returned 404 Not Found: Object not found: 
+       resolving cookbooks for run list: ["sc-mongodb::replicaset"]
+       [2018-10-08T21:13:16+00:00] INFO: Loading cookbooks [sc-mongodb@1.2.0, apt@7.1.0, yum@5.1.0, build-essential@8.2.1, seven_zip@3.0.0, mingw@2.1.0, windows@5.1.1]
+       Synchronizing Cookbooks:
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/resources/agent.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/resources/user.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/configserver.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/default.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mongodb_org_repo.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/providers/user.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mongo_gem.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mms_automation_agent.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mms_monitoring_agent.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mongos.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/replicaset.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/install.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/shard.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mms_backup_agent.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/dbconfig.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/definitions/mongodb.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/ulimit.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/sysconfig.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/user_management.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/mms_agent.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/mms_agent_config.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/libraries/mongodb_config_helpers.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/libraries/mongodb.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/users.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/debian-mongodb.upstart.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/mongodb.sysconfig.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/redhat-mongodb.init.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/default.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/sv-mms-agent-log-run.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/mongodb.conf.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/recipes/unattended-upgrades.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/libraries/helpers.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/README.md in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/sv-mms-agent-run.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/recipes/cacher-client.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/recipes/cacher-ng.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/debian-mongodb.init.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/files/15update-stamp in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/templates/01proxy.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/sc-mongodb/metadata.json in the cache.
+         - sc-mongodb (1.2.0)
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/templates/unattended-upgrades.seed.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/recipes/default.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/templates/50unattended-upgrades.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/templates/10recommends.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/templates/10dpkg-options.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/files/apt-proxy-v2.conf in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/templates/acng.conf.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/attributes/default.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/metadata.json in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/templates/20auto-upgrades.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/apt/README.md in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/yum/resources/globalconfig.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/yum/templates/main.erb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/yum/recipes/default.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/yum/attributes/main.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/yum/README.md in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/yum/recipes/dnf_yum_compat.rb in the cache.
+         - apt (7.1.0)
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/yum/libraries/matchers.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/build-essential/resources/xcode_command_line_tools.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/build-essential/resources/build_essential.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/yum/metadata.json in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/build-essential/recipes/default.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/build-essential/attributes/default.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/build-essential/recipes/_windows.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/build-essential/README.md in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/seven_zip/providers/archive.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/seven_zip/resources/archive.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/build-essential/metadata.json in the cache.
+         - yum (5.1.0)
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/seven_zip/recipes/default.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/seven_zip/attributes/default.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/seven_zip/metadata.json in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/seven_zip/libraries/matchers.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/seven_zip/README.md in the cache.
+         - build-essential (8.2.1)
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/mingw/resources/msys2_package.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/mingw/resources/get.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/mingw/resources/tdm_gcc.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/mingw/libraries/_helper.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/mingw/attributes/default.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/mingw/files/default/bash.bat in the cache.
+         - seven_zip (3.0.0)[2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/mingw/files/default/custom_prefix.sh in the cache.
+       
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/mingw/files/default/custom-upgrade.sh in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/mingw/recipes/default.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/mingw/metadata.json in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/mingw/files/default/pthread.h in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/mingw/files/default/time.h in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/certificate.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/auto_run.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/certificate_binding.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/dns.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/mingw/README.md in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/feature.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/feature_powershell.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/feature_dism.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/http_acl.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/font.rb in the cache.
+         - mingw (2.1.0)
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/printer.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/pagefile.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/printer_port.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/shortcut.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/zipfile.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/share.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/recipes/default.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/providers/dns.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/libraries/powershell_helper.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/libraries/version.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/resources/user_privilege.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/libraries/version_helper.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/libraries/windows_privileged.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/libraries/windows_helper.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/libraries/registry_helper.rb in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/README.md in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/metadata.json in the cache.
+       [2018-10-08T21:13:16+00:00] INFO: Storing updated cookbooks/windows/libraries/wmi_helper.rb in the cache.
+         - windows (5.1.1)
+       Installing Cookbook Gems:
+       Compiling Cookbooks...
+       [2018-10-08T21:13:17+00:00] INFO: HTTP Request Returned 404 Not Found: Object not found: 
+       Converging 17 resources
+       Recipe: sc-mongodb::mongodb_org_repo
+         * yum_repository[mongodb] action create[2018-10-08T21:13:17+00:00] INFO: Processing yum_repository[mongodb] action create (sc-mongodb::mongodb_org_repo line 52)
+       
+           * template[/etc/yum.repos.d/mongodb.repo] action create[2018-10-08T21:13:17+00:00] INFO: Processing template[/etc/yum.repos.d/mongodb.repo] action create (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 42)
+       [2018-10-08T21:13:17+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] created file /etc/yum.repos.d/mongodb.repo
+       
+             - create new file /etc/yum.repos.d/mongodb.repo[2018-10-08T21:13:17+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] updated file contents /etc/yum.repos.d/mongodb.repo
+       
+             - update content in file /etc/yum.repos.d/mongodb.repo from none to 4294ab
+             --- /etc/yum.repos.d/mongodb.repo	2018-10-08 21:13:17.034225773 +0000
+             +++ /etc/yum.repos.d/.chef-mongodb20181008-9648-1w7oioh.repo	2018-10-08 21:13:17.033225796 +0000
+             @@ -1 +1,12 @@
+             +# This file was generated by Chef
+             +# Do NOT modify this file by hand.
+             +
+             +[mongodb]
+             +name=mongodb RPM Repository
+             +baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.6/x86_64
+             +enabled=1
+             +fastestmirror_enabled=0
+             +gpgcheck=1
+             +gpgkey=https://www.mongodb.org/static/pgp/server-3.6.asc
+             +sslverify=true[2018-10-08T21:13:17+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] mode changed to 644
+       
+             - change mode from '' to '0644'
+             - restore selinux security context
+       [2018-10-08T21:13:17+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] sending run action to execute[yum clean metadata mongodb] (immediate)
+           * execute[yum clean metadata mongodb] action run[2018-10-08T21:13:17+00:00] INFO: Processing execute[yum clean metadata mongodb] action run (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 59)
+       
+             [execute] Loaded plugins: fastestmirror
+                Cleaning repos: mongodb
+                0 metadata files removed
+                0 sqlite files removed
+                0 metadata files removed
+       [2018-10-08T21:13:17+00:00] INFO: execute[yum clean metadata mongodb] ran successfully
+             - execute yum clean metadata --disablerepo=* --enablerepo=mongodb
+       [2018-10-08T21:13:17+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] sending run action to execute[yum-makecache-mongodb] (immediate)
+           * execute[yum-makecache-mongodb] action run[2018-10-08T21:13:17+00:00] INFO: Processing execute[yum-makecache-mongodb] action run (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 65)
+       [2018-10-08T21:13:17+00:00] INFO: execute[yum-makecache-mongodb] ran successfully
+       
+             - execute yum -q -y makecache --disablerepo=* --enablerepo=mongodb
+       [2018-10-08T21:13:17+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] sending create action to ruby_block[yum-cache-reload-mongodb] (immediate)
+           * ruby_block[yum-cache-reload-mongodb] action create[2018-10-08T21:13:17+00:00] INFO: Processing ruby_block[yum-cache-reload-mongodb] action create (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 72)
+       [2018-10-08T21:13:17+00:00] INFO: ruby_block[yum-cache-reload-mongodb] called
+       
+             - execute the ruby block yum-cache-reload-mongodb
+           * execute[yum clean metadata mongodb] action nothing[2018-10-08T21:13:17+00:00] INFO: Processing execute[yum clean metadata mongodb] action nothing (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 59)
+        (skipped due to action :nothing)
+           * execute[yum-makecache-mongodb] action nothing[2018-10-08T21:13:17+00:00] INFO: Processing execute[yum-makecache-mongodb] action nothing (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 65)
+        (skipped due to action :nothing)
+           * ruby_block[yum-cache-reload-mongodb] action nothing[2018-10-08T21:13:17+00:00] INFO: Processing ruby_block[yum-cache-reload-mongodb] action nothing (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 72)
+        (skipped due to action :nothing)
+         
+       Recipe: sc-mongodb::install
+         * build_essential[build-tools] action install[2018-10-08T21:13:17+00:00] INFO: Processing build_essential[build-tools] action install (sc-mongodb::install line 29)
+       
+           * yum_package[autoconf, bison, flex, gcc, gcc-c++, gettext, kernel-devel, make, m4, ncurses-devel, patch] action install[2018-10-08T21:13:17+00:00] INFO: Processing yum_package[autoconf, bison, flex, gcc, gcc-c++, gettext, kernel-devel, make, m4, ncurses-devel, patch] action install (/tmp/kitchen/cache/cookbooks/build-essential/resources/build_essential.rb line 31)
+       [2018-10-08T21:13:22+00:00] INFO: yum_package[autoconf, bison, flex, gcc, gcc-c++, gettext, kernel-devel, make, m4, ncurses-devel, patch] installing autoconf-2.69-11.el7 from base repository bison-3.0.4-1.el7 from base repository flex-2.5.37-3.el7 from base repository gcc-4.8.5-28.el7_5.1 from updates repository gcc-c++-4.8.5-28.el7_5.1 from updates repository kernel-devel-3.10.0-862.14.4.el7 from updates repository m4-1.4.16-10.el7 from base repository ncurses-devel-5.9-14.20130511.el7_4 from base repository patch-2.7.1-10.el7_5 from updates repository
+       [2018-10-08T21:13:50+00:00] INFO: yum_package[autoconf, bison, flex, gcc, gcc-c++, gettext, kernel-devel, make, m4, ncurses-devel, patch] installed ["autoconf", "bison", "flex", "gcc", "gcc-c++", nil, "kernel-devel", nil, "m4", "ncurses-devel", "patch"] at ["2.69-11.el7", "3.0.4-1.el7", "2.5.37-3.el7", "4.8.5-28.el7_5.1", "4.8.5-28.el7_5.1", nil, "3.10.0-862.14.4.el7", nil, "1.4.16-10.el7", "5.9-14.20130511.el7_4", "2.7.1-10.el7_5"]
+       
+             - install version 2.69-11.el7 of package autoconf
+             - install version 3.0.4-1.el7 of package bison
+             - install version 2.5.37-3.el7 of package flex
+             - install version 4.8.5-28.el7_5.1 of package gcc
+             - install version 4.8.5-28.el7_5.1 of package gcc-c++
+             - install version 3.10.0-862.14.4.el7 of package kernel-devel
+             - install version 1.4.16-10.el7 of package m4
+             - install version 5.9-14.20130511.el7_4 of package ncurses-devel
+             - install version 2.7.1-10.el7_5 of package patch
+         
+         * file[/etc/sysconfig/mongodb install] action create_if_missing[2018-10-08T21:13:50+00:00] INFO: Processing file[/etc/sysconfig/mongodb install] action create_if_missing (sc-mongodb::install line 38)
+       [2018-10-08T21:13:50+00:00] INFO: file[/etc/sysconfig/mongodb install] created file /etc/sysconfig/mongodb
+       
+           - create new file /etc/sysconfig/mongodb[2018-10-08T21:13:50+00:00] INFO: file[/etc/sysconfig/mongodb install] updated file contents /etc/sysconfig/mongodb
+       
+           - update content in file /etc/sysconfig/mongodb from none to a35762
+           --- /etc/sysconfig/mongodb	2018-10-08 21:13:50.554570630 +0000
+           +++ /etc/sysconfig/.chef-mongodb20181008-9648-1h8ao83	2018-10-08 21:13:50.553570600 +0000
+           @@ -1 +1,2 @@
+           +ENABLE_MONGODB=no[2018-10-08T21:13:50+00:00] INFO: file[/etc/sysconfig/mongodb install] owner changed to 0
+       [2018-10-08T21:13:50+00:00] INFO: file[/etc/sysconfig/mongodb install] group changed to 0
+       [2018-10-08T21:13:50+00:00] INFO: file[/etc/sysconfig/mongodb install] mode changed to 644
+       
+           - change mode from '' to '0644'
+           - change owner from '' to 'root'
+           - change group from '' to 'root'
+           - restore selinux security context
+         * template[/etc/mongod.conf install] action create_if_missing[2018-10-08T21:13:50+00:00] INFO: Processing template[/etc/mongod.conf install] action create_if_missing (sc-mongodb::install line 48)
+       [2018-10-08T21:13:50+00:00] INFO: template[/etc/mongod.conf install] created file /etc/mongod.conf
+       
+           - create new file /etc/mongod.conf[2018-10-08T21:13:50+00:00] INFO: template[/etc/mongod.conf install] updated file contents /etc/mongod.conf
+       
+           - update content in file /etc/mongod.conf from none to e0bbc2
+           --- /etc/mongod.conf	2018-10-08 21:13:50.581571448 +0000
+           +++ /etc/.chef-mongod20181008-9648-1270xmk.conf	2018-10-08 21:13:50.581571448 +0000
+           @@ -1 +1,26 @@
+           +#
+           +# Automatically Generated by Chef, do not edit directly!
+           +#
+           +
+           +---
+           +net:
+           +  port: 27017
+           +  bindIp: 0.0.0.0
+           +systemLog:
+           +  destination: file
+           +  logAppend: true
+           +  path: "/var/log/mongodb/mongod.log"
+           +processManagement:
+           +  fork: true
+           +  pidFilePath: "/var/run/mongodb/mongod.pid"
+           +storage:
+           +  journal:
+           +    enabled: true
+           +  dbPath: "/var/lib/mongo"
+           +  engine: wiredTiger
+           +replication:
+           +  oplogSizeMB: 3000
+           +  replSetName: kitchen
+           +  enableMajorityReadConcern: true
+           +[2018-10-08T21:13:50+00:00] INFO: template[/etc/mongod.conf install] owner changed to 0
+       [2018-10-08T21:13:50+00:00] INFO: template[/etc/mongod.conf install] group changed to 0
+       [2018-10-08T21:13:50+00:00] INFO: template[/etc/mongod.conf install] mode changed to 644
+       
+           - change mode from '' to '0644'
+           - change owner from '' to 'root'
+           - change group from '' to 'root'
+           - restore selinux security context
+         * yum_package[netcat] action install[2018-10-08T21:13:50+00:00] INFO: Processing yum_package[netcat] action install (sc-mongodb::install line 63)
+        (skipped due to only_if)
+         * template[/etc/init.d/mongod install] action create_if_missing[2018-10-08T21:13:50+00:00] INFO: Processing template[/etc/init.d/mongod install] action create_if_missing (sc-mongodb::install line 76)
+       [2018-10-08T21:13:50+00:00] INFO: template[/etc/init.d/mongod install] created file /etc/init.d/mongod
+       
+           - create new file /etc/init.d/mongod[2018-10-08T21:13:50+00:00] INFO: template[/etc/init.d/mongod install] updated file contents /etc/init.d/mongod
+       
+           - update content in file /etc/init.d/mongod from none to 86fc31
+           --- /etc/init.d/mongod	2018-10-08 21:13:50.607572235 +0000
+           +++ /etc/init.d/.chef-mongod20181008-9648-pp4ftj	2018-10-08 21:13:50.607572235 +0000
+           @@ -1 +1,107 @@
+           +#!/bin/bash
+           +
+           +# mongod - Startup script for mongod
+           +
+           +# chkconfig: 35 85 15
+           +# description: Mongo is a scalable, document-oriented database.
+           +# processname: mongod
+           +# config: /etc/mongod.conf
+           +
+           +. /etc/rc.d/init.d/functions
+           +
+           +NAME=mongod
+           +SYSCONFIG=/etc/sysconfig/mongodb
+           +DAEMON_USER=
+           +ENABLE_MONGODB=yes
+           +
+           +SUBSYS_LOCK_FILE=/var/lock/subsys/mongod
+           +
+           +if [ -f "$SYSCONFIG" ]; then
+           +    . "$SYSCONFIG"
+           +fi
+           +
+           +# FIXME: 1.9.x has a --shutdown flag that parses the config file and
+           +# shuts down the correct running pid, but that's unavailable in 1.8
+           +# for now.  This can go away when this script stops supporting 1.8.
+           +DBPATH=`awk -F= '/^dbpath[[:blank:]]*=[[:blank:]]*/{print $2}' "$CONFIGFILE"`
+           +PIDFILE=`awk -F= '/^pidfilepath[[:blank:]]*=[[:blank:]]*/{print $2}' "$CONFIGFILE"`
+           +
+           +# Handle NUMA access to CPUs (SERVER-3574)
+           +# This verifies the existence of numactl as well as testing that the command works
+           +NUMACTL_ARGS="--interleave=all"
+           +if which numactl >/dev/null 2>/dev/null && numactl $NUMACTL_ARGS ls / >/dev/null 2>/dev/null
+           +then
+           +    NUMACTL="numactl $NUMACTL_ARGS"
+           +else
+           +    NUMACTL=""
+           +fi
+           +
+           +start()
+           +{
+           +  ulimit -f unlimited
+           +  ulimit -t unlimited
+           +  ulimit -v unlimited
+           +  ulimit -n 64000
+           +  ulimit -m unlimited
+           +  ulimit -u 32000
+           +
+           +  echo -n $"Starting mongod: "
+           +  daemon --user "$DAEMON_USER" $NUMACTL $DAEMON $DAEMON_OPTS
+           +  RETVAL=$?
+           +  echo
+           +  [ $RETVAL -eq 0 ] && touch $SUBSYS_LOCK_FILE
+           +}
+           +
+           +stop()
+           +{
+           +  echo -n $"Stopping mongod: "
+           +  if test "x$PIDFILE" != "x"; then
+           +    killproc -p $PIDFILE -d 300 $DAEMON
+           +  else
+           +    killproc -d 300 $DAEMON
+           +  fi
+           +  RETVAL=$?
+           +  echo
+           +  [ $RETVAL -eq 0 ] && rm -f $SUBSYS_LOCK_FILE
+           +}
+           +
+           +restart () {
+           +  stop
+           +  start
+           +}
+           +
+           +RETVAL=0
+           +
+           +if test "x$ENABLE_MONGODB" != "xyes"; then
+           +    exit $RETVAL
+           +fi
+           +
+           +case "$1" in
+           +  start)
+           +    start
+           +    ;;
+           +  stop)
+           +    stop
+           +    ;;
+           +  restart|reload|force-reload)
+           +    restart
+           +    ;;
+           +  condrestart)
+           +    [ -f $SUBSYS_LOCK_FILE ] && restart || :
+           +    ;;
+           +  status)
+           +    if test "x$PIDFILE" != "x"; then
+           +      status -p $PIDFILE $DAEMON
+           +    else
+           +      status $DAEMON
+           +    fi
+           +    RETVAL=$?
+           +    ;;
+           +  *)
+           +    echo "Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
+           +    RETVAL=1
+           +esac
+           +
+           +exit $RETVAL
+           +[2018-10-08T21:13:50+00:00] INFO: template[/etc/init.d/mongod install] owner changed to 0
+       [2018-10-08T21:13:50+00:00] INFO: template[/etc/init.d/mongod install] group changed to 0
+       [2018-10-08T21:13:50+00:00] INFO: template[/etc/init.d/mongod install] mode changed to 755
+       
+           - change mode from '' to '0755'
+           - change owner from '' to 'root'
+           - change group from '' to 'root'
+           - restore selinux security context
+         * service[mongod] action enable[2018-10-08T21:13:50+00:00] INFO: Processing service[mongod] action enable (sc-mongodb::install line 94)
+       [2018-10-08T21:13:50+00:00] INFO: service[mongod] enabled
+       
+           - enable service service[mongod]
+         * yum_package[mongodb-org] action install[2018-10-08T21:13:50+00:00] INFO: Processing yum_package[mongodb-org] action install (sc-mongodb::install line 114)
+       [2018-10-08T21:13:50+00:00] INFO: yum_package[mongodb-org] installing mongodb-org-3.6.6-1.el7 from mongodb repository
+       [2018-10-08T21:13:57+00:00] INFO: yum_package[mongodb-org] installed mongodb-org at 3.6.6-1.el7
+       
+           - install version 3.6.6-1.el7 of package mongodb-org
+         * directory[/var/run/mongodb] action create[2018-10-08T21:13:57+00:00] INFO: Processing directory[/var/run/mongodb] action create (sc-mongodb::install line 154)
+        (up to date)
+       Recipe: sc-mongodb::replicaset
+         * ruby_block[chef_gem_at_converge_time] action run[2018-10-08T21:13:57+00:00] INFO: Processing ruby_block[chef_gem_at_converge_time] action run (sc-mongodb::replicaset line 27)
+       [2018-10-08T21:14:03+00:00] INFO: ruby_block[chef_gem_at_converge_time] called
+       
+           - execute the ruby block chef_gem_at_converge_time
+         * template[/etc/sysconfig/mongodb] action create[2018-10-08T21:14:03+00:00] INFO: Processing template[/etc/sysconfig/mongodb] action create (sc-mongodb::replicaset line 146)
+       [2018-10-08T21:14:03+00:00] INFO: template[/etc/sysconfig/mongodb] backed up to /tmp/kitchen/backup/etc/sysconfig/mongodb.chef-20181008211403.274286
+       [2018-10-08T21:14:03+00:00] INFO: template[/etc/sysconfig/mongodb] updated file contents /etc/sysconfig/mongodb
+       
+           - update content in file /etc/sysconfig/mongodb from a35762 to 803da0
+           --- /etc/sysconfig/mongodb	2018-10-08 21:13:50.553570600 +0000
+           +++ /etc/sysconfig/.chef-mongodb20181008-9648-1lzqac1	2018-10-08 21:14:03.271955690 +0000
+           @@ -1,2 +1,10 @@
+           -ENABLE_MONGODB=no
+           +#
+           +# Automatically Generated by Chef, do not edit directly!
+           +#
+           +
+           +CONFIGFILE="/etc/mongod.conf"
+           +DAEMON="/usr/bin/$NAME"
+           +DAEMON_OPTS="--config /etc/mongod.conf"
+           +DAEMON_USER="mongod"
+           +ENABLE_MONGODB="yes"
+           - restore selinux security context
+         * template[/etc/mongod.conf] action create[2018-10-08T21:14:03+00:00] INFO: Processing template[/etc/mongod.conf] action create (sc-mongodb::replicaset line 159)
+        (up to date)
+         * directory[/var/log/mongodb] action create[2018-10-08T21:14:03+00:00] INFO: Processing directory[/var/log/mongodb] action create (sc-mongodb::replicaset line 173)
+        (up to date)
+         * directory[/var/lib/mongo] action create[2018-10-08T21:14:03+00:00] INFO: Processing directory[/var/lib/mongo] action create (sc-mongodb::replicaset line 184)
+        (up to date)
+         * execute[mongodb-systemctl-daemon-reload-mongod] action nothing[2018-10-08T21:14:03+00:00] INFO: Processing execute[mongodb-systemctl-daemon-reload-mongod] action nothing (sc-mongodb::replicaset line 194)
+        (skipped due to action :nothing)
+         * template[/etc/init.d/mongod] action create[2018-10-08T21:14:03+00:00] INFO: Processing template[/etc/init.d/mongod] action create (sc-mongodb::replicaset line 200)
+        (up to date)
+         * service[mongod] action enable[2018-10-08T21:14:03+00:00] INFO: Processing service[mongod] action enable (sc-mongodb::replicaset line 222)
+        (up to date)
+         * service[mongod] action start[2018-10-08T21:14:03+00:00] INFO: Processing service[mongod] action start (sc-mongodb::replicaset line 222)
+       [2018-10-08T21:14:04+00:00] INFO: service[mongod] started
+       
+           - start service service[mongod]
+       [2018-10-08T21:14:04+00:00] INFO: template[/etc/sysconfig/mongodb] sending restart action to service[mongod] (delayed)
+         * service[mongod] action restart[2018-10-08T21:14:04+00:00] INFO: Processing service[mongod] action restart (sc-mongodb::replicaset line 222)
+       [2018-10-08T21:14:06+00:00] INFO: service[mongod] restarted
+       
+           - restart service service[mongod]
+       [2018-10-08T21:14:06+00:00] INFO: Chef Run complete in 49.678712268 seconds
+       
+       Running handlers:
+       [2018-10-08T21:14:06+00:00] INFO: Running report handlers
+       Running handlers complete
+       [2018-10-08T21:14:06+00:00] INFO: Report handlers complete
+       
+       Deprecated features used!
+         Cloning resource attributes for service[mongod] from prior resource
+       Previous service[mongod]: /tmp/kitchen/cache/cookbooks/sc-mongodb/recipes/install.rb:94:in `from_file'
+       Current  service[mongod]: /tmp/kitchen/cache/cookbooks/sc-mongodb/definitions/mongodb.rb:222:in `block in from_file' at 1 location:
+           - /tmp/kitchen/cache/cookbooks/sc-mongodb/definitions/mongodb.rb:222:in `block in from_file'
+          See https://docs.chef.io/deprecations_resource_cloning.html for further details.
+       
+       Chef Client finished, 16/27 resources updated in 51 seconds
+D      Cleaning up local sandbox in /var/folders/9n/78q28xzj6q3_c3k90hqlb58j6mx2w9/T/replicaset2-centos-73-sandbox-20181008-87875-17u7dvv
+       Finished converging <replicaset2-centos-73> (1m46.43s).
+D      [SSH] shutting previous connection centos@10.111.68.51<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a21c3dba8 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a21c3d658 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a21c3d158 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a21c3d068>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+D      [SSH] closing connection to centos@10.111.68.51<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a21c3dba8 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a21c3d658 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a21c3d158 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a21c3d068>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+-----> Creating <replicaset3-centos-73>...
+D      Image for replicaset3-centos-73: CentOS Linux 7 x86_64 HVM EBS ENA 1805_01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-77ec9308.4.  Architecture: x86_64, Virtualization: hvm, Storage: ebs gp2, Created: 2018-06-13T15:53:24.000Z
+       Detected platform: centos version 7 on x86_64. Instance Type: t2.large. Default username: centos (default).
+D      No SSH username specified: using default username centos  for image ami-9887c6e7, which we detected as centos 7 x86_64.
+       If you are not using an account that qualifies under the AWS
+free-tier, you may be charged to run these suites. The charge
+should be minimal, but neither Test Kitchen nor its maintainers
+are responsible for your incurred costs.
+
+D      Creating EC2 instance in region us-east-1 with properties:
+D      - instance_type = "t2.large"
+D      - ebs_optimized = false
+D      - image_id = "ami-9887c6e7"
+D      - key_name = "Integrations"
+D      - private_ip_address = nil
+D      - placement = {:availability_zone=>"us-east-1e", :tenancy=>"default"}
+D      - block_device_mappings = [{:device_name=>"/dev/sda1", :ebs=>{:volume_type=>"gp2", :volume_size=>50, :delete_on_termination=>true}}, {:device_name=>"xvdb", :ebs=>{:volume_type=>"gp2", :volume_size=>50, :delete_on_termination=>true}}, {:device_name=>"xvdc", :ebs=>{:volume_type=>"gp2", :volume_size=>10, :delete_on_termination=>true}}]
+D      - network_interfaces = [{:device_index=>0, :associate_public_ip_address=>false, :delete_on_termination=>true, :subnet_id=>"subnet-e33dadde", :groups=>["sg-2717275f", "sg-29093951"]}]
+       Instance <i-0a1b84bda067c64ea> requested.
+       Polling AWS for existence, attempt 0...
+       Attempting to tag the instance, 0 retries
+       EC2 instance <i-0a1b84bda067c64ea> created.
+       Waited 0/1600s for instance <i-0a1b84bda067c64ea> volumes to be ready.
+       Waited 0/1600s for instance <i-0a1b84bda067c64ea> to become ready.
+       Waited 8/1600s for instance <i-0a1b84bda067c64ea> to become ready.
+       Waited 16/1600s for instance <i-0a1b84bda067c64ea> to become ready.
+       Waited 24/1600s for instance <i-0a1b84bda067c64ea> to become ready.
+       EC2 instance <i-0a1b84bda067c64ea> ready.
+D      [SSH] opening connection to centos@10.111.96.4<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"]}>
+D      [SSH] connection failed (#<Errno::ECONNREFUSED: Connection refused - connect(2) for 10.111.96.4:22>)
+       Waiting for SSH service on 10.111.96.4:22, retrying in 3 seconds
+D      [SSH] opening connection to centos@10.111.96.4<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a2bb72c28 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a2bb72bd8 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a2bb72b88 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a2bb72b38>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+D      [SSH] centos@10.111.96.4<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a2bb72c28 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a2bb72bd8 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a2bb72b88 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a2bb72b38>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (echo '[SSH] Established')
+       [SSH] Established
+D      Using sudo_command='sudo -E' for ohai hints
+D      [SSH] reusing existing connection centos@10.111.96.4<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a2bb72c28 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a2bb72bd8 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a2bb72b88 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a2bb72b38>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+D      [SSH] centos@10.111.96.4<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a2bb72c28 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a2bb72bd8 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a2bb72b88 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a2bb72b38>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (sudo -E mkdir -p /etc/chef/ohai/hints; sudo -E touch /etc/chef/ohai/hints/ec2.json)
+D      ec2:create '10.111.96.4'
+       Finished creating <replicaset3-centos-73> (0m39.24s).
+-----> Converging <replicaset3-centos-73>...
+       Preparing files for transfer
+D      Creating local sandbox in /var/folders/9n/78q28xzj6q3_c3k90hqlb58j6mx2w9/T/replicaset3-centos-73-sandbox-20181008-87875-jjlr99
+       Preparing dna.json
+D      Creating dna.json from {:mongodb=>{:auto_configure=>{:replicaset=>false}, :cluster_name=>"kitchen", :config=>{:mongod=>{:replication=>{:replSetName=>"kitchen"}}}}, :run_list=>["recipe[sc-mongodb::replicaset]"]}
+       Resolving cookbook dependencies with Berkshelf 6.3.1...
+D      Using Berksfile from /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/Berksfile
+       Removing non-cookbook files before transfer
+       Preparing environments
+D      Using environments from /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/test/integration/environments
+       Preparing nodes
+D      Using nodes from /Users/dcaughill/Documents/Github/IT-chef-repo/cookbooks/mongodb/test/integration/nodes
+       Preparing validation.pem
+D      Using a dummy validation.pem
+       Preparing client.rb
+D      Creating client.rb from {:node_name=>"replicaset3-centos-73", :checksum_path=>"/tmp/kitchen/checksums", :file_cache_path=>"/tmp/kitchen/cache", :file_backup_path=>"/tmp/kitchen/backup", :cookbook_path=>["/tmp/kitchen/cookbooks", "/tmp/kitchen/site-cookbooks"], :data_bag_path=>"/tmp/kitchen/data_bags", :environment_path=>"/tmp/kitchen/environments", :node_path=>"/tmp/kitchen/nodes", :role_path=>"/tmp/kitchen/roles", :client_path=>"/tmp/kitchen/clients", :user_path=>"/tmp/kitchen/users", :validation_key=>"/tmp/kitchen/validation.pem", :client_key=>"/tmp/kitchen/client.pem", :chef_server_url=>"http://127.0.0.1:8889", :encrypted_data_bag_secret=>"/tmp/kitchen/encrypted_data_bag_secret", :treat_deprecation_warnings_as_errors=>false, :exit_status=>":enabled", :client_fork=>false, :environments_path=>"/test/integration/environments", :environment=>"testing", :named_run_list=>{}}
+D      [SSH] reusing existing connection centos@10.111.96.4<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a2bb72c28 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a2bb72bd8 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a2bb72b88 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a2bb72b38>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+D      [SSH] centos@10.111.96.4<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a2bb72c28 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a2bb72bd8 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a2bb72b88 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a2bb72b38>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (sudo -E sh -c '
+
+chef_omnibus_root="/opt/chef"
+chef_omnibus_url="https://omnitruck.chef.io/install.sh"
+install_flags="-v 12.21.4"
+pretty_version="12.21.4"
+sudo_sh="sudo -E sh"
+version="12.21.4"
+
+tmp_stderr="/tmp/stderr";
+
+# capture_tmp_stderr SOURCE
+capture_tmp_stderr() {
+  # spool up $tmp_stderr from all the commands we called
+  if test -f "$tmp_stderr"; then
+    output="`cat $tmp_stderr`";
+    stderr_results="${stderr_results}\nSTDERR from $1:\n\n${output}\n";
+    rm $tmp_stderr;
+  fi
+}
+
+# do_curl URL FILENAME
+do_curl() {
+  echo "Trying curl...";
+  curl -sL -D "$tmp_stderr" "$1" > "$2";
+  ec=$?;
+  # check for 404
+  grep "404 Not Found" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "curl";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# do_download URL FILENAME
+do_download() {
+  echo "Downloading ${1} to file ${2}";
+
+  exists wget;
+  if test $? -eq 0; then
+    do_wget "$1" "$2" && return 0;
+  fi
+
+  exists curl;
+  if test $? -eq 0; then
+    do_curl "$1" "$2" && return 0;
+  fi
+
+  exists fetch;
+  if test $? -eq 0; then
+    do_fetch "$1" "$2" && return 0;
+  fi
+
+  exists python;
+  if test $? -eq 0; then
+    do_python "$1" "$2" && return 0;
+  fi
+
+  exists perl;
+  if test $? -eq 0; then
+    do_perl "$1" "$2" && return 0;
+  fi
+
+  unable_to_download "$1" "$2";
+}
+
+# do_fetch URL FILENAME
+do_fetch() {
+  echo "Trying fetch...";
+  fetch -o "$2" "$1" 2>"$tmp_stderr";
+  ec=$?;
+  # check for 404
+  grep "Not Found" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "fetch";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# do_perl URL FILENAME
+do_perl() {
+  echo "Trying perl...";
+  perl -e "use LWP::Simple; getprint(\$ARGV[0]);" "$1" > "$2" 2>"$tmp_stderr";
+  ec=$?;
+  # check for 404
+  grep "404 Not Found" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "perl";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# do_python URL FILENAME
+do_python() {
+  echo "Trying python...";
+  python -c "import sys,urllib2 ; sys.stdout.write(urllib2.urlopen(sys.argv[1]).read())" "$1" > "$2" 2>"$tmp_stderr";
+  ec=$?;
+  # check for 404
+  grep "HTTP Error 404" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "python";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# do_wget URL FILENAME
+do_wget() {
+  echo "Trying wget...";
+  wget -O "$2" "$1" 2>"$tmp_stderr";
+  ec=$?;
+  # check for 404
+  grep "ERROR 404" "$tmp_stderr" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    http_404_error "$1";
+  fi
+
+  # check for bad return status or empty output
+  if test $ec -ne 0 || test ! -s "$2"; then
+    capture_tmp_stderr "wget";
+    return 1;
+  else
+    echo "Download complete.";
+    return 0;
+  fi
+}
+
+# exists COMMAND
+exists() {
+  if command -v "$1" >/dev/null 2>&1; then
+    return 0;
+  else
+    return 1;
+  fi
+}
+
+# http_404_error URL
+http_404_error() {
+  echo ">>>>>> Downloading ${1} resulted in an HTTP/404, aborting";
+  exit 40;
+}
+
+# should_update_chef ROOT VERSION
+should_update_chef() {
+  if test ! -d "$1"; then
+    return 0;
+  elif test "$2" = "true"; then
+    return 1;
+  elif test "$2" = "latest"; then
+    return 0;
+  fi
+
+  if test -f "${1}/version-manifest.txt"; then
+    chef_version="`head -n 1 ${1}/version-manifest.txt | cut -d \" \" -f 2`";
+  else
+    chef_version="`${1}/bin/chef-solo -v | cut -d \" \" -f 2`";
+  fi
+
+  echo "$chef_version" | grep "^${2}" 2>&1 >/dev/null;
+  if test $? -eq 0; then
+    return 1;
+  else
+    echo "${2}" | grep "^$chef_version" 2>&1 >/dev/null;
+    if test $? -eq 0; then
+      return 1;
+    else
+      return 0;
+    fi
+  fi
+}
+
+# unable_to_download URL FILE
+unable_to_download() {
+  echo "Unable to download $1 to $2, aborting";
+
+  if test "x${stderr_results}" != "x"; then
+    echo "\nDEBUG OUTPUT FOLLOWS:\n${stderr_results}";
+  fi
+
+  exit 10;
+}
+
+# main
+main() {
+  should_update_chef "$chef_omnibus_root" "$version"
+  if test $? -eq 0; then
+    echo "-----> Installing Chef Omnibus (${pretty_version})";
+
+    # solaris 10 lacks recent enough credentials, so http url is used
+    platform="`/usr/bin/uname -s 2>/dev/null`";
+    platform_version="`/usr/bin/uname -r 2>/dev/null`";
+    if test "x${platform}" = "xSunOS" && test "x${platform_version}" = "x5.10"; then
+      chef_omnibus_url=`echo "$chef_omnibus_url" | sed -e "s/https/http/"`;
+    fi
+
+    do_download "$chef_omnibus_url" /tmp/install.sh;
+    $sudo_sh /tmp/install.sh $install_flags;
+  else
+    echo "-----> Chef Omnibus installation detected (${pretty_version})";
+  fi
+}
+
+# augment path in an attempt to find a download program
+PATH="${PATH}:/opt/local/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/sfw/bin";
+export PATH;
+
+main
+')
+-----> Installing Chef Omnibus (12.21.4)
+       Downloading https://omnitruck.chef.io/install.sh to file /tmp/install.sh
+       Trying curl...
+       Download complete.
+       el 7 x86_64
+       Getting information for chef stable 12.21.4 for el...
+       downloading https://omnitruck.chef.io/stable/chef/metadata?v=12.21.4&p=el&pv=7&m=x86_64
+         to file /tmp/install.sh.4256/metadata.txt
+       trying curl...
+       sha1	d58dc9b6b459bf43b5dfd842b436534f16dd0576
+       sha256	e368c75155b76d30976657e8794f13d932725eae798214b9a0e02bf4773fd1ea
+       url	https://packages.chef.io/files/stable/chef/12.21.4/el/7/chef-12.21.4-1.el7.x86_64.rpm
+       version	12.21.4
+       downloaded metadata file looks valid...
+       downloading https://packages.chef.io/files/stable/chef/12.21.4/el/7/chef-12.21.4-1.el7.x86_64.rpm
+         to file /tmp/install.sh.4256/chef-12.21.4-1.el7.x86_64.rpm
+       trying curl...
+       Comparing checksum with sha256sum...
+       Installing chef 12.21.4
+       installing with rpm...
+       warning: /tmp/install.sh.4256/chef-12.21.4-1.el7.x86_64.rpm: Header V4 DSA/SHA1 Signature, key ID 83ef826a: NOKEY
+       Preparing...                                                            (100%)#                                 (100%)##                                (100%)###                               (100%)####                              (100%)#####                             (100%)######                            (100%)#######                           (100%)########                          (100%)#########                         (100%)##########                        (100%)###########                       (100%)############                      (100%)#############                     (100%)##############                    (100%)###############                   (100%)################                  (100%)#################                 (100%)##################                (100%)###################               (100%)####################              (100%)#####################             (100%)######################            (100%)#######################           (100%)########################          (100%)#########################         (100%)##########################        (100%)###########################       (100%)############################      (100%)#############################     (100%)##############################    (100%)###############################   (100%)################################  (100%)################################# (100%)################################# [100%]
+       Updating / installing...
+          1:chef-12.21.4-1.el7                                                 (  1%)#                                 (  4%)##                                (  7%)###                               ( 10%)####                              ( 13%)#####                             ( 16%)######                            ( 19%)#######                           ( 22%)########                          ( 25%)#########                         ( 28%)##########                        ( 31%)###########                       ( 34%)############                      ( 37%)#############                     ( 40%)##############                    ( 43%)###############                   ( 46%)################                  ( 49%)#################                 ( 51%)##################                ( 54%)###################               ( 57%)####################              ( 60%)#####################             ( 63%)######################            ( 66%)#######################           ( 69%)########################          ( 72%)#########################         ( 75%)##########################        ( 78%)###########################       ( 81%)############################      ( 84%)#############################     ( 87%)##############################    ( 90%)###############################   ( 93%)################################  ( 96%)################################# ( 99%)################################# [100%]
+       Thank you for installing Chef!
+D      [SSH] centos@10.111.96.4<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a2bb72c28 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a2bb72bd8 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a2bb72b88 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a2bb72b38>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (sh -c '
+TEST_KITCHEN="1"; export TEST_KITCHEN
+sudo_rm="sudo -E rm"
+dirs="/tmp/kitchen/clients /tmp/kitchen/cookbooks /tmp/kitchen/data /tmp/kitchen/data_bags /tmp/kitchen/encrypted_data_bag_secret /tmp/kitchen/environments /tmp/kitchen/roles"
+root_path="/tmp/kitchen"
+
+$sudo_rm -rf $dirs
+mkdir -p $root_path
+')
+       Transferring files to <replicaset3-centos-73>
+D      TIMING: scp async upload (Kitchen::Transport::Ssh)
+D      TIMING: scp async upload (Kitchen::Transport::Ssh) took (0m46.98s)
+D      Transfer complete
+D      Attempting to execute command - try 1 of 1.
+D      [SSH] centos@10.111.96.4<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a2bb72c28 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a2bb72bd8 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a2bb72b88 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a2bb72b38>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}> (sh -c '
+TEST_KITCHEN="1"; export TEST_KITCHEN
+sudo -E /opt/chef/bin/chef-client --local-mode --config /tmp/kitchen/client.rb --log_level auto --force-formatter --no-color --json-attributes /tmp/kitchen/dna.json --chef-zero-port 8889 
+')
+       Starting Chef Client, version 12.21.4
+       [2018-10-08T21:15:41+00:00] INFO: *** Chef 12.21.4 ***
+       [2018-10-08T21:15:41+00:00] INFO: Platform: x86_64-linux
+       [2018-10-08T21:15:41+00:00] INFO: Chef-client pid: 9648
+       [2018-10-08T21:15:41+00:00] INFO: The plugin path /etc/chef/ohai/plugins does not exist. Skipping...
+       Creating a new client identity for replicaset3-centos-73 using the validator key.
+       [2018-10-08T21:15:42+00:00] INFO: Client key /tmp/kitchen/client.pem is not present - registering
+       [2018-10-08T21:15:42+00:00] INFO: HTTP Request Returned 404 Not Found: Object not found: chefzero://localhost:8889/nodes/replicaset3-centos-73
+       [2018-10-08T21:15:42+00:00] INFO: Setting the run_list to ["recipe[sc-mongodb::replicaset]"] from CLI options
+       [2018-10-08T21:15:42+00:00] INFO: Run List is [recipe[sc-mongodb::replicaset]]
+       [2018-10-08T21:15:42+00:00] INFO: Run List expands to [sc-mongodb::replicaset]
+       [2018-10-08T21:15:42+00:00] INFO: Starting Chef Run for replicaset3-centos-73
+       [2018-10-08T21:15:42+00:00] INFO: Running start handlers
+       [2018-10-08T21:15:42+00:00] INFO: Start handlers complete.
+       [2018-10-08T21:15:42+00:00] INFO: HTTP Request Returned 404 Not Found: Object not found: 
+       resolving cookbooks for run list: ["sc-mongodb::replicaset"]
+       [2018-10-08T21:15:42+00:00] INFO: Loading cookbooks [sc-mongodb@1.2.0, apt@7.1.0, yum@5.1.0, build-essential@8.2.1, seven_zip@3.0.0, mingw@2.1.0, windows@5.1.1]
+       Synchronizing Cookbooks:
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/resources/agent.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/resources/user.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mms_automation_agent.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/configserver.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/replicaset.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mms_backup_agent.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/providers/user.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/shard.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/default.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mms_monitoring_agent.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mongos.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mongo_gem.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/definitions/mongodb.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/mongodb_org_repo.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/libraries/mongodb_config_helpers.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/libraries/mongodb.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/install.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/recipes/user_management.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/mms_agent_config.erb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/ulimit.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/mms_agent.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/sysconfig.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/dbconfig.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/debian-mongodb.upstart.erb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/debian-mongodb.init.erb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/default.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/mongodb.conf.erb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/README.md in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/mongodb.sysconfig.erb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/sv-mms-agent-run.erb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/apt/recipes/default.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/apt/attributes/default.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/redhat-mongodb.init.erb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/apt/recipes/cacher-client.rb in the cache.
+       [2018-10-08T21:15:42+00:00] INFO: Storing updated cookbooks/sc-mongodb/attributes/users.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/sc-mongodb/templates/default/sv-mms-agent-log-run.erb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/sc-mongodb/metadata.json in the cache.
+         - sc-mongodb (1.2.0)
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/apt/recipes/unattended-upgrades.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/apt/templates/10dpkg-options.erb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/apt/templates/01proxy.erb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/apt/recipes/cacher-ng.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/apt/files/apt-proxy-v2.conf in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/apt/files/15update-stamp in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/apt/libraries/helpers.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/apt/templates/10recommends.erb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/apt/templates/50unattended-upgrades.erb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/apt/templates/unattended-upgrades.seed.erb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/yum/recipes/default.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/apt/templates/20auto-upgrades.erb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/apt/templates/acng.conf.erb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/apt/metadata.json in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/yum/resources/globalconfig.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/yum/recipes/dnf_yum_compat.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/yum/libraries/matchers.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/yum/templates/main.erb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/apt/README.md in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/yum/metadata.json in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/yum/README.md in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/yum/attributes/main.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/build-essential/resources/build_essential.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/build-essential/recipes/default.rb in the cache.
+         - apt (7.1.0)
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/build-essential/attributes/default.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/build-essential/resources/xcode_command_line_tools.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/build-essential/README.md in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/build-essential/metadata.json in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/build-essential/recipes/_windows.rb in the cache.
+         - yum (5.1.0)
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/seven_zip/providers/archive.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/seven_zip/recipes/default.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/seven_zip/resources/archive.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/seven_zip/metadata.json in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/seven_zip/attributes/default.rb in the cache.
+         - build-essential (8.2.1)
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/mingw/resources/tdm_gcc.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/mingw/resources/msys2_package.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/seven_zip/README.md in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/seven_zip/libraries/matchers.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/mingw/recipes/default.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/mingw/resources/get.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/mingw/libraries/_helper.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/mingw/attributes/default.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/mingw/files/default/bash.bat in the cache.
+         - seven_zip (3.0.0)
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/mingw/files/default/custom-upgrade.sh in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/mingw/files/default/custom_prefix.sh in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/mingw/README.md in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/mingw/metadata.json in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/mingw/files/default/time.h in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/mingw/files/default/pthread.h in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/certificate.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/certificate_binding.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/auto_run.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/dns.rb in the cache.
+         - mingw (2.1.0)[2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/feature_dism.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/feature.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/http_acl.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/font.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/feature_powershell.rb in the cache.
+       
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/pagefile.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/printer_port.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/share.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/printer.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/shortcut.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/user_privilege.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/resources/zipfile.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/providers/dns.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/recipes/default.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/libraries/registry_helper.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/libraries/powershell_helper.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/libraries/windows_helper.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/libraries/windows_privileged.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/libraries/version_helper.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/libraries/version.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/libraries/wmi_helper.rb in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/metadata.json in the cache.
+       [2018-10-08T21:15:43+00:00] INFO: Storing updated cookbooks/windows/README.md in the cache.
+         - windows (5.1.1)
+       Installing Cookbook Gems:
+       Compiling Cookbooks...
+       [2018-10-08T21:15:43+00:00] INFO: HTTP Request Returned 404 Not Found: Object not found: 
+       Converging 17 resources
+       Recipe: sc-mongodb::mongodb_org_repo
+         * yum_repository[mongodb] action create[2018-10-08T21:15:43+00:00] INFO: Processing yum_repository[mongodb] action create (sc-mongodb::mongodb_org_repo line 52)
+       
+           * template[/etc/yum.repos.d/mongodb.repo] action create[2018-10-08T21:15:43+00:00] INFO: Processing template[/etc/yum.repos.d/mongodb.repo] action create (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 42)
+       [2018-10-08T21:15:43+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] created file /etc/yum.repos.d/mongodb.repo
+       
+             - create new file /etc/yum.repos.d/mongodb.repo[2018-10-08T21:15:43+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] updated file contents /etc/yum.repos.d/mongodb.repo
+       
+             - update content in file /etc/yum.repos.d/mongodb.repo from none to 4294ab
+             --- /etc/yum.repos.d/mongodb.repo	2018-10-08 21:15:43.226615465 +0000
+             +++ /etc/yum.repos.d/.chef-mongodb20181008-9648-cta4mm.repo	2018-10-08 21:15:43.226615465 +0000
+             @@ -1 +1,12 @@
+             +# This file was generated by Chef
+             +# Do NOT modify this file by hand.
+             +
+             +[mongodb]
+             +name=mongodb RPM Repository
+             +baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.6/x86_64
+             +enabled=1
+             +fastestmirror_enabled=0
+             +gpgcheck=1
+             +gpgkey=https://www.mongodb.org/static/pgp/server-3.6.asc
+             +sslverify=true[2018-10-08T21:15:43+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] mode changed to 644
+       
+             - change mode from '' to '0644'
+             - restore selinux security context
+       [2018-10-08T21:15:43+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] sending run action to execute[yum clean metadata mongodb] (immediate)
+           * execute[yum clean metadata mongodb] action run[2018-10-08T21:15:43+00:00] INFO: Processing execute[yum clean metadata mongodb] action run (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 59)
+       
+             [execute] Loaded plugins: fastestmirror
+                Cleaning repos: mongodb
+                0 metadata files removed
+                0 sqlite files removed
+                0 metadata files removed
+       [2018-10-08T21:15:43+00:00] INFO: execute[yum clean metadata mongodb] ran successfully
+             - execute yum clean metadata --disablerepo=* --enablerepo=mongodb
+       [2018-10-08T21:15:43+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] sending run action to execute[yum-makecache-mongodb] (immediate)
+           * execute[yum-makecache-mongodb] action run[2018-10-08T21:15:43+00:00] INFO: Processing execute[yum-makecache-mongodb] action run (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 65)
+       [2018-10-08T21:15:44+00:00] INFO: execute[yum-makecache-mongodb] ran successfully
+       
+             - execute yum -q -y makecache --disablerepo=* --enablerepo=mongodb
+       [2018-10-08T21:15:44+00:00] INFO: template[/etc/yum.repos.d/mongodb.repo] sending create action to ruby_block[yum-cache-reload-mongodb] (immediate)
+           * ruby_block[yum-cache-reload-mongodb] action create[2018-10-08T21:15:44+00:00] INFO: Processing ruby_block[yum-cache-reload-mongodb] action create (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 72)
+       [2018-10-08T21:15:44+00:00] INFO: ruby_block[yum-cache-reload-mongodb] called
+       
+             - execute the ruby block yum-cache-reload-mongodb
+           * execute[yum clean metadata mongodb] action nothing[2018-10-08T21:15:44+00:00] INFO: Processing execute[yum clean metadata mongodb] action nothing (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 59)
+        (skipped due to action :nothing)
+           * execute[yum-makecache-mongodb] action nothing[2018-10-08T21:15:44+00:00] INFO: Processing execute[yum-makecache-mongodb] action nothing (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 65)
+        (skipped due to action :nothing)
+           * ruby_block[yum-cache-reload-mongodb] action nothing[2018-10-08T21:15:44+00:00] INFO: Processing ruby_block[yum-cache-reload-mongodb] action nothing (/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/chef-12.21.4/lib/chef/provider/yum_repository.rb line 72)
+        (skipped due to action :nothing)
+         
+       Recipe: sc-mongodb::install
+         * build_essential[build-tools] action install[2018-10-08T21:15:44+00:00] INFO: Processing build_essential[build-tools] action install (sc-mongodb::install line 29)
+       
+           * yum_package[autoconf, bison, flex, gcc, gcc-c++, gettext, kernel-devel, make, m4, ncurses-devel, patch] action install[2018-10-08T21:15:44+00:00] INFO: Processing yum_package[autoconf, bison, flex, gcc, gcc-c++, gettext, kernel-devel, make, m4, ncurses-devel, patch] action install (/tmp/kitchen/cache/cookbooks/build-essential/resources/build_essential.rb line 31)
+       [2018-10-08T21:15:48+00:00] INFO: yum_package[autoconf, bison, flex, gcc, gcc-c++, gettext, kernel-devel, make, m4, ncurses-devel, patch] installing autoconf-2.69-11.el7 from base repository bison-3.0.4-1.el7 from base repository flex-2.5.37-3.el7 from base repository gcc-4.8.5-28.el7_5.1 from updates repository gcc-c++-4.8.5-28.el7_5.1 from updates repository kernel-devel-3.10.0-862.14.4.el7 from updates repository m4-1.4.16-10.el7 from base repository ncurses-devel-5.9-14.20130511.el7_4 from base repository patch-2.7.1-10.el7_5 from updates repository
+       [2018-10-08T21:16:17+00:00] INFO: yum_package[autoconf, bison, flex, gcc, gcc-c++, gettext, kernel-devel, make, m4, ncurses-devel, patch] installed ["autoconf", "bison", "flex", "gcc", "gcc-c++", nil, "kernel-devel", nil, "m4", "ncurses-devel", "patch"] at ["2.69-11.el7", "3.0.4-1.el7", "2.5.37-3.el7", "4.8.5-28.el7_5.1", "4.8.5-28.el7_5.1", nil, "3.10.0-862.14.4.el7", nil, "1.4.16-10.el7", "5.9-14.20130511.el7_4", "2.7.1-10.el7_5"]
+       
+             - install version 2.69-11.el7 of package autoconf
+             - install version 3.0.4-1.el7 of package bison
+             - install version 2.5.37-3.el7 of package flex
+             - install version 4.8.5-28.el7_5.1 of package gcc
+             - install version 4.8.5-28.el7_5.1 of package gcc-c++
+             - install version 3.10.0-862.14.4.el7 of package kernel-devel
+             - install version 1.4.16-10.el7 of package m4
+             - install version 5.9-14.20130511.el7_4 of package ncurses-devel
+             - install version 2.7.1-10.el7_5 of package patch
+         
+         * file[/etc/sysconfig/mongodb install] action create_if_missing[2018-10-08T21:16:17+00:00] INFO: Processing file[/etc/sysconfig/mongodb install] action create_if_missing (sc-mongodb::install line 38)
+       [2018-10-08T21:16:17+00:00] INFO: file[/etc/sysconfig/mongodb install] created file /etc/sysconfig/mongodb
+       
+           - create new file /etc/sysconfig/mongodb[2018-10-08T21:16:17+00:00] INFO: file[/etc/sysconfig/mongodb install] updated file contents /etc/sysconfig/mongodb
+       
+           - update content in file /etc/sysconfig/mongodb from none to a35762
+           --- /etc/sysconfig/mongodb	2018-10-08 21:16:17.191457369 +0000
+           +++ /etc/sysconfig/.chef-mongodb20181008-9648-1tb2aq5	2018-10-08 21:16:17.190457410 +0000
+           @@ -1 +1,2 @@
+           +ENABLE_MONGODB=no[2018-10-08T21:16:17+00:00] INFO: file[/etc/sysconfig/mongodb install] owner changed to 0
+       [2018-10-08T21:16:17+00:00] INFO: file[/etc/sysconfig/mongodb install] group changed to 0
+       [2018-10-08T21:16:17+00:00] INFO: file[/etc/sysconfig/mongodb install] mode changed to 644
+       
+           - change mode from '' to '0644'
+           - change owner from '' to 'root'
+           - change group from '' to 'root'
+           - restore selinux security context
+         * template[/etc/mongod.conf install] action create_if_missing[2018-10-08T21:16:17+00:00] INFO: Processing template[/etc/mongod.conf install] action create_if_missing (sc-mongodb::install line 48)
+       [2018-10-08T21:16:17+00:00] INFO: template[/etc/mongod.conf install] created file /etc/mongod.conf
+       
+           - create new file /etc/mongod.conf[2018-10-08T21:16:17+00:00] INFO: template[/etc/mongod.conf install] updated file contents /etc/mongod.conf
+       
+           - update content in file /etc/mongod.conf from none to e0bbc2
+           --- /etc/mongod.conf	2018-10-08 21:16:17.219456214 +0000
+           +++ /etc/.chef-mongod20181008-9648-3m9bec.conf	2018-10-08 21:16:17.218456255 +0000
+           @@ -1 +1,26 @@
+           +#
+           +# Automatically Generated by Chef, do not edit directly!
+           +#
+           +
+           +---
+           +net:
+           +  port: 27017
+           +  bindIp: 0.0.0.0
+           +systemLog:
+           +  destination: file
+           +  logAppend: true
+           +  path: "/var/log/mongodb/mongod.log"
+           +processManagement:
+           +  fork: true
+           +  pidFilePath: "/var/run/mongodb/mongod.pid"
+           +storage:
+           +  journal:
+           +    enabled: true
+           +  dbPath: "/var/lib/mongo"
+           +  engine: wiredTiger
+           +replication:
+           +  oplogSizeMB: 3000
+           +  replSetName: kitchen
+           +  enableMajorityReadConcern: true
+           +[2018-10-08T21:16:17+00:00] INFO: template[/etc/mongod.conf install] owner changed to 0
+       [2018-10-08T21:16:17+00:00] INFO: template[/etc/mongod.conf install] group changed to 0
+       [2018-10-08T21:16:17+00:00] INFO: template[/etc/mongod.conf install] mode changed to 644
+       
+           - change mode from '' to '0644'
+           - change owner from '' to 'root'
+           - change group from '' to 'root'
+           - restore selinux security context
+         * yum_package[netcat] action install[2018-10-08T21:16:17+00:00] INFO: Processing yum_package[netcat] action install (sc-mongodb::install line 63)
+        (skipped due to only_if)
+         * template[/etc/init.d/mongod install] action create_if_missing[2018-10-08T21:16:17+00:00] INFO: Processing template[/etc/init.d/mongod install] action create_if_missing (sc-mongodb::install line 76)
+       [2018-10-08T21:16:17+00:00] INFO: template[/etc/init.d/mongod install] created file /etc/init.d/mongod
+       
+           - create new file /etc/init.d/mongod[2018-10-08T21:16:17+00:00] INFO: template[/etc/init.d/mongod install] updated file contents /etc/init.d/mongod
+       
+           - update content in file /etc/init.d/mongod from none to 86fc31
+           --- /etc/init.d/mongod	2018-10-08 21:16:17.243455224 +0000
+           +++ /etc/init.d/.chef-mongod20181008-9648-rmos7	2018-10-08 21:16:17.243455224 +0000
+           @@ -1 +1,107 @@
+           +#!/bin/bash
+           +
+           +# mongod - Startup script for mongod
+           +
+           +# chkconfig: 35 85 15
+           +# description: Mongo is a scalable, document-oriented database.
+           +# processname: mongod
+           +# config: /etc/mongod.conf
+           +
+           +. /etc/rc.d/init.d/functions
+           +
+           +NAME=mongod
+           +SYSCONFIG=/etc/sysconfig/mongodb
+           +DAEMON_USER=
+           +ENABLE_MONGODB=yes
+           +
+           +SUBSYS_LOCK_FILE=/var/lock/subsys/mongod
+           +
+           +if [ -f "$SYSCONFIG" ]; then
+           +    . "$SYSCONFIG"
+           +fi
+           +
+           +# FIXME: 1.9.x has a --shutdown flag that parses the config file and
+           +# shuts down the correct running pid, but that's unavailable in 1.8
+           +# for now.  This can go away when this script stops supporting 1.8.
+           +DBPATH=`awk -F= '/^dbpath[[:blank:]]*=[[:blank:]]*/{print $2}' "$CONFIGFILE"`
+           +PIDFILE=`awk -F= '/^pidfilepath[[:blank:]]*=[[:blank:]]*/{print $2}' "$CONFIGFILE"`
+           +
+           +# Handle NUMA access to CPUs (SERVER-3574)
+           +# This verifies the existence of numactl as well as testing that the command works
+           +NUMACTL_ARGS="--interleave=all"
+           +if which numactl >/dev/null 2>/dev/null && numactl $NUMACTL_ARGS ls / >/dev/null 2>/dev/null
+           +then
+           +    NUMACTL="numactl $NUMACTL_ARGS"
+           +else
+           +    NUMACTL=""
+           +fi
+           +
+           +start()
+           +{
+           +  ulimit -f unlimited
+           +  ulimit -t unlimited
+           +  ulimit -v unlimited
+           +  ulimit -n 64000
+           +  ulimit -m unlimited
+           +  ulimit -u 32000
+           +
+           +  echo -n $"Starting mongod: "
+           +  daemon --user "$DAEMON_USER" $NUMACTL $DAEMON $DAEMON_OPTS
+           +  RETVAL=$?
+           +  echo
+           +  [ $RETVAL -eq 0 ] && touch $SUBSYS_LOCK_FILE
+           +}
+           +
+           +stop()
+           +{
+           +  echo -n $"Stopping mongod: "
+           +  if test "x$PIDFILE" != "x"; then
+           +    killproc -p $PIDFILE -d 300 $DAEMON
+           +  else
+           +    killproc -d 300 $DAEMON
+           +  fi
+           +  RETVAL=$?
+           +  echo
+           +  [ $RETVAL -eq 0 ] && rm -f $SUBSYS_LOCK_FILE
+           +}
+           +
+           +restart () {
+           +  stop
+           +  start
+           +}
+           +
+           +RETVAL=0
+           +
+           +if test "x$ENABLE_MONGODB" != "xyes"; then
+           +    exit $RETVAL
+           +fi
+           +
+           +case "$1" in
+           +  start)
+           +    start
+           +    ;;
+           +  stop)
+           +    stop
+           +    ;;
+           +  restart|reload|force-reload)
+           +    restart
+           +    ;;
+           +  condrestart)
+           +    [ -f $SUBSYS_LOCK_FILE ] && restart || :
+           +    ;;
+           +  status)
+           +    if test "x$PIDFILE" != "x"; then
+           +      status -p $PIDFILE $DAEMON
+           +    else
+           +      status $DAEMON
+           +    fi
+           +    RETVAL=$?
+           +    ;;
+           +  *)
+           +    echo "Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
+           +    RETVAL=1
+           +esac
+           +
+           +exit $RETVAL
+           +[2018-10-08T21:16:17+00:00] INFO: template[/etc/init.d/mongod install] owner changed to 0
+       [2018-10-08T21:16:17+00:00] INFO: template[/etc/init.d/mongod install] group changed to 0
+       [2018-10-08T21:16:17+00:00] INFO: template[/etc/init.d/mongod install] mode changed to 755
+       
+           - change mode from '' to '0755'
+           - change owner from '' to 'root'
+           - change group from '' to 'root'
+           - restore selinux security context
+         * service[mongod] action enable[2018-10-08T21:16:17+00:00] INFO: Processing service[mongod] action enable (sc-mongodb::install line 94)
+       [2018-10-08T21:16:17+00:00] INFO: service[mongod] enabled
+       
+           - enable service service[mongod]
+         * yum_package[mongodb-org] action install[2018-10-08T21:16:17+00:00] INFO: Processing yum_package[mongodb-org] action install (sc-mongodb::install line 114)
+       [2018-10-08T21:16:17+00:00] INFO: yum_package[mongodb-org] installing mongodb-org-3.6.6-1.el7 from mongodb repository
+       [2018-10-08T21:16:22+00:00] INFO: yum_package[mongodb-org] installed mongodb-org at 3.6.6-1.el7
+       
+           - install version 3.6.6-1.el7 of package mongodb-org
+         * directory[/var/run/mongodb] action create[2018-10-08T21:16:22+00:00] INFO: Processing directory[/var/run/mongodb] action create (sc-mongodb::install line 154)
+        (up to date)
+       Recipe: sc-mongodb::replicaset
+         * ruby_block[chef_gem_at_converge_time] action run[2018-10-08T21:16:22+00:00] INFO: Processing ruby_block[chef_gem_at_converge_time] action run (sc-mongodb::replicaset line 27)
+       [2018-10-08T21:16:28+00:00] INFO: ruby_block[chef_gem_at_converge_time] called
+       
+           - execute the ruby block chef_gem_at_converge_time
+         * template[/etc/sysconfig/mongodb] action create[2018-10-08T21:16:28+00:00] INFO: Processing template[/etc/sysconfig/mongodb] action create (sc-mongodb::replicaset line 146)
+       [2018-10-08T21:16:28+00:00] INFO: template[/etc/sysconfig/mongodb] backed up to /tmp/kitchen/backup/etc/sysconfig/mongodb.chef-20181008211628.820864
+       [2018-10-08T21:16:28+00:00] INFO: template[/etc/sysconfig/mongodb] updated file contents /etc/sysconfig/mongodb
+       
+           - update content in file /etc/sysconfig/mongodb from a35762 to 803da0
+           --- /etc/sysconfig/mongodb	2018-10-08 21:16:17.190457410 +0000
+           +++ /etc/sysconfig/.chef-mongodb20181008-9648-ipm9im	2018-10-08 21:16:28.818977756 +0000
+           @@ -1,2 +1,10 @@
+           -ENABLE_MONGODB=no
+           +#
+           +# Automatically Generated by Chef, do not edit directly!
+           +#
+           +
+           +CONFIGFILE="/etc/mongod.conf"
+           +DAEMON="/usr/bin/$NAME"
+           +DAEMON_OPTS="--config /etc/mongod.conf"
+           +DAEMON_USER="mongod"
+           +ENABLE_MONGODB="yes"
+           - restore selinux security context
+         * template[/etc/mongod.conf] action create[2018-10-08T21:16:28+00:00] INFO: Processing template[/etc/mongod.conf] action create (sc-mongodb::replicaset line 159)
+        (up to date)
+         * directory[/var/log/mongodb] action create[2018-10-08T21:16:28+00:00] INFO: Processing directory[/var/log/mongodb] action create (sc-mongodb::replicaset line 173)
+        (up to date)
+         * directory[/var/lib/mongo] action create[2018-10-08T21:16:28+00:00] INFO: Processing directory[/var/lib/mongo] action create (sc-mongodb::replicaset line 184)
+        (up to date)
+         * execute[mongodb-systemctl-daemon-reload-mongod] action nothing[2018-10-08T21:16:28+00:00] INFO: Processing execute[mongodb-systemctl-daemon-reload-mongod] action nothing (sc-mongodb::replicaset line 194)
+        (skipped due to action :nothing)
+         * template[/etc/init.d/mongod] action create[2018-10-08T21:16:28+00:00] INFO: Processing template[/etc/init.d/mongod] action create (sc-mongodb::replicaset line 200)
+        (up to date)
+         * service[mongod] action enable[2018-10-08T21:16:28+00:00] INFO: Processing service[mongod] action enable (sc-mongodb::replicaset line 222)
+        (up to date)
+         * service[mongod] action start[2018-10-08T21:16:28+00:00] INFO: Processing service[mongod] action start (sc-mongodb::replicaset line 222)
+       [2018-10-08T21:16:29+00:00] INFO: service[mongod] started
+       
+           - start service service[mongod]
+       [2018-10-08T21:16:29+00:00] INFO: template[/etc/sysconfig/mongodb] sending restart action to service[mongod] (delayed)
+         * service[mongod] action restart[2018-10-08T21:16:29+00:00] INFO: Processing service[mongod] action restart (sc-mongodb::replicaset line 222)
+       [2018-10-08T21:16:31+00:00] INFO: service[mongod] restarted
+       
+           - restart service service[mongod]
+       [2018-10-08T21:16:31+00:00] INFO: Chef Run complete in 48.781387133 seconds
+       
+       Running handlers:
+       [2018-10-08T21:16:31+00:00] INFO: Running report handlers
+       Running handlers complete
+       [2018-10-08T21:16:31+00:00] INFO: Report handlers complete
+       
+       Deprecated features used!
+         Cloning resource attributes for service[mongod] from prior resource
+       Previous service[mongod]: /tmp/kitchen/cache/cookbooks/sc-mongodb/recipes/install.rb:94:in `from_file'
+       Current  service[mongod]: /tmp/kitchen/cache/cookbooks/sc-mongodb/definitions/mongodb.rb:222:in `block in from_file' at 1 location:
+           - /tmp/kitchen/cache/cookbooks/sc-mongodb/definitions/mongodb.rb:222:in `block in from_file'
+          See https://docs.chef.io/deprecations_resource_cloning.html for further details.
+       
+       Chef Client finished, 16/27 resources updated in 50 seconds
+D      Cleaning up local sandbox in /var/folders/9n/78q28xzj6q3_c3k90hqlb58j6mx2w9/T/replicaset3-centos-73-sandbox-20181008-87875-jjlr99
+       Finished converging <replicaset3-centos-73> (1m46.04s).
+D      [SSH] shutting previous connection centos@10.111.96.4<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a2bb72c28 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a2bb72bd8 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a2bb72b88 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a2bb72b38>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+D      [SSH] closing connection to centos@10.111.96.4<{:user_known_hosts_file=>"/dev/null", :paranoid=>false, :port=>22, :compression=>false, :compression_level=>0, :keepalive=>true, :keepalive_interval=>60, :timeout=>15, :keys_only=>true, :keys=>["/Users/dcaughill/Documents/Github/IT-chef-repo/.chef/Integrations.pem"], :auth_methods=>["publickey"], :logger=>#<Logger:0x00007f8a2bb72c28 @level=4, @progname=nil, @default_formatter=#<Logger::Formatter:0x00007f8a2bb72bd8 @datetime_format=nil>, @formatter=nil, @logdev=#<Logger::LogDevice:0x00007f8a2bb72b88 @shift_period_suffix=nil, @shift_size=nil, @shift_age=nil, @filename=nil, @dev=#<IO:<STDERR>>, @mon_owner=nil, @mon_count=0, @mon_mutex=#<Thread::Mutex:0x00007f8a2bb72b38>>>, :password_prompt=>#<Net::SSH::Prompt:0x00007f8a25123c00>, :user=>"centos"}>
+-----> Kitchen is finished. (7m23.75s)
