@@ -267,28 +267,28 @@ describe 'sc-mongodb::default' do
 
     shared_examples_for 'debian based install' do
       it 'should install "mongodb-org-server" package' do
-        expect(chef_run).to install_apt_package('mongodb-org-server').with(
+        expect(chef_run).to install_package('mongodb-org-server').with(
           options: mongod_packager_options,
           version: mongod_version
         )
       end
 
       it 'should install "mongodb-org-shell" package' do
-        expect(chef_run).to install_apt_package('mongodb-org-shell').with(
+        expect(chef_run).to install_package('mongodb-org-shell').with(
           options: mongod_packager_options,
           version: mongod_version
         )
       end
 
       it 'should install "mongodb-org-tools" package' do
-        expect(chef_run).to install_apt_package('mongodb-org-tools').with(
+        expect(chef_run).to install_package('mongodb-org-tools').with(
           options: mongod_packager_options,
           version: mongod_version
         )
       end
 
       it 'should install "mongodb-org-mongos" package' do
-        expect(chef_run).to install_apt_package('mongodb-org-mongos').with(
+        expect(chef_run).to install_package('mongodb-org-mongos').with(
           options: mongod_packager_options,
           version: mongod_version
         )
@@ -321,7 +321,7 @@ describe 'sc-mongodb::default' do
 
       it 'should install "mongodb-org" package' do
         expect(chef_run).to install_package('mongodb-org').with(
-          options: mongod_packager_options,
+          options: mongod_packager_options_rhel,
           version: mongod_version
         )
       end
