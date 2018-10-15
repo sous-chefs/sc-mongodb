@@ -50,6 +50,10 @@ describe 'sc-mongodb::default' do
           'logAppend' => true,
           'path' => '/var/log/mongodb/mongod.log',
         },
+        'processManagement' => {
+          'fork' => true,
+          'pidFilePath' => '/var/run/mongodb/mongod.pid',
+        },
         'storage' => {
           'journal' => {
             'enabled' => true,
@@ -80,11 +84,11 @@ describe 'sc-mongodb::default' do
 
     # mongod_packager_options: pkg install options for mongo per OS
     let(:mongod_packager_options_rhel) do
-      '--nogpgcheck'
+      ['--nogpgcheck']
     end
 
     let(:mongod_packager_options_debian) do
-      '-o Dpkg::Options::="--force-confold" --force-yes'
+      ['-o', 'Dpkg::Options::=--force-confold', '--force-yes']
     end
 
     # mongod_sysconfig_file: sysconfig file location for mongo per OS
@@ -168,13 +172,6 @@ describe 'sc-mongodb::default' do
             bind_ip: '0.0.0.0',
             port: 27017,
           }
-        )
-      end
-
-      it 'should install "mongodb-org" package' do
-        expect(chef_run).to install_package('mongodb-org').with(
-          options: mongod_packager_options,
-          version: mongod_version
         )
       end
 
@@ -270,28 +267,28 @@ describe 'sc-mongodb::default' do
 
     shared_examples_for 'debian based install' do
       it 'should install "mongodb-org-server" package' do
-        expect(chef_run).to install_package('mongodb-org-server').with(
+        expect(chef_run).to install_apt_package('mongodb-org-server').with(
           options: mongod_packager_options,
           version: mongod_version
         )
       end
 
       it 'should install "mongodb-org-shell" package' do
-        expect(chef_run).to install_package('mongodb-org-shell').with(
+        expect(chef_run).to install_apt_package('mongodb-org-shell').with(
           options: mongod_packager_options,
           version: mongod_version
         )
       end
 
       it 'should install "mongodb-org-tools" package' do
-        expect(chef_run).to install_package('mongodb-org-tools').with(
+        expect(chef_run).to install_apt_package('mongodb-org-tools').with(
           options: mongod_packager_options,
           version: mongod_version
         )
       end
 
       it 'should install "mongodb-org-mongos" package' do
-        expect(chef_run).to install_package('mongodb-org-mongos').with(
+        expect(chef_run).to install_apt_package('mongodb-org-mongos').with(
           options: mongod_packager_options,
           version: mongod_version
         )
@@ -319,6 +316,13 @@ describe 'sc-mongodb::default' do
           gpgcheck: true,
           sslverify: true,
           enabled: true
+        )
+      end
+
+      it 'should install "mongodb-org" package' do
+        expect(chef_run).to install_package('mongodb-org').with(
+          options: mongod_packager_options,
+          version: mongod_version
         )
       end
     end
