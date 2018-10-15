@@ -99,6 +99,8 @@ when 'debian'
     if node['platform_version'].to_f < 15.04
       default['mongodb']['init_dir'] = '/etc/init/'
       default['mongodb']['init_script_template'] = 'debian-mongodb.upstart.erb'
+    elsif node['platform_version'].to_i >= 18
+      default['mongodb']['package_version'] = '4.0.3'
     end
   elsif node['platform'] == 'debian'
     default['mongodb']['repo'] = 'http://repo.mongodb.org/apt/debian'
