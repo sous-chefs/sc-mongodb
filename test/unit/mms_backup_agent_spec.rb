@@ -3,7 +3,7 @@ require 'chefspec/berkshelf'
 
 describe 'sc-mongodb::mms_backup_agent' do
   let(:chef_run) do
-    ChefSpec::Runner.new(platform: 'ubuntu', version: '12.04') do |n|
+    ChefSpec::Runner.new(platform: 'ubuntu', version: '16.04') do |n|
       n['mongodb']['mms_agent']['api_key'] = 'strange key'
     end
   end

@@ -6,7 +6,7 @@ describe 'sc-mongodb::default' do
   let(:chef_run) do
     ChefSpec::Runner.new(
       platform: 'ubuntu',
-      version: '12.04'
+      version: '16.04'
     )
   end
 

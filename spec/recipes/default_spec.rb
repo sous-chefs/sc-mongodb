@@ -98,11 +98,11 @@ describe 'sc-mongodb::default' do
 
     # mongod_version: RHEL appends a release and OS versions to their versions
     let(:mongod_version_rhel) do
-      '3.2.18-1.el7'
+      '3.6.6-1.el7'
     end
 
     let(:mongod_version_debian) do
-      '3.2.18'
+      '3.6.6'
     end
 
     # All tests in this section run for all OS's
@@ -314,8 +314,8 @@ describe 'sc-mongodb::default' do
       it 'should create "mongodb" yum_repository' do
         expect(chef_run).to create_yum_repository('mongodb').with(
           description: 'mongodb RPM Repository',
-          baseurl: 'https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.2/x86_64',
-          gpgkey: 'https://www.mongodb.org/static/pgp/server-3.2.asc',
+          baseurl: 'https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.6/x86_64',
+          gpgkey: 'https://www.mongodb.org/static/pgp/server-3.6.asc',
           gpgcheck: true,
           sslverify: true,
           enabled: true
@@ -344,15 +344,15 @@ describe 'sc-mongodb::default' do
       it 'should create "mongodb" yum_repository' do
         expect(chef_run).to add_apt_repository('mongodb').with(
           uri: 'http://repo.mongodb.org/apt/debian',
-          distribution: 'wheezy/mongodb-org/3.2',
+          distribution: 'wheezy/mongodb-org/3.6',
           components: ['main'],
-          key: ['https://www.mongodb.org/static/pgp/server-3.2.asc']
+          key: ['https://www.mongodb.org/static/pgp/server-3.6.asc']
         )
       end
     end
 
     context 'Debian 8' do
-      let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'debian', version: '8.7').converge(described_recipe) }
+      let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'debian', version: '8.11').converge(described_recipe) }
 
       it_behaves_like 'default recipe' do
         let(:file_owner) { 'mongodb' }
@@ -372,9 +372,9 @@ describe 'sc-mongodb::default' do
       it 'should create "mongodb" yum_repository' do
         expect(chef_run).to add_apt_repository('mongodb').with(
           uri: 'http://repo.mongodb.org/apt/debian',
-          distribution: 'jessie/mongodb-org/3.2',
+          distribution: 'jessie/mongodb-org/3.6',
           components: ['main'],
-          key: ['https://www.mongodb.org/static/pgp/server-3.2.asc']
+          key: ['https://www.mongodb.org/static/pgp/server-3.6.asc']
         )
       end
     end
@@ -400,9 +400,9 @@ describe 'sc-mongodb::default' do
       it 'should create "mongodb" yum_repository' do
         expect(chef_run).to add_apt_repository('mongodb').with(
           uri: 'http://repo.mongodb.org/apt/ubuntu',
-          distribution: 'trusty/mongodb-org/3.2',
+          distribution: 'trusty/mongodb-org/3.6',
           components: ['multiverse'],
-          key: ['https://www.mongodb.org/static/pgp/server-3.2.asc']
+          key: ['https://www.mongodb.org/static/pgp/server-3.6.asc']
         )
       end
     end
@@ -428,9 +428,37 @@ describe 'sc-mongodb::default' do
       it 'should create "mongodb" yum_repository' do
         expect(chef_run).to add_apt_repository('mongodb').with(
           uri: 'http://repo.mongodb.org/apt/ubuntu',
-          distribution: 'xenial/mongodb-org/3.2',
+          distribution: 'xenial/mongodb-org/3.6',
           components: ['multiverse'],
-          key: ['https://www.mongodb.org/static/pgp/server-3.2.asc']
+          key: ['https://www.mongodb.org/static/pgp/server-3.6.asc']
+        )
+      end
+    end
+
+    context 'Ubuntu 18.04' do
+      let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '18.04').converge(described_recipe) }
+
+      it_behaves_like 'default recipe' do
+        let(:file_owner) { 'mongodb' }
+        let(:mongod_conf) { mongod_conf_debian }
+        let(:mongod_init_file) { mongod_init_sysvinit }
+        let(:mongod_init_source) { 'debian-mongodb.init.erb' }
+        let(:mongod_packager_options) { mongod_packager_options_debian }
+        let(:mongod_sysconfig_file) { mongod_sysconfig_file_debian }
+        let(:mongod_version) { mongod_version_debian }
+      end
+
+      it_behaves_like 'debian based install' do
+        let(:mongod_packager_options) { mongod_packager_options_debian }
+        let(:mongod_version) { mongod_version_debian }
+      end
+
+      it 'should create "mongodb" yum_repository' do
+        expect(chef_run).to add_apt_repository('mongodb').with(
+          uri: 'http://repo.mongodb.org/apt/ubuntu',
+          distribution: 'bionic/mongodb-org/4.0',
+          components: ['multiverse'],
+          key: ['https://www.mongodb.org/static/pgp/server-4.0.asc']
         )
       end
     end
