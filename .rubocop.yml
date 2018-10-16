@@ -1,2 +1,3 @@
-BlockNesting:
-  Max: 4 
+AllCops:
+  Exclude:
+    - 'Dangerfile'
