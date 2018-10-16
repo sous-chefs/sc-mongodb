@@ -59,6 +59,11 @@ template "#{dbconfig_file} install" do
   action :create_if_missing
 end
 
+# this package required by init script
+package 'netcat' do
+  only_if { node['platform_family'] == 'debian' }
+end
+
 # and we install our own init file
 if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
   init_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}.conf")
@@ -66,12 +71,6 @@ if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
 else
   init_file = File.join(node['mongodb']['init_dir'], node['mongodb']['default_init_name'])
   mode = '0755'
-end
-
-# Reload systemctl for RHEL 7+ after modifying the init file.
-execute 'mongodb-systemctl-daemon-reload' do
-  command 'systemctl daemon-reload'
-  action :nothing
 end
 
 template "#{init_file} install" do
@@ -90,10 +89,11 @@ template "#{init_file} install" do
     port: config['net']['port']
   )
   action :create_if_missing
+end
 
-  if (platform_family?('rhel') && node['platform'] != 'amazon' && node['platform_version'].to_i >= 7) || (node['platform'] == 'debian' && node['platform_version'].to_i >= 8)
-    notifies :run, 'execute[mongodb-systemctl-daemon-reload]', :immediately
-  end
+service 'mongod' do
+  supports start: true, stop: true, restart: true, status: true
+  action :enable
 end
 
 # Adjust the version number for RHEL style if needed
@@ -149,3 +149,10 @@ if key_file_content
 end
 
 node.default['mongodb']['config'][config_type]['security']['keyFile'] = nil if key_file_content.nil?
+
+# create directory for pidfile
+directory File.dirname(node['mongodb']['config']['mongod']['processManagement']['pidFilePath']) do
+  owner node['mongodb']['user']
+  group node['mongodb']['group']
+  mode  '0755'
+end

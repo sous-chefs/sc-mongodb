@@ -5,11 +5,11 @@ driver:
 provisioner:
   name: chef_zero
 
+verifier:
+  name: inspec
+
 client_rb:
   treat_deprecation_warnings_as_errors: true
-  resource_cloning: false
-
-verifier: inspec
 
 platforms:
 - name: centos-6

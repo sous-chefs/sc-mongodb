@@ -14,7 +14,7 @@ default['mongodb']['config']['mongod']['systemLog']['logAppend'] = true
 default['mongodb']['config']['mongod']['systemLog']['path'] = '/var/log/mongodb/mongod.log'
 
 case node['platform_family']
-when 'rhel', 'fedora'
+when 'rhel', 'fedora', 'debian'
   default['mongodb']['config']['mongod']['processManagement']['fork'] = true
   default['mongodb']['config']['mongod']['processManagement']['pidFilePath'] = '/var/run/mongodb/mongod.pid'
 end
