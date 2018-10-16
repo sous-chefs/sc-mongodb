@@ -1,5 +1,9 @@
 # sc-mongodb Cookbook CHANGELOG
 
+## unreleased
+
+- Update CI tooling
+
 ## v2.0.0
 
 - custom resource user resource
