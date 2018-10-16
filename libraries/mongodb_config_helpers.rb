@@ -25,14 +25,13 @@ end
 # Monkey patches Hash to allow us to throw away keys that have empty or nil values
 class Hash
   def compact
-    inject({}) do |new_hash, (k, v)|
+    each_with_object({}) do |(k, v), new_hash|
       if v.is_a?(Hash)
         v = v.compact
         new_hash[k] = v unless v.empty?
       else
         new_hash[k] = v unless v.nil?
       end
-      new_hash
     end
   end
 end

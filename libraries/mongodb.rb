@@ -133,7 +133,7 @@ class Chef::ResourceDefinitionList::MongoDB
         abort("Could not connect to database: '#{mongo_host}:#{mongo_port}'")
       end
 
-      rs_member_ips =	members.each_with_index.map do |member, n|
+      rs_member_ips =  members.each_with_index.map do |member, n|
         port = member['mongodb']['config']['mongod']['net']['port']
         { '_id' => n, 'host' => "#{member['ipaddress']}:#{port}" }
       end
