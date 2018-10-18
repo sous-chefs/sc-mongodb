@@ -1,15 +1,14 @@
+---
 sudo: required
 dist: trusty
+cache: bundler
 
 addons:
   apt:
     sources:
-      - chef-current-trusty
+      - chef-stable-trusty
     packages:
       - chefdk
-
-# Don't `bundle install`
-install: echo "skip bundle install"
 
 branches:
   only:
@@ -18,38 +17,30 @@ branches:
 services: docker
 
 env:
-  matrix:
-    - INSTANCE=default-centos-6
-    - INSTANCE=default-centos-7
-    - INSTANCE=default-debian-8
-    - INSTANCE=default-fedora-latest
-    - INSTANCE=default-ubuntu-1404
-    - INSTANCE=default-ubuntu-1604
-    - INSTANCE=default-ubuntu-1804
-    - INSTANCE=mms-agent-centos-6
-    - INSTANCE=mms-agent-centos-7
-    - INSTANCE=mms-agent-ubuntu-1404
-    - INSTANCE=mms-agent-ubuntu-1604
+  - INSTANCE=default-centos-6
+  - INSTANCE=default-centos-7
+  - INSTANCE=default-debian-8
+  - INSTANCE=default-debian-9
+  - INSTANCE=default-fedora-latest
+  - INSTANCE=default-ubuntu-1604
+  - INSTANCE=default-ubuntu-1804
+  - INSTANCE=mms-agent-centos-6
+  - INSTANCE=mms-agent-centos-7
+  - INSTANCE=mms-agent-ubuntu-1604
+  - INSTANCE=mms-agent-ubuntu-1804
 
-# Ensure we make ChefDK's Ruby the default
 before_script:
-  - eval "$(/opt/chefdk/bin/chef shell-init bash)"
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
   - eval "$(/opt/chefdk/bin/chef shell-init bash)"
-  - /opt/chefdk/embedded/bin/chef --version
-  - /opt/chefdk/embedded/bin/cookstyle --version
-  - /opt/chefdk/embedded/bin/foodcritic --version
+  - chef --version
+  - cookstyle --version
+  - foodcritic --version
+  - chef gem install danger
 
-script:
-  - KITCHEN_LOCAL_YAML=.kitchen.dokken.yml /opt/chefdk/embedded/bin/kitchen verify ${INSTANCE}
-
-after_failure:
-  - cat .kitchen/logs/*.log
+script: KITCHEN_LOCAL_YAML=.kitchen.dokken.yml kitchen verify ${INSTANCE}
 
 matrix:
-  allow_failures:
-    - env: INSTANCE=mms-agent-centos-6
   include:
-    - env: UNIT_AND_LINT=1
-      script:
-        - /opt/chefdk/bin/chef exec rake
+    - script:
+      - chef exec delivery local all
+      env: UNIT_AND_LINT=1

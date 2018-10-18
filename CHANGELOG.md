@@ -1,5 +1,14 @@
 # sc-mongodb Cookbook CHANGELOG
 
+## unreleased
+
+- Update CI tooling
+
+## v2.0.0
+
+- custom resource user resource
+- update CI tooling
+
 ## v1.2.0
 
 - Fixes issue where on debain based systems mongo is not updated if version is increased

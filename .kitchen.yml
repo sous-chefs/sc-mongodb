@@ -1,33 +1,33 @@
 ---
 driver:
   name: vagrant
-  linked_clone: true
+
+provisioner:
+  name: chef_zero
 
 verifier:
   name: inspec
 
 client_rb:
   treat_deprecation_warnings_as_errors: true
-  resource_cloning: false
 
 platforms:
-  - name: centos-6.8
-  - name: centos-7.3
-  - name: debian-8.6
-  - name: debian-9.5
-  - name: fedora-25
-  - name: ubuntu-14.04
+  - name: centos-6
+  - name: centos-7
+  - name: debian-8
+  - name: debian-9
+  - name: fedora-28
   - name: ubuntu-16.04
   - name: ubuntu-18.04
 
 suites:
   - name: default
     run_list:
-      - "recipe[sc-mongodb]"
+      - recipe[sc-mongodb]
 
   - name: replicaset
     run_list:
-      - "recipe[sc-mongodb::replicaset]"
+      - recipe[sc-mongodb::replicaset]
     attributes:
       mongodb:
         cluster_name: kitchen
@@ -38,12 +38,12 @@ suites:
 
   - name: configserver
     run_list:
-      - "recipe[sc-mongodb::configserver]"
+      - recipe[sc-mongodb::configserver]
 
   - name: mongos
     run_list:
-      - "recipe[sc-mongodb::configserver]"
-      - "recipe[sc-mongodb::mongos]"
+      - recipe[sc-mongodb::configserver]
+      - recipe[sc-mongodb::mongos]
     attributes:
       mongodb:
         cluster_name: default
@@ -80,8 +80,8 @@ suites:
 
   - name: user_management
     run_list:
-      - "recipe[sc-mongodb::default]"
-      - "recipe[sc-mongodb::user_management]"
+      - recipe[sc-mongodb::default]
+      - recipe[sc-mongodb::user_management]
     attributes:
       mongodb:
         config:
@@ -95,7 +95,7 @@ suites:
     includes:
       # Only need to test this on one OS since this is
       # purely to test mongo ruby driver code
-      - centos-7.3
+      - centos-7
 
   - name: user_management_v2
     run_list:
@@ -116,7 +116,7 @@ suites:
     includes:
       # Only need to test this on one OS since this is
       # purely to test mongo ruby driver code
-      - centos-7.3
+      - centos-7
 
   - name: user_management_v2_delete
     run_list:
@@ -138,7 +138,7 @@ suites:
     includes:
       # Only need to test this on one OS since this is
       # purely to test mongo ruby driver code
-      - centos-7.3
+      - centos-7
 
   - name: replicaset1
     driver:
@@ -160,7 +160,7 @@ suites:
     includes:
       # Only need to test this on one OS since this is
       # purely to test mongo ruby driver code
-      - centos-7.3
+      - centos-7
 
   - name: replicaset2
     driver:
@@ -182,7 +182,7 @@ suites:
     includes:
       # Only need to test this on one OS since this is
       # purely to test mongo ruby driver code
-      - centos-7.3
+      - centos-7
 
   - name: replicaset3
     driver:
@@ -204,7 +204,7 @@ suites:
     includes:
       # Only need to test this on one OS since this is
       # purely to test mongo ruby driver code
-      - centos-7.3
+      - centos-7
 
   - name: shard1-n1
     driver:
@@ -227,7 +227,7 @@ suites:
     includes:
       # Only need to test this on one OS since this is
       # purely to test mongo ruby driver code
-      - centos-7.3
+      - centos-7
 
   - name: shard1-n2
     driver:
@@ -250,7 +250,7 @@ suites:
     includes:
       # Only need to test this on one OS since this is
       # purely to test mongo ruby driver code
-      - centos-7.3
+      - centos-7
 
   - name: shard1-n3
     driver:
@@ -273,7 +273,7 @@ suites:
     includes:
       # Only need to test this on one OS since this is
       # purely to test mongo ruby driver code
-      - centos-7.3
+      - centos-7
 
   - name: shard-mongos
     driver:
@@ -302,4 +302,4 @@ suites:
     includes:
       # Only need to test this on one OS since this is
       # purely to test mongo ruby driver code
-      - centos-7.3
+      - centos-7
