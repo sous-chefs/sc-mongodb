@@ -65,13 +65,9 @@ package 'netcat' do
 end
 
 # and we install our own init file
-if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
-  init_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}.conf")
-  mode = '0644'
-else
-  init_file = File.join(node['mongodb']['init_dir'], node['mongodb']['default_init_name'])
-  mode = '0755'
-end
+init_file = File.join(node['mongodb']['init_dir'], node['mongodb']['default_init_name'])
+mode = '0755'
+
 
 template "#{init_file} install" do
   path init_file
