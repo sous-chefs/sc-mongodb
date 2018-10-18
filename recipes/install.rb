@@ -68,7 +68,6 @@ end
 init_file = File.join(node['mongodb']['init_dir'], node['mongodb']['default_init_name'])
 mode = '0755'
 
-
 template "#{init_file} install" do
   path init_file
   cookbook node['mongodb']['template_cookbook']

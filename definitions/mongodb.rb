@@ -113,7 +113,6 @@ define :mongodb_instance,
   new_resource.init_file = File.join(node['mongodb']['init_dir'], new_resource.name)
   mode = '0755'
 
-
   # TODO(jh): reimplement using polymorphism
   replicaset_name = if new_resource.is_replicaset
                       if new_resource.replicaset_name
