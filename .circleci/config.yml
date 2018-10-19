@@ -9,60 +9,58 @@ workflows:
       - kitchen/danger:
           name: danger
           context: Danger
-      - kitchen/lint:
-          name: lint
       - kitchen/dokken-single:
           name: default-centos-6
           suite: default
           platform: centos-6
-          requires: [lint, danger]
+          requires: [danger]
       - kitchen/dokken-single:
           name: default-centos-7
           suite: default
           platform: centos-7
-          requires: [lint, danger]
+          requires: [danger]
       - kitchen/dokken-single:
           name: default-debian-8
           suite: default
           platform: debian-8
-          requires: [lint, danger]
+          requires: [danger]
       - kitchen/dokken-single:
           name: default-debian-9
           suite: default
           platform: debian-9
-          requires: [lint, danger]
+          requires: [danger]
       - kitchen/dokken-single:
           name: default-fedora-28
           suite: default
           platform: fedora-28
-          requires: [lint, danger]
+          requires: [danger]
       - kitchen/dokken-single:
           name: default-ubuntu-1604
           suite: default
           platform: ubuntu-1604
-          requires: [lint, danger]
+          requires: [danger]
       - kitchen/dokken-single:
           name: default-ubuntu-1804
           suite: default
           platform: ubuntu-1804
-          requires: [lint, danger]
+          requires: [danger]
       - kitchen/dokken-single:
           name: mms-agent-centos-6
           suite: mms-agent
           platform: centos-6
-          requires: [lint, danger]
+          requires: [danger]
       - kitchen/dokken-single:
           name: mms-agent-centos-7
           suite: mms-agent
           platform: centos-7
-          requires: [lint, danger]
+          requires: [danger]
       - kitchen/dokken-single:
           name: mms-agent-ubuntu-1604
           suite: mms-agent
           platform: ubuntu-1604
-          requires: [lint, danger]
+          requires: [danger]
       - kitchen/dokken-single:
           name: mms-agent-ubuntu-1804
           suite: mms-agent
           platform: ubuntu-1804
-          requires: [lint, danger]
+          requires: [danger]
