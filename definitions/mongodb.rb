@@ -41,6 +41,9 @@ define :mongodb_instance,
   # Determine if this will be part of a shard
   new_resource.is_shard = node['mongodb']['is_shard']
 
+  # Determine if this is a config server
+  new_resource.is_configserver = node['mongodb']['is_configserver']
+
   # Make changes to node['mongodb']['config'] before copying to new_resource.
   if new_resource.is_mongos
     provider = 'mongos'
@@ -76,6 +79,11 @@ define :mongodb_instance,
       new_resource.config['sharding']['clusterRole'] = 'shardsvr'
     end
 
+    if new_resource.is_configserver
+      new_resource.config['sharding'] ||= {}
+      new_resource.config['sharding']['clusterRole'] = 'configsvr'
+    end
+
     if node['mongodb']['config']['mongod']['storage']['dbPath'].nil?
       node.default['mongodb']['config']['mongod']['storage']['dbPath'] = '/data'
     end
@@ -99,7 +107,6 @@ define :mongodb_instance,
   new_resource.init_dir                   = node['mongodb']['init_dir']
   new_resource.init_script_template       = node['mongodb']['init_script_template']
   new_resource.is_replicaset              = node['mongodb']['is_replicaset']
-  new_resource.is_configserver            = node['mongodb']['is_configserver']
   new_resource.mongodb_group              = node['mongodb']['group']
   new_resource.mongodb_user               = node['mongodb']['user']
   new_resource.port                       = new_resource.config['net']['port']
