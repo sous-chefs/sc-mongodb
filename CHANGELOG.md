@@ -2,6 +2,8 @@
 
 ## unreleased
 
+- Install MongoDB 4 on Ubuntu 18.04
+- Remove deprecated platform versions
 - Update CI tooling
 
 ## v2.0.0
