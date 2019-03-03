@@ -130,7 +130,7 @@ if node['platform_family'] == 'debian'
   package deb_pkgs do
     options node['mongodb']['packager_options']
     action :install
-    version package_version
+    version [ package_version, package_version, package_version, package_version ]
     not_if { node['mongodb']['install_method'] == 'none' }
   end
 end

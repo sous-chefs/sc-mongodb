@@ -3,6 +3,7 @@
 ## unreleased
 
 - Update CI tooling
+- Fix packages version pin for Debian
 
 ## v2.0.0
 
