@@ -3,6 +3,7 @@
 ## unreleased
 
 - Update CI tooling
+* mongodb.rb (cluster_up_to_date?): optimize
 
 ## v2.0.0
 
