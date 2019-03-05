@@ -1,6 +1,7 @@
 # sc-MongoDB Cookbook
 
-[![Build Status](https://travis-ci.org/sous-chefs/mongodb.svg)](https://travis-ci.org/sous-chefs/mongodb)
+[![Cookbook Version](https://img.shields.io/cookbook/v/sc-mongodb.svg)](https://supermarket.chef.io/cookbooks/sc-mongodb)
+[![Build Status](https://img.shields.io/circleci/project/github/sous-chefs/mongodb/master.svg)](https://circleci.com/gh/sous-chefs/mongodb)
 
 Installs and configures MongoDB
 
@@ -171,8 +172,8 @@ Add `sc-mongodb::replicaset` (instead of `sc-mongodb::default`) to the node's ru
 replicaset cluster and set the value of `node['mongodb']['cluster_name']` for each
 member to this name.
 
-The recipe will try to configure the replicaset with the instances already registered in your chef-server with the same 
-`node['mongodb']['cluster_name']`, to configure various machines with the replicaset you'll need to deactivate the 
+The recipe will try to configure the replicaset with the instances already registered in your chef-server with the same
+`node['mongodb']['cluster_name']`, to configure various machines with the replicaset you'll need to deactivate the
 automatic configuration with `node['mongodb']['auto_configure']['replicaset'] = false` and enable that flag only on the last
 instance of the replicaset.
 
