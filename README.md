@@ -8,6 +8,10 @@
 
 Installs and configures MongoDB
 
+## Maintainers
+
+This cookbook is maintained by the Sous Chefs. The Sous Chefs are a community of Chef cookbook maintainers working together to maintain important cookbooks. If you’d like to know more please visit [sous-chefs.org](https://sous-chefs.org/) or come chat with us on the Chef Community Slack in [#sous-chefs](https://chefcommunity.slack.com/messages/C2V7B88SF).
+
 ## Supports
 
 - Single MongoDB instance
@@ -15,10 +19,6 @@ Installs and configures MongoDB
 - Sharding
 - Replication and Sharding
 - MongoDB Monitoring System
-
-## Community
-
-Live discussion happens on [![Chef Community Slack](https://community-slack.chef.io/badge.svg)](https://community-slack.chef.io/) in [#sous-chefs](https://chefcommunity.slack.com/messages/sous-chefs/).
 
 ## Requirements
 
