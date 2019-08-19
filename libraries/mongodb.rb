@@ -35,7 +35,7 @@ class Chef::ResourceDefinitionList::MongoDB
   def self.cluster_up_to_date?(from_server, expected)
     cut_down = from_server.map do |s|
       other = expected.select { |e| s['_id'] == e['_id'] }.first
-      s.select { |k, _v| other.keys.include?(k) }
+      s.select { |k, _v| other.key?(k) }
     end
 
     cut_down == expected
