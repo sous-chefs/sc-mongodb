@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: sc-mongodb
+# Cookbook:: sc-mongodb
 # Resource:: agent
 #
-# Copyright 2017, Grant Ridder
+# Copyright:: 2017, Grant Ridder
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ action :create do
     source 'mms_agent_config.erb'
     owner new_resource.user
     group new_resource.group
-    mode 0600
+    mode '600'
     variables(
       config: new_resource.config
     )

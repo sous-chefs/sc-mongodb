@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: mongodb
+# Cookbook:: mongodb
 # Recipe:: mms_automation_agent
 #
-# Copyright 2017, Grant Ridder
+# Copyright:: 2017, Grant Ridder
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
