@@ -116,7 +116,9 @@ define :mongodb_instance,
   if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.conf")
     mode = '0644'
-  elsif node['platform'] == 'debian' &&  node['platform_version'].to_f > 8
+  elsif node['platform'] == 'ubuntu' && node['platform_version'].to_f > 15.04
+    new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.service")
+  elsif node['platform'] == 'debian' && node['platform_version'].to_f > 8
     new_resource.init_file = File.join(node['mongodb']['init_dir'], "#{new_resource.name}.service")
   else
     new_resource.init_file = File.join(node['mongodb']['init_dir'], new_resource.name)
