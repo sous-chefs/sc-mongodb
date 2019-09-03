@@ -99,14 +99,18 @@ when 'debian'
     if node['platform_version'].to_f < 15.04
       default['mongodb']['init_dir'] = '/etc/init/'
       default['mongodb']['init_script_template'] = 'debian-mongodb.upstart.erb'
+    else # Systemd
+      default['mongodb']['init_dir'] = '/etc/systemd/system/'
+      default['mongodb']['init_script_template'] = 'debian-mongodb.systemd.erb'
+      default['mongodb']['default_init_name'] = 'mongod.service'
     end
   elsif node['platform'] == 'debian'
     default['mongodb']['repo'] = 'http://repo.mongodb.org/apt/debian'
 
     if node['platform_version'].to_f > 8
-			default['mongodb']['init_dir'] = '/lib/systemd/system/'
-			default['mongodb']['init_script_template'] = 'debian-mongodb.systemd.erb'
-			default['mongodb']['default_init_name'] = 'mongod.service'
+      default['mongodb']['init_dir'] = '/etc/systemd/system/'
+      default['mongodb']['init_script_template'] = 'debian-mongodb.systemd.erb'
+      default['mongodb']['default_init_name'] = 'mongod.service'
     end
   end
 else
