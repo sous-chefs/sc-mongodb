@@ -42,7 +42,7 @@ when 'debian'
   # Debian: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/
   apt_repository 'mongodb' do
     uri node['mongodb']['repo']
-    distribution "#{node['lsb']['codename']}/mongodb-org/#{package_version_major}"
+    distribution node['lsb']['codename'] == 'buster' ? "stretch/mongodb-org/#{package_version_major}" : "#{node['lsb']['codename']}/mongodb-org/#{package_version_major}"
     components node['platform'] == 'ubuntu' ? ['multiverse'] : ['main']
     key "https://www.mongodb.org/static/pgp/server-#{package_version_major}.asc"
   end
