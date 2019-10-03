@@ -23,11 +23,11 @@ platforms:
 suites:
   - name: default
     run_list:
-    - "recipe[sc-mongodb]"
+      - "recipe[sc-mongodb]"
 
   - name: replicaset
     run_list:
-    - "recipe[sc-mongodb::replicaset]"
+      - "recipe[sc-mongodb::replicaset]"
     attributes:
       mongodb:
         cluster_name: kitchen
@@ -38,12 +38,12 @@ suites:
 
   - name: configserver
     run_list:
-    - "recipe[sc-mongodb::configserver]"
+      - "recipe[sc-mongodb::configserver]"
 
   - name: mongos
     run_list:
-    - "recipe[sc-mongodb::configserver]"
-    - "recipe[sc-mongodb::mongos]"
+      - "recipe[sc-mongodb::configserver]"
+      - "recipe[sc-mongodb::mongos]"
     attributes:
       mongodb:
         cluster_name: default
@@ -58,9 +58,9 @@ suites:
 
   - name: mms_agent
     run_list:
-    - recipe[sc-mongodb::mms_automation_agent]
-    - recipe[sc-mongodb::mms_backup_agent]
-    - recipe[sc-mongodb::mms_monitoring_agent]
+      - recipe[sc-mongodb::mms_automation_agent]
+      - recipe[sc-mongodb::mms_backup_agent]
+      - recipe[sc-mongodb::mms_monitoring_agent]
     attributes:
       mongodb:
         mms_agent:
@@ -80,8 +80,8 @@ suites:
 
   - name: user_management
     run_list:
-    - "recipe[sc-mongodb::default]"
-    - "recipe[sc-mongodb::user_management]"
+      - "recipe[sc-mongodb::default]"
+      - "recipe[sc-mongodb::user_management]"
     attributes:
       mongodb:
         config:
@@ -99,8 +99,8 @@ suites:
 
   - name: user_management_v2
     run_list:
-    - recipe[sc-mongodb::default]
-    - recipe[sc-mongodb::user_management]
+      - recipe[sc-mongodb::default]
+      - recipe[sc-mongodb::user_management]
     attributes:
       mongodb:
         config:
@@ -120,9 +120,9 @@ suites:
 
   - name: user_management_v2_delete
     run_list:
-    - recipe[sc-mongodb::default]
-    - recipe[sc-mongodb::user_management]
-    - recipe[mongodb_spec::user_delete]
+      - recipe[sc-mongodb::default]
+      - recipe[sc-mongodb::user_management]
+      - recipe[mongodb_spec::user_delete]
     attributes:
       mongodb:
         config:
@@ -146,8 +146,8 @@ suites:
         private_network:
           ip: 192.168.10.10
     run_list:
-    - recipe[mongodb_spec::set_hostname]
-    - recipe[sc-mongodb::replicaset]
+      - recipe[mongodb_spec::set_hostname]
+      - recipe[sc-mongodb::replicaset]
     attributes:
       mongodb:
         auto_configure:
@@ -168,8 +168,8 @@ suites:
         private_network:
           ip: 192.168.10.20
     run_list:
-    - recipe[mongodb_spec::set_hostname]
-    - recipe[sc-mongodb::replicaset]
+      - recipe[mongodb_spec::set_hostname]
+      - recipe[sc-mongodb::replicaset]
     attributes:
       mongodb:
         auto_configure:
@@ -190,8 +190,8 @@ suites:
         private_network:
           ip: 192.168.10.30
     run_list:
-    - recipe[mongodb_spec::set_hostname]
-    - recipe[sc-mongodb::replicaset]
+      - recipe[mongodb_spec::set_hostname]
+      - recipe[sc-mongodb::replicaset]
     attributes:
       mongodb:
         auto_configure:
@@ -212,8 +212,8 @@ suites:
         private_network:
           ip: 192.168.10.10
     run_list:
-    - recipe[mongodb_spec::set_hostname]
-    - recipe[sc-mongodb::shard]
+      - recipe[mongodb_spec::set_hostname]
+      - recipe[sc-mongodb::shard]
     attributes:
       mongodb:
         auto_configure:
@@ -235,8 +235,8 @@ suites:
         private_network:
           ip: 192.168.10.20
     run_list:
-    - recipe[mongodb_spec::set_hostname]
-    - recipe[sc-mongodb::shard]
+      - recipe[mongodb_spec::set_hostname]
+      - recipe[sc-mongodb::shard]
     attributes:
       mongodb:
         auto_configure:
@@ -258,8 +258,8 @@ suites:
         private_network:
           ip: 192.168.10.30
     run_list:
-    - recipe[mongodb_spec::set_hostname]
-    - recipe[sc-mongodb::shard]
+      - recipe[mongodb_spec::set_hostname]
+      - recipe[sc-mongodb::shard]
     attributes:
       mongodb:
         auto_configure:
@@ -281,9 +281,9 @@ suites:
         private_network:
           ip: 192.168.10.99
     run_list:
-    - recipe[mongodb_spec::set_hostname]
-    - recipe[sc-mongodb::configserver]
-    - recipe[sc-mongodb::mongos]
+      - recipe[mongodb_spec::set_hostname]
+      - recipe[sc-mongodb::configserver]
+      - recipe[sc-mongodb::mongos]
     attributes:
       mongodb:
         cluster_name: kitchen1
