@@ -6,17 +6,16 @@
 - mongodb.rb (cluster_up_to_date?): optimize
 - Fix packages version pin for Debian
 - Set the following attributes to node.default:
-  
-  ``` ruby
-  ['mongodb']['is_shard']
-  ['mongodb']['shard_name']
-  ['mongodb']['is_replicaset']
-  ['mongodb']['cluster_name']
-  ['mongodb']['cluster_name']
-  ['mongodb']['is_replicaset']
-  ```
 
-- foo
+``` ruby
+['mongodb']['is_shard']
+['mongodb']['shard_name']
+['mongodb']['is_replicaset']
+['mongodb']['cluster_name']
+['mongodb']['cluster_name']
+['mongodb']['is_replicaset']
+```
+
 ## v2.0.0
 
 - custom resource user resource
@@ -113,7 +112,7 @@ _WARNING:_ This is a rewrite that contains many backwards incompatable changes. 
 
 - update to Berkshelf 3
 
-- # 280 fix install for centos (missing build-essentials)
+- 280 fix install for centos (missing build-essentials)
 
 ## v0.15.2 End of Ruby 1.8, Chef 10 support
 
@@ -144,9 +143,9 @@ _WARNING:_ This is a rewrite that contains many backwards incompatable changes. 
 
 - allow pinning for gems, pip packages
 
-- # 261 new mms agent recipe based on new packaging in upstream
+- 261 new mms agent recipe based on new packaging in upstream
 
-- # 256 Allow mms_agent to be run as non-root user
+- 256 Allow mms_agent to be run as non-root user
 
   - replSet is not set automatically
 
