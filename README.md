@@ -52,7 +52,7 @@ For examples see the USAGE section below.
 
 ## Attributes
 
-### MongoDB setup
+### MongoDB setup
 
 - `default['mongodb']['install_method']` - This option can be "mongodb-org" or "none" - Default ("mongodb-org")
 
