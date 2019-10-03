@@ -21,10 +21,10 @@
 # limitations under the License.
 #
 
-node.normal['mongodb']['is_shard'] = true
-node.normal['mongodb']['shard_name'] = node['mongodb']['shard_name']
-node.normal['mongodb']['is_replicaset'] = node['mongodb']['is_replicaset']
-node.normal['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
+node.default['mongodb']['is_shard'] = true
+node.default['mongodb']['shard_name'] = node['mongodb']['shard_name']
+node.default['mongodb']['is_replicaset'] = node['mongodb']['is_replicaset']
+node.default['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
 
 include_recipe 'sc-mongodb::install'
 

@@ -5,7 +5,18 @@
 - Update CI tooling
 - mongodb.rb (cluster_up_to_date?): optimize
 - Fix packages version pin for Debian
+- Set the following attributes to node.default:
+  
+  ``` ruby
+  ['mongodb']['is_shard']
+  ['mongodb']['shard_name']
+  ['mongodb']['is_replicaset']
+  ['mongodb']['cluster_name']
+  ['mongodb']['cluster_name']
+  ['mongodb']['is_replicaset']
+  ```
 
+- foo
 ## v2.0.0
 
 - custom resource user resource

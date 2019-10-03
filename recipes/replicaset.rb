@@ -19,8 +19,8 @@
 # limitations under the License.
 #
 
-node.normal['mongodb']['is_replicaset'] = true
-node.normal['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
+node.default['mongodb']['is_replicaset'] = true
+node.default['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
 
 include_recipe 'sc-mongodb::install'
 

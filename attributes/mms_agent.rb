@@ -48,7 +48,7 @@ when 'amazon', 'fedora', 'rhel'
   default['mongodb']['mms_agent']['backup']['package_url'] = "#{mms_agent_download_base}/backup/mongodb-mms-backup-agent-latest.x86_64.rpm"
   default['mongodb']['mms_agent']['monitoring']['package_url'] = "#{mms_agent_download_base}/monitoring/mongodb-mms-monitoring-agent-latest.x86_64.rpm"
 when 'debian'
-  if node['platform'] == 'ubuntu' && node['platform_version'].to_f >= 15.04
+  if platform?('ubuntu') && node['platform_version'].to_f >= 15.04
     default['mongodb']['mms_agent']['automation']['package_url'] = "#{mms_agent_download_base}/automation/mongodb-mms-automation-agent-manager_latest_amd64.ubuntu1604.deb"
     default['mongodb']['mms_agent']['backup']['package_url'] = "#{mms_agent_download_base}/backup/mongodb-mms-backup-agent_latest_amd64.ubuntu1604.deb"
     default['mongodb']['mms_agent']['monitoring']['package_url'] = "#{mms_agent_download_base}/monitoring/mongodb-mms-monitoring-agent_latest_amd64.ubuntu1604.deb"
