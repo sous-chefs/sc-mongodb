@@ -5,6 +5,8 @@
 - Install MongoDB 4 on Ubuntu 18.04
 - Remove deprecated platform versions
 - Update CI tooling
+- mongodb.rb (cluster_up_to_date?): optimize
+- Fix packages version pin for Debian
 
 ## v2.0.0
 

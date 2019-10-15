@@ -1,12 +1,12 @@
 #
-# Cookbook Name:: mongodb
+# Cookbook:: mongodb
 # Recipe:: install
 #
-# Copyright 2011, edelight GmbH
+# Copyright:: 2011, edelight GmbH
 # Authors:
 #       Markus Korn <markus.korn@edelight.de>
 #
-# Copyright 2016-2017, Grant Ridder
+# Copyright:: 2016-2017, Grant Ridder
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -115,18 +115,19 @@ end
 
 # Change needed so that updates work properly on debian based systems
 if node['platform_family'] == 'debian'
-  deb_pkgs = %w(
+  deb_pkg_suffixes = %w(
     server
     shell
     tools
     mongos
-  ).map { |sfx| "#{node['mongodb']['package_name']}-#{sfx}" }
-
-  package deb_pkgs do
-    options node['mongodb']['packager_options']
-    action :install
-    version package_version
-    not_if { node['mongodb']['install_method'] == 'none' }
+  )
+  deb_pkg_suffixes.each do |suffix|
+    package "#{node['mongodb']['package_name']}-#{suffix}" do
+      options node['mongodb']['packager_options']
+      action :install
+      version package_version
+      not_if { node['mongodb']['install_method'] == 'none' }
+    end
   end
 end
 
