@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: sc-mongodb
+# Cookbook:: sc-mongodb
 # Definition:: mongodb
 #
-# Copyright 2011, edelight GmbH
+# Copyright:: 2011, edelight GmbH
 # Authors:
 #       Markus Korn <markus.korn@edelight.de>
 #
