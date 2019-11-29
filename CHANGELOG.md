@@ -5,6 +5,7 @@
 - Update CI tooling
 - mongodb.rb (cluster_up_to_date?): optimize
 - Fix packages version pin for Debian
+- Fix user creation error with MongoDB 4.x
 
 ## v2.0.0
 
