@@ -61,11 +61,11 @@ end
 
 # this package required by init script
 package 'netcat' do
-  only_if { node['platform_family'] == 'debian' }
+  only_if { platform_family?('debian') }
 end
 
 # and we install our own init file
-if node['platform'] == 'ubuntu' && node['platform_version'].to_f < 15.04
+if platform?('ubuntu') && node['platform_version'].to_f < 15.04
   init_file = File.join(node['mongodb']['init_dir'], "#{node['mongodb']['default_init_name']}.conf")
   mode = '0644'
 else
@@ -99,7 +99,7 @@ end
 # Adjust the version number for RHEL style if needed
 package_version = case node['platform_family']
                   when 'rhel'
-                    if node['platform'] == 'amazon'
+                    if platform?('amazon')
                       "#{node['mongodb']['package_version']}-1.amzn1"
                     else
                       "#{node['mongodb']['package_version']}-1.el#{node['platform_version'].to_i}"
@@ -119,7 +119,7 @@ package node['mongodb']['package_name'] do
 end
 
 # Change needed so that updates work properly on debian based systems
-if node['platform_family'] == 'debian'
+if platform_family?('debian')
   deb_pkg_suffixes = %w(
     server
     shell

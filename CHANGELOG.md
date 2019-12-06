@@ -5,6 +5,9 @@
 - Update CI tooling
 - mongodb.rb (cluster_up_to_date?): optimize
 - Fix packages version pin for Debian
+- Simplify platform check logic
+- Remove unnnecessary `if respond_to?` from metadata.rb
+- Remove deprecated `ChefSpec::Coverage.report!` call from the ChefSpecs
 
 ## v2.0.0
 
