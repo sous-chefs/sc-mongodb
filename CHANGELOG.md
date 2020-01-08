@@ -2,7 +2,7 @@
 
 ## unreleased
 
-- Update CI tooling
+- Update CI tooling to actions
 - mongodb.rb (cluster_up_to_date?): optimize
 - Fix packages version pin for Debian
 
