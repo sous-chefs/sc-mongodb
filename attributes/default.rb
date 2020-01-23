@@ -92,7 +92,7 @@ when 'rhel', 'fedora'
   default['mongodb']['group'] = 'mongod'
   default['mongodb']['init_script_template'] = 'redhat-mongodb.init.erb'
 when 'debian'
-  if node['platform'] == 'ubuntu'
+  if platform?('ubuntu')
     default['mongodb']['repo'] = 'http://repo.mongodb.org/apt/ubuntu'
 
     # Upstart
@@ -100,7 +100,7 @@ when 'debian'
       default['mongodb']['init_dir'] = '/etc/init/'
       default['mongodb']['init_script_template'] = 'debian-mongodb.upstart.erb'
     end
-  elsif node['platform'] == 'debian'
+  elsif platform?('debian')
     default['mongodb']['repo'] = 'http://repo.mongodb.org/apt/debian'
   end
 else

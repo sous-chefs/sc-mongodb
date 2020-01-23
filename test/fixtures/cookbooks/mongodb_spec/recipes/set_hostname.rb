@@ -4,7 +4,7 @@
   end
 end
 
-if node['platform_family'] == 'rhel' && node['platform_version'].to_i == 7
+if platform_family?('rhel') && node['platform_version'].to_i == 7
   execute 'fix_network' do
     command 'service NetworkManager stop && service network restart'
   end
