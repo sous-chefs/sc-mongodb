@@ -1,7 +1,6 @@
 # sc-MongoDB Cookbook
 
 [![Cookbook Version](https://img.shields.io/cookbook/v/sc-mongodb.svg)](https://supermarket.chef.io/cookbooks/sc-mongodb)
-[![Build Status](https://img.shields.io/circleci/project/github/sous-chefs/mongodb/master.svg)](https://circleci.com/gh/sous-chefs/mongodb)
 [![OpenCollective](https://opencollective.com/sous-chefs/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/sous-chefs/sponsors/badge.svg)](#sponsors)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
