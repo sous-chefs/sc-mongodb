@@ -22,21 +22,13 @@ This cookbook is maintained by the Sous Chefs. The Sous Chefs are a community of
 
 ## Requirements
 
-This cookbook depends on these external cookbooks
+### Cookbooks
 
-- apt
-- python
-- yum
+- build-essential
 
-As of 1.0 This Cookbook requires
+### Chef Infra Client
 
-- Chef > 12.5
-- Ruby > 2.3
-
-As of 0.16 This Cookbook requires
-
-- Chef > 11
-- Ruby > 1.9
+- Chef Infra Client 13+
 
 ### Platform
 
@@ -52,7 +44,7 @@ For examples see the USAGE section below.
 
 ## Attributes
 
-### MongoDB setup
+### MongoDB setup
 
 - `default['mongodb']['install_method']` - This option can be "mongodb-org" or "none" - Default ("mongodb-org")
 
@@ -133,7 +125,7 @@ mmsBaseUrl=https://mms.mongodb.com
 - `node['mongodb']['admin']` - The admin user with userAdmin privileges that allows user management
 - `node['mongodb']['users']` - Array of users to add when running the user management recipe
 
-## Useage
+## Usage
 
 ### Single mongodb instance
 
@@ -188,14 +180,14 @@ the `node['mongodb']['cluster_name']` and `node['mongodb']['shard_name']` attrib
 Let's have a look at a simple sharding setup, consisting of two shard servers, one
 config server and one mongos.
 
-First we would like to configure the two shards. For doing so, just use
+First, we would like to configure the two shards. For doing so, just use
 `sc-mongodb::shard` in the node's run_list and define a unique `mongodb['shard_name']`
 for each of these two nodes, say "shard1" and "shard2".
 
 Then configure a node to act as a config server - by using the `sc-mongodb::configserver`
 recipe.
 
-And finally you need to configure the mongos. This can be done by using the
+And finally, you need to configure the mongos. This can be done by using the
 `sc-mongodb::mongos` recipe. The mongos needs some special configuration, as these
 mongos are actually doing the configuration of the whole sharded cluster.
 Most importantly you need to define what collections should be sharded by setting the
@@ -213,16 +205,16 @@ attribute `mongodb['sharded_collections']`:
 ```
 
 Now mongos will automatically enable sharding for the "test" and the "mydatabase"
-database. Also the "addressbook" and the "calendar" collection will be sharded,
+database. Also, the "addressbook" and the "calendar" collection will be sharded,
 with sharding key "name" resp. "date".
 In the context of a sharding cluster always keep in mind to use a single role
 which is added to all members of the cluster to identify all member nodes.
-Also shard names are important to distinguish the different shards.
+Also, shard names are important to distinguish the different shards.
 This is esp. important when you want to replicate shards.
 
 ### Sharding + Replication
 
-The setup is not much different to the one described above. All you have to do is add the
+The setup is not much different from the one described above. All you have to do is add the
 `sc-mongodb::replicaset` recipe to all shard nodes, and make sure that all shard
 nodes which should be in the same replicaset have the same shard name.
 
