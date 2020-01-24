@@ -31,7 +31,7 @@ link '/usr/lib64/libsasl2.so.2 mms_monitoring_agent' do
   target_file '/usr/lib64/libsasl2.so.2'
   not_if { ::File.exist?('/usr/lib64/libsasl2.so.2') }
   only_if { ::File.exist?('/usr/lib64/libsasl2.so.3') }
-  only_if { node['platform_family'] == 'rhel' && node['platform_version'].to_i == 7 }
+  only_if { platform_family?('rhel') && node['platform_version'].to_i == 7 }
 end
 
 mongodb_agent 'monitoring' do

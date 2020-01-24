@@ -5,8 +5,7 @@ require 'fauxhai'
 describe 'sc-mongodb::default' do
   let(:chef_run) do
     ChefSpec::Runner.new(
-      platform: 'ubuntu',
-      version: '12.04'
+      platform: 'ubuntu'
     )
   end
 

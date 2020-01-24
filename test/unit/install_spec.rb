@@ -3,12 +3,7 @@ require 'chefspec/berkshelf'
 require 'fauxhai'
 
 describe 'sc-mongodb::default' do
-  let(:chef_run) do
-    ChefSpec::Runner.new(
-      platform: 'ubuntu',
-      version: '12.04'
-    )
-  end
+  let(:chef_run) { ChefSpec::Runner.new(platform: 'ubuntu') }
 
   it 'should include install recipe, and enable mongodb service' do
     chef_run.converge(described_recipe)
