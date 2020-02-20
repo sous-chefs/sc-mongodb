@@ -13,15 +13,13 @@ default['mongodb']['config']['mongod']['systemLog']['destination'] = 'file'
 default['mongodb']['config']['mongod']['systemLog']['logAppend'] = true
 default['mongodb']['config']['mongod']['systemLog']['path'] = '/var/log/mongodb/mongod.log'
 
-case node['platform_family']
-when 'rhel', 'fedora', 'debian'
+if platform_family?('rhel', 'fedora', 'debian')
   default['mongodb']['config']['mongod']['processManagement']['fork'] = true
   default['mongodb']['config']['mongod']['processManagement']['pidFilePath'] = '/var/run/mongodb/mongod.pid'
 end
 
 default['mongodb']['config']['mongod']['storage']['journal']['enabled'] = true
-default['mongodb']['config']['mongod']['storage']['dbPath'] = case node['platform_family']
-                                                              when 'rhel', 'fedora'
+default['mongodb']['config']['mongod']['storage']['dbPath'] = if platform_family?('rhel', 'fedora')
                                                                 '/var/lib/mongo'
                                                               else
                                                                 '/var/lib/mongodb'
@@ -44,8 +42,7 @@ default['mongodb']['config']['mongos']['systemLog']['destination'] = 'file'
 default['mongodb']['config']['mongos']['systemLog']['logAppend'] = true
 default['mongodb']['config']['mongos']['systemLog']['path'] = '/var/log/mongodb/mongos.log'
 
-case node['platform_family']
-when 'rhel', 'fedora'
+if platform_family?('rhel', 'fedora')
   default['mongodb']['config']['mongos']['processManagement']['fork'] = true
   default['mongodb']['config']['mongos']['processManagement']['pidFilePath'] = '/var/run/mongodb/mongos.pid'
 end

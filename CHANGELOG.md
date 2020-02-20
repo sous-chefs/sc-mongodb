@@ -2,10 +2,15 @@
 
 ## unreleased
 
-- Update CI tooling
+- Update CI tooling to actions
 - mongodb.rb (cluster_up_to_date?): optimize
 - Fix packages version pin for Debian
 - Fix user creation error with MongoDB 4.x
+- Remove specs for EOL platforms
+- Remove deprecated long_description metadata
+- Remove if respond_to? usage in metadata.rb
+- Simplify the platform checks
+- Remove the ChefSpec converge report
 
 ## v2.0.0
 
