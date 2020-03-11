@@ -39,7 +39,7 @@ module MongoDB
         # Create the user if they don't exist
         # Update the user if they already exist
         begin
-          db.add_user(username, password, false, roles: roles)
+          db.add_user(username, password, false, roles: roles, mechanisms: ['SCRAM-SHA-1'])
           Chef::Log.info("Created or updated user #{username} on #{database}")
         rescue Mongo::ConnectionFailure => e
           if @new_resource.connection['is_replicaset']
@@ -56,7 +56,7 @@ module MongoDB
                 has_info_message = result['members'].select { |a| a['self'] && a.key?('infoMessage') }.count > 0
                 if result['myState'] == 1
                   # This node is a primary node, try to add the user
-                  db.add_user(username, password, false, roles: roles)
+                  db.add_user(username, password, false, roles: roles, mechanisms: ['SCRAM-SHA-1'])
                   Chef::Log.info("Created or updated user #{username} on #{database} of primary replicaset node")
                   break
                 elsif result['myState'] == 2 && has_info_message == true
