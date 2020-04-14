@@ -1,5 +1,9 @@
 # sc-mongodb Cookbook CHANGELOG
 
+## Unreleased
+
+- resolved cookstyle error: metadata.rb:11:1 refactor: `ChefModernize/UnnecessaryDependsChef14`
+
 ## v3.0.0
 
 - Update CI tooling to actions
