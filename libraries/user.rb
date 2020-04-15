@@ -113,7 +113,7 @@ module MongoDB
             begin
               connection = retrieve_db_v2
             rescue Mongo::Error::NoServerAvailable => e
-              Chef::Application.fatal!("Unable to connect to mongo: #{e}")
+              raise("Unable to connect to mongo: #{e}")
             end
           end
         end
@@ -135,7 +135,7 @@ module MongoDB
           end
         rescue Mongo::Error::OperationFailure => e
           # User probably already exists
-          Chef::Application.fatal!("Unable to add user on initial try: #{e}")
+          raise("Unable to add user on initial try: #{e}")
         rescue Mongo::Error::NoServerAvailable => e
           if @new_resource.connection['is_replicaset']
             # Node is part of a replicaset and may not be initialized yet, going to retry if set to
@@ -169,7 +169,7 @@ module MongoDB
               sleep(@new_resource.connection['mongod_create_user']['delay'])
             end
           else
-            Chef::Application.fatal!("Unable to add user: #{e}")
+            raise("Unable to add user: #{e}")
           end
         end
       end
@@ -209,7 +209,7 @@ module MongoDB
             )
           rescue Mongo::Auth::Unauthorized => e
             # invalid creds
-            Chef::Application.fatal!("Unable to authenticate as admin user: #{e}")
+            raise("Unable to authenticate as admin user: #{e}")
             connection = retrieve_db_v2
           rescue Mongo::Error::NoServerAvailable => e
             # Replicaset not initialized
@@ -219,7 +219,7 @@ module MongoDB
             begin
               connection = retrieve_db_v2
             rescue Mongo::Error::NoServerAvailable => e
-              Chef::Application.fatal!("Unable to connect to mongo: #{e}")
+              raise("Unable to connect to mongo: #{e}")
             end
           end
         end

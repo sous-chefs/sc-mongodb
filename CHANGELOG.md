@@ -1,5 +1,14 @@
 # sc-mongodb Cookbook CHANGELOG
 
+## Unreleased
+
+- resolved cookstyle error: libraries/user.rb:116:15 refactor: `ChefCorrectness/ChefApplicationFatal`
+- resolved cookstyle error: libraries/user.rb:138:11 refactor: `ChefCorrectness/ChefApplicationFatal`
+- resolved cookstyle error: libraries/user.rb:172:13 refactor: `ChefCorrectness/ChefApplicationFatal`
+- resolved cookstyle error: libraries/user.rb:212:13 refactor: `ChefCorrectness/ChefApplicationFatal`
+- resolved cookstyle error: libraries/user.rb:222:15 refactor: `ChefCorrectness/ChefApplicationFatal`
+- resolved cookstyle error: metadata.rb:11:1 refactor: `ChefModernize/UnnecessaryDependsChef14`
+
 ## v3.0.0
 
 - Update CI tooling to actions
