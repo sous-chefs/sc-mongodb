@@ -1,7 +1,8 @@
 # sc-mongodb Cookbook CHANGELOG
 
-## Unreleased
+## 4.0.0
 
+- Minimum Chef version 14
 - resolved cookstyle error: libraries/user.rb:116:15 refactor: `ChefCorrectness/ChefApplicationFatal`
 - resolved cookstyle error: libraries/user.rb:138:11 refactor: `ChefCorrectness/ChefApplicationFatal`
 - resolved cookstyle error: libraries/user.rb:172:13 refactor: `ChefCorrectness/ChefApplicationFatal`
