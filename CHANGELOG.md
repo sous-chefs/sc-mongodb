@@ -1,6 +1,6 @@
 # sc-mongodb Cookbook CHANGELOG
 
-## Unreleased
+## 4.0.1
 
 - resolved cookstyle error: recipes/mongodb_org_repo.rb:31:53 convention: `Layout/TrailingWhitespace`
 - resolved cookstyle error: recipes/mongodb_org_repo.rb:31:54 refactor: `ChefModernize/FoodcriticComments`
