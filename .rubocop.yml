@@ -1,9 +1,10 @@
+---
 AllCops:
   Exclude:
     - 'Dangerfile'
 
-# Cookstyle (rubocop) todo:	
-BlockNesting:	
-  Max: 4 # TODO: reduce to 3	
-Style/EachWithObject:	
+# Cookstyle (rubocop) todo:
+BlockNesting:
+  Max: 4 # TODO: reduce to 3
+Style/EachWithObject:
   Enabled: false
