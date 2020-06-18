@@ -24,11 +24,11 @@ This cookbook is maintained by the Sous Chefs. The Sous Chefs are a community of
 
 ### Cookbooks
 
-- build-essential
+- none
 
 ### Chef Infra Client
 
-- Chef Infra Client 13+
+- Chef Infra Client 14+
 
 ### Platform
 
