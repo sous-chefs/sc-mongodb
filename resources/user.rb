@@ -1,7 +1,3 @@
-provides :mongodb_user
-
-default_action :add
-
 property :username, String, name_property: true
 property :password, String
 property :roles, Array
