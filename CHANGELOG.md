@@ -1,5 +1,20 @@
 # sc-mongodb Cookbook CHANGELOG
 
+## Unreleased
+
+- resolved cookstyle error: libraries/user.rb:144:1 convention: `Layout/TrailingWhitespace`
+- resolved cookstyle error: libraries/user.rb:144:15 convention: `Style/RedundantBegin`
+- resolved cookstyle error: libraries/user.rb:145:13 convention: `Layout/IndentationWidth`
+- resolved cookstyle error: libraries/user.rb:146:17 convention: `Layout/IndentationConsistency`
+- resolved cookstyle error: libraries/user.rb:147:17 convention: `Layout/IndentationConsistency`
+- resolved cookstyle error: libraries/user.rb:149:17 convention: `Layout/IndentationConsistency`
+- resolved cookstyle error: libraries/user.rb:166:1 convention: `Layout/TrailingWhitespace`
+- resolved cookstyle error: libraries/user.rb:167:1 convention: `Layout/EmptyLines`
+- resolved cookstyle error: libraries/user.rb:168:15 convention: `Layout/IndentationConsistency`
+- resolved cookstyle error: libraries/user.rb:168:17 convention: `Layout/IndentationConsistency`
+- resolved cookstyle error: libraries/user.rb:169:15 convention: `Layout/IndentationConsistency`
+- resolved cookstyle error: libraries/user.rb:169:17 convention: `Layout/IndentationConsistency`
+
 ## 4.0.1
 
 - resolved cookstyle error: recipes/mongodb_org_repo.rb:31:53 convention: `Layout/TrailingWhitespace`
