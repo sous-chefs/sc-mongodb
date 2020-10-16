@@ -18,7 +18,7 @@ module MongoDBConfigHelpers
   end
 
   def to_yaml_options(config)
-    config.to_hash.compact.to_yaml
+    YAML.dump(config.to_hash.compact)
   end
 end
 
