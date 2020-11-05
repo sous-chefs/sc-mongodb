@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- resolved cookstyle error: definitions/mongodb.rb:53:12 convention: `Style/RedundantParentheses`
 - resolved cookstyle error: libraries/mongodb_config_helpers.rb:21:5 warning: `ChefDeprecations/UseYamlDump`
 - resolved cookstyle error: libraries/user.rb:144:1 convention: `Layout/TrailingWhitespace`
 - resolved cookstyle error: libraries/user.rb:144:15 convention: `Style/RedundantBegin`
