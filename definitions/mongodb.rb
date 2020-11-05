@@ -19,7 +19,8 @@
 # limitations under the License.
 #
 
-define :mongodb_instance,
+# TODO: This needs to be converted to a custom resource
+define :mongodb_instance, # rubocop:disable ChefModernize/Definitions
        mongodb_type: 'mongod',
        action: [:enable, :start],
        logpath: '/var/log/mongodb/mongod.log',

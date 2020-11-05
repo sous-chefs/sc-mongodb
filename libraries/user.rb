@@ -209,7 +209,6 @@ module MongoDB
           rescue Mongo::Auth::Unauthorized => e
             # invalid creds
             raise("Unable to authenticate as admin user: #{e}")
-            connection = retrieve_db_v2
           rescue Mongo::Error::NoServerAvailable => e
             # Replicaset not initialized
             Chef::Log.warn("Server appears to be part of an uninitialized or initializing replicaset: #{e}")

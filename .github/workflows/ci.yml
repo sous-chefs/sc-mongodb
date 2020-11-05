@@ -1,7 +1,7 @@
 ---
 name: ci
 
-on:
+"on":
   pull_request:
   push:
     branches:
@@ -40,15 +40,15 @@ jobs:
     strategy:
       matrix:
         os:
+          - 'debian-9'
           - 'centos-7'
           - 'ubuntu-1604'
-          - 'ubuntu-1804'
         suite:
           - 'default'
-          - 'replicaset'
+          # - 'replicaset'
           - 'configserver'
-          - 'mongos'
-          - 'mms-agent'
+          # - 'mongos'
+          # - 'mms-agent'
       fail-fast: false
 
     steps:

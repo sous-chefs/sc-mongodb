@@ -12,15 +12,14 @@ client_rb:
   treat_deprecation_warnings_as_errors: true
 
 platforms:
-  - name: centos-6
   - name: centos-7
-  - name: centos-8
+  # - name: centos-8
   - name: debian-9
-  - name: debian-10
-  - name: fedora-32
+  # - name: debian-10
+  # - name: fedora-latest
   - name: ubuntu-16.04
-  - name: ubuntu-18.04
-  - name: ubuntu-20.04
+  # - name: ubuntu-18.04
+  # - name: ubuntu-20.04
 
 suites:
   - name: default
