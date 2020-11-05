@@ -22,12 +22,12 @@ platforms:
       intermediate_instructions:
         - RUN /usr/bin/apt-get update
 
-  - name: debian-10
-    driver:
-      image: dokken/debian-10
-      pid_one_command: /bin/systemd
-      intermediate_instructions:
-        - RUN /usr/bin/apt-get update
+  # - name: debian-10
+  #   driver:
+  #     image: dokken/debian-10
+  #     pid_one_command: /bin/systemd
+  #     intermediate_instructions:
+  #       - RUN /usr/bin/apt-get update
 
   - name: centos-6
     driver:
@@ -40,17 +40,23 @@ platforms:
       image: dokken/centos-7
       platform: rhel
       pid_one_command: /usr/lib/systemd/systemd
+      volumes:
+        - /sys/fs/cgroup:/sys/fs/cgroup
 
-  - name: dokken/centos-8
-    driver:
-      image: dokken/centos-8
-      platform: rhel
-      pid_one_command: /usr/lib/systemd/systemd
+  # - name: centos-8
+  #   driver:
+  #     image: dokken/centos-8
+  #     platform: rhel
+  #     pid_one_command: /usr/lib/systemd/systemd
+  #     volumes:
+  #       - /sys/fs/cgroup:/sys/fs/cgroup
 
-  - name: fedora-latest
-    driver:
-      image: dokken/fedora-latest
-      pid_one_command: /usr/lib/systemd/systemd
+  # - name: fedora-latest
+  #   driver:
+  #     image: dokken/fedora-latest
+  #     pid_one_command: /usr/lib/systemd/systemd
+  #     volumes:
+  #       - /sys/fs/cgroup:/sys/fs/cgroup
 
   - name: ubuntu-16.04
     driver:
@@ -58,17 +64,23 @@ platforms:
       pid_one_command: /bin/systemd
       intermediate_instructions:
         - RUN /usr/bin/apt-get update
+      volumes:
+        - /sys/fs/cgroup:/sys/fs/cgroup
 
-  - name: ubuntu-18.04
-    driver:
-      image: dokken/ubuntu-18.04
-      pid_one_command: /bin/systemd
-      intermediate_instructions:
-        - RUN /usr/bin/apt-get update
+# - name: ubuntu-18.04
+#   driver:
+#     image: dokken/ubuntu-18.04
+#     pid_one_command: /bin/systemd
+#     intermediate_instructions:
+#       - RUN /usr/bin/apt-get update
+#     volumes:
+#       - /sys/fs/cgroup:/sys/fs/cgroup
 
-  - name: ubuntu-20.04
-    driver:
-      image: dokken/ubuntu-20.04
-      pid_one_command: /bin/systemd
-      intermediate_instructions:
-        - RUN /usr/bin/apt-get update
+# - name: ubuntu-20.04
+#   driver:
+#      image: dokken/ubuntu-20.04
+#     pid_one_command: /bin/systemd
+#     intermediate_instructions:
+#       - RUN /usr/bin/apt-get update
+#     volumes:
+#       - /sys/fs/cgroup:/sys/fs/cgroup

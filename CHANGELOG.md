@@ -18,6 +18,7 @@
 - resolved cookstyle error: libraries/user.rb:169:17 convention: `Layout/IndentationConsistency`
 - Resolve cookstyle issues
 - Comment out ChefSpec until defintions are converted to custom resources
+- Disable platforms that do not currently work
 
 ## 4.0.1
 
