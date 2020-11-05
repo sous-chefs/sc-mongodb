@@ -1,3 +1,5 @@
+provides :mongodb_user
+
 property :username, String, name_property: true
 property :password, String
 property :roles, Array

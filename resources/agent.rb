@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+provides :mongodb_agent
+
 property :type, String, name_property: true, equal_to: %w(automation backup monitoring)
 property :config, Hash
 property :group, String
