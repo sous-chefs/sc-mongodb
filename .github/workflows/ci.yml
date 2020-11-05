@@ -45,10 +45,10 @@ jobs:
           - 'ubuntu-1604'
         suite:
           - 'default'
-          - 'replicaset'
+          # - 'replicaset'
           - 'configserver'
-          - 'mongos'
-          - 'mms-agent'
+          # - 'mongos'
+          # - 'mms-agent'
       fail-fast: false
 
     steps:
