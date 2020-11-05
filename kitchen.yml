@@ -12,7 +12,6 @@ client_rb:
   treat_deprecation_warnings_as_errors: true
 
 platforms:
-  - name: centos-6
   - name: centos-7
   # - name: centos-8
   - name: debian-9

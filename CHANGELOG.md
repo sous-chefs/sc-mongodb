@@ -19,6 +19,7 @@
 - Resolve cookstyle issues
 - Comment out ChefSpec until defintions are converted to custom resources
 - Disable platforms that do not currently work
+- Remove testing on EL6
 
 ## 4.0.1
 
