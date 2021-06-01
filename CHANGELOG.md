@@ -1,6 +1,6 @@
 # sc-mongodb Cookbook CHANGELOG
 
-## Unreleased
+## 4.1.1 - *2021-06-01*
 
 - resolved cookstyle error: definitions/mongodb.rb:53:12 convention: `Style/RedundantParentheses`
 - resolved cookstyle error: libraries/mongodb_config_helpers.rb:21:5 warning: `ChefDeprecations/UseYamlDump`
