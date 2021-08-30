@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Standardise files with files in sous-chefs/repo-management
+
 ## 4.1.1 - *2021-06-01*
 
 - resolved cookstyle error: definitions/mongodb.rb:53:12 convention: `Style/RedundantParentheses`
