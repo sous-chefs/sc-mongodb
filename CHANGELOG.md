@@ -1,6 +1,6 @@
 # sc-mongodb Cookbook CHANGELOG
 
-## Unreleased
+## 4.1.2 - *2021-08-30*
 
 - Standardise files with files in sous-chefs/repo-management
 
