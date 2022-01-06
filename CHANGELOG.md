@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- resolved regression in custom resource names (#272)
+
 ## 4.1.2 - *2021-08-30*
 
 - Standardise files with files in sous-chefs/repo-management
@@ -22,7 +24,6 @@
 - resolved cookstyle error: libraries/user.rb:168:17 convention: `Layout/IndentationConsistency`
 - resolved cookstyle error: libraries/user.rb:169:15 convention: `Layout/IndentationConsistency`
 - resolved cookstyle error: libraries/user.rb:169:17 convention: `Layout/IndentationConsistency`
-- resolved regression in custom resource names (#272)
 - Resolve cookstyle issues
 - Comment out ChefSpec until defintions are converted to custom resources
 - Disable platforms that do not currently work
