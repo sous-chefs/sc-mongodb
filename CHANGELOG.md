@@ -1,5 +1,7 @@
 # sc-mongodb Cookbook CHANGELOG
 
+## Unreleased
+
 ## 4.1.3 - *2022-01-06*
 
 - resolved regression in custom resource names (#272)
