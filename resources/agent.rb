@@ -18,6 +18,7 @@
 #
 
 provides :mongodb_agent
+unified_mode true
 
 property :type, String, name_property: true, equal_to: %w(automation backup monitoring)
 property :config, Hash
