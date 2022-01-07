@@ -1,6 +1,6 @@
 # sc-mongodb Cookbook CHANGELOG
 
-## Unreleased
+## 5.0.0 - *2022-01-07*
 
 - Require Chef >= 15.3 for unified_mode
 - resolved cookstyle error: resources/agent.rb:1:1 refactor: `Chef/Deprecations/ResourceWithoutUnifiedTrue`
