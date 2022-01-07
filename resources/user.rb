@@ -1,4 +1,5 @@
 provides :mongodb_user
+unified_mode true
 
 property :username, String, name_property: true
 property :password, String

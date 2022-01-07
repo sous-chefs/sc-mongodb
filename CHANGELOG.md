@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Require Chef >= 15.3 for unified_mode
+- resolved cookstyle error: resources/agent.rb:1:1 refactor: `Chef/Deprecations/ResourceWithoutUnifiedTrue`
+- resolved cookstyle error: resources/user.rb:1:1 refactor: `Chef/Deprecations/ResourceWithoutUnifiedTrue`
+
 ## 4.1.3 - *2022-01-06*
 
 - resolved regression in custom resource names (#272)
