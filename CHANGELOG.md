@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Require Chef >= 15.3 for unified_mode
 - resolved cookstyle error: resources/agent.rb:1:1 refactor: `Chef/Deprecations/ResourceWithoutUnifiedTrue`
 - resolved cookstyle error: resources/user.rb:1:1 refactor: `Chef/Deprecations/ResourceWithoutUnifiedTrue`
 
