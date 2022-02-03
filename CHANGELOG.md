@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+Standardise files with files in sous-chefs/repo-management
+
 ## 5.0.0 - *2022-01-07*
 
 - Require Chef >= 15.3 for unified_mode
