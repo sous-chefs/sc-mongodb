@@ -1,6 +1,6 @@
 # sc-mongodb Cookbook CHANGELOG
 
-## Unreleased
+## 5.0.1 - *2022-02-08*
 
 - Remove delivery folder
 
