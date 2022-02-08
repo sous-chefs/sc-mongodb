@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Remove delivery folder
+
 ## 5.0.0 - *2022-01-07*
 
 - Require Chef >= 15.3 for unified_mode
