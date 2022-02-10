@@ -1,5 +1,7 @@
 # sc-mongodb Cookbook CHANGELOG
 
+## Unreleased
+
 ## 5.1.0 - *2022-02-10*
 
 - Use chef_gem for replicaset recipe
