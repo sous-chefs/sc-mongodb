@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Use chef_gem for replicaset recipe
+
 ## 5.0.1 - *2022-02-08*
 
 - Remove delivery folder
