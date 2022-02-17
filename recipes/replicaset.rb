@@ -23,15 +23,7 @@ node.default['mongodb']['is_replicaset'] = true
 node.default['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
 
 include_recipe 'sc-mongodb::install'
-
-ruby_block 'chef_gem_at_converge_time' do
-  block do
-    node['mongodb']['ruby_gems'].each do |gem, version|
-      version = Gem::Dependency.new(gem, version)
-      Chef::Provider::Package::Rubygems::GemEnvironment.new.install(version)
-    end
-  end
-end
+include_recipe 'sc-mongodb::mongo_gem'
 
 mongodb_instance node['mongodb']['instance_name']['mongod'] do
   mongodb_type 'mongod'
