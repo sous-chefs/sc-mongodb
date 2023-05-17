@@ -6,7 +6,7 @@ description       'Installs and configures mongodb'
 source_url        'https://github.com/sous-chefs/sc-mongodb'
 issues_url        'https://github.com/sous-chefs/sc-mongodb/issues'
 chef_version      '>= 15.3'
-version           '5.1.13'
+version           '5.1.14'
 
 supports 'amazon'
 supports 'centos'
