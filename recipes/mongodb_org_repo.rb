@@ -28,7 +28,7 @@ node.override['mongodb']['package_name'] = 'mongodb-org'
 package_version_major = node['mongodb']['package_version'].to_f
 
 package_repo_url = case node['platform']
-                   when 'redhat', 'oracle', 'centos'
+                   when 'redhat', 'oracle', 'centos', 'rocky'
                      "https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/#{package_version_major}/#{node['kernel']['machine'] =~ /x86_64/ ? 'x86_64' : 'i686'}"
                    when 'fedora'
                      "https://repo.mongodb.org/yum/redhat/7/mongodb-org/#{package_version_major}/#{node['kernel']['machine'] =~ /x86_64/ ? 'x86_64' : 'i686'}"

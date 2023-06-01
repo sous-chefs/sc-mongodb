@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add support for Rocky Linux
+
 ## 5.1.14 - *2023-05-17*
 
 ## 5.1.13 - *2023-05-03*
