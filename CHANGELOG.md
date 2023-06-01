@@ -1,5 +1,7 @@
 # sc-mongodb Cookbook CHANGELOG
 
+## Unreleased
+
 ## 5.1.15 - *2023-06-01*
 
 - Add support for Rocky Linux
