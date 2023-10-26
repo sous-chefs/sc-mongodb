@@ -24,9 +24,9 @@ jobs:
     strategy:
       matrix:
         os:
-          - "debian-9"
-          - "centos-7"
-          - "ubuntu-1604"
+          - "debian-10"
+          - "centos-stream-9"
+          - "ubuntu-2204"
         suite:
           - "default"
           # - 'replicaset'
