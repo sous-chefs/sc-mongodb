@@ -147,7 +147,7 @@ Standardise files with files in sous-chefs/repo-management
 
 ## v1.0.0 Changes (Released 2017-05-23)
 
-_WARNING:_ This is a rewrite that contains many backwards incompatable changes. Many attributes have changed defaults and/or the attribute key itself.
+*WARNING:* This is a rewrite that contains many backwards incompatable changes. Many attributes have changed defaults and/or the attribute key itself.
 
 - Drop support for 10gen repo and default to mongo-org repo install
 - Remove Chef 10 and 11 support
@@ -183,7 +183,7 @@ _WARNING:_ This is a rewrite that contains many backwards incompatable changes. 
 - add custom repo support
 - Moved the running of the sysconfig_file above the NUMA support
 - replace deprecated recipe
-- bug fix in member_config for having _id > 255
+- bug fix in member_config for having_id > 255
 - User management in replicasets / sharding
 - Force rs.reconfig when there are no old members
 - Packager Options Attribute
@@ -224,7 +224,7 @@ _WARNING:_ This is a rewrite that contains many backwards incompatable changes. 
 
 - update to Berkshelf 3
 
-- # 280 fix install for centos (missing build-essentials)
+- 280 fix install for centos (missing build-essentials)
 
 ## v0.15.2 End of Ruby 1.8, Chef 10 support
 
@@ -242,23 +242,16 @@ _WARNING:_ This is a rewrite that contains many backwards incompatable changes. 
   - python < 1.4.5
 
 - DEPRECATION: explicitly drop support for 'unsupported' platforms
-
   - must be freebsd, rhel, fedora, debian
 
 - DEPRECATION: recipe mms-agent.rb/mms_agent.rb
-
   - see #261 for new-recipes
 
 - use node.set to make sure is_* attributes are available for search
-
 - 'key_file' -> 'key_file_content'
-
 - allow pinning for gems, pip packages
-
-- # 261 new mms agent recipe based on new packaging in upstream
-
-- # 256 Allow mms_agent to be run as non-root user
-
+- 261 new mms agent recipe based on new packaging in upstream
+- 256 Allow mms_agent to be run as non-root user
   - replSet is not set automatically
 
 ## v0.15.0
