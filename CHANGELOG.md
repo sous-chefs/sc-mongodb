@@ -1,6 +1,6 @@
 # sc-mongodb Cookbook CHANGELOG
 
-## Unreleased
+## 5.1.20 - *2023-10-29*
 
 Update platforms in Test Kitchen
 
