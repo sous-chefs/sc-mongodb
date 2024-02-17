@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+Update default version to 7.0.2
+
 ## 5.1.21 - *2023-10-29*
 
 ## 5.1.20 - *2023-10-29*
