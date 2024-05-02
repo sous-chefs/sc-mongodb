@@ -1,5 +1,7 @@
 # sc-mongodb Cookbook CHANGELOG
 
+## Unreleased
+
 ## 5.1.22 - *2024-05-02*
 
 Update default version to 7.0.2
