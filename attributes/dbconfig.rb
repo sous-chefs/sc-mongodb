@@ -18,7 +18,6 @@ if platform_family?('rhel', 'fedora', 'debian')
   default['mongodb']['config']['mongod']['processManagement']['pidFilePath'] = '/var/run/mongodb/mongod.pid'
 end
 
-default['mongodb']['config']['mongod']['storage']['journal']['enabled'] = true
 default['mongodb']['config']['mongod']['storage']['dbPath'] = if platform_family?('rhel', 'fedora')
                                                                 '/var/lib/mongo'
                                                               else

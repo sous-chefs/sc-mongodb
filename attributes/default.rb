@@ -53,7 +53,7 @@ default['mongodb']['dbconfig_file']['mongod'] = '/etc/mongod.conf'
 default['mongodb']['dbconfig_file']['mongos'] = '/etc/mongos.conf'
 
 default['mongodb']['package_name'] = 'mongodb'
-default['mongodb']['package_version'] = '7.0.2'
+default['mongodb']['package_version'] = '8.0.5'
 
 default['mongodb']['default_init_name'] = 'mongod'
 default['mongodb']['instance_name']['mongod'] = 'mongod'
@@ -114,6 +114,6 @@ default['mongodb']['key_file_content'] = nil
 # install the mongo and bson_ext ruby gems at compile time to make them globally available
 # TODO: remove bson_ext once mongo gem supports bson >= 2
 default['mongodb']['ruby_gems'] = {
-  mongo: '~> 1.12',
+  mongo: '~> 2.21',
   bson_ext: nil,
 }

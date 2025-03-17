@@ -21,6 +21,10 @@
 # limitations under the License.
 #
 
+apt_update do
+  compile_time true
+end
+
 # The build-essential cookbook was not running during the compile phase, install gcc explicitly for rhel so native
 # extensions can be installed
 gcc = package 'gcc' do
