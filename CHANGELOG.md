@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- MongoDB 8.0 compatibility
+- Ubuntu 22.04 LTS compatibility
+
 ## 5.1.24 - *2024-11-18*
 
 Standardise files with files in sous-chefs/repo-management

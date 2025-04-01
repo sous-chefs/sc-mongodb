@@ -1,10 +1,10 @@
 # @test "requires authentication" {
-#     mongo --eval "db.stats().ok"
+#     mongosh --eval "db.stats().ok"
 #     ! [ $? -eq 1 ]
 # }
 #
 # @test "admin user created" {
-#     mongo admin -u admin -p admin --eval "db.stats().ok"
+#     mongosh admin -u admin -p admin --eval "db.stats().ok"
 #     [ $? -eq 0 ]
 # }
 
@@ -15,15 +15,15 @@ describe service('mongod') do
 end
 
 # admin user created
-describe bash('mongo admin -u admin -p admin --eval "db.stats().ok"') do
+describe bash('mongosh admin -u admin -p admin --eval "db.stats().ok"') do
   its('exit_status') { should eq 0 }
 end
 
-describe bash('mongo --eval "db.stats().ok"') do
+describe bash('mongosh --eval "db.stats().ok"') do
   its('exit_status') { should_not eq 1 }
 end
 
 # kitchen read user created
-describe bash(%(mongo admin -u admin -p admin --eval "db.system.users.find({'_id' : 'admin.kitchen', 'user' : 'kitchen', 'db' : 'admin', 'roles' : [ { 'role' : 'read', 'db' : 'admin' } ]})" | grep _id)) do
+describe bash(%(mongosh admin -u admin -p admin --eval "db.system.users.find({'_id' : 'admin.kitchen', 'user' : 'kitchen', 'db' : 'admin', 'roles' : [ { 'role' : 'read', 'db' : 'admin' } ]})" | grep _id)) do
   its('exit_status') { should eq 0 }
 end
