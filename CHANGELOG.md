@@ -1,6 +1,6 @@
 # sc-mongodb Cookbook CHANGELOG
 
-## Unreleased
+## 5.1.25 - *2025-09-04*
 
 ## 5.1.24 - *2024-11-18*
 
