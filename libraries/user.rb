@@ -2,11 +2,11 @@ module MongoDB
   module Helpers
     module User
       def user_exists?(username, connection)
-        connection['admin']['system.users'].find(user: username).count > 0
+        connection['admin']['system.users'].find(user: username).any?
       end
 
       def user_exists_v2?(username, connection)
-        connection['system.users'].find(user: username).count > 0
+        connection['system.users'].find(user: username).any?
       end
 
       def add_user(username, password, database, roles = [])
@@ -53,7 +53,7 @@ module MongoDB
                 result = admin.command(cmd)
                 # Check if the current node in the replicaset status has an info message set (at this point, most likely
                 # a message about the election)
-                has_info_message = result['members'].select { |a| a['self'] && a.key?('infoMessage') }.count > 0
+                has_info_message = result['members'].any? { |a| a['self'] && a.key?('infoMessage') }
                 if result['myState'] == 1
                   # This node is a primary node, try to add the user
                   db.add_user(username, password, false, roles: roles, mechanisms: ['SCRAM-SHA-1'])

@@ -236,9 +236,9 @@ define :mongodb_instance, # rubocop:disable ChefModernize/Definitions
   if new_resource.is_replicaset && new_resource.auto_configure_replicaset
     rs_nodes = search(
       :node,
-      "mongodb_cluster_name:#{new_resource.cluster_name} AND "\
-      'mongodb_is_replicaset:true AND '\
-      "mongodb_config_mongod_replication_replSetName:#{new_resource.replicaset_name} AND "\
+      "mongodb_cluster_name:#{new_resource.cluster_name} AND " \
+      'mongodb_is_replicaset:true AND ' \
+      "mongodb_config_mongod_replication_replSetName:#{new_resource.replicaset_name} AND " \
       "chef_environment:#{node.chef_environment}"
     )
 
@@ -262,9 +262,9 @@ define :mongodb_instance, # rubocop:disable ChefModernize/Definitions
 
     shard_nodes = search(
       :node,
-      "mongodb_cluster_name:#{new_resource.cluster_name} AND "\
-      "mongodb_shard_name:#{new_resource.shard_name} AND "\
-      'mongodb_is_shard:true AND '\
+      "mongodb_cluster_name:#{new_resource.cluster_name} AND " \
+      "mongodb_shard_name:#{new_resource.shard_name} AND " \
+      'mongodb_is_shard:true AND ' \
       "chef_environment:#{node.chef_environment}"
     )
 
