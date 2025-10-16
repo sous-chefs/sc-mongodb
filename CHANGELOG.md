@@ -3,6 +3,13 @@
 Standardise files with files in sous-chefs/repo-management
 Standardise files with files in sous-chefs/repo-management
 
+## [5.1.26](https://github.com/sous-chefs/sc-mongodb/compare/5.1.25...v5.1.26) (2025-10-16)
+
+
+### Bug Fixes
+
+* **ci:** Update workflows to use release pipeline ([#330](https://github.com/sous-chefs/sc-mongodb/issues/330)) ([8f524b1](https://github.com/sous-chefs/sc-mongodb/commit/8f524b1ae5f12038e6a68b6bfb6e3c39c724e238))
+
 ## 5.1.24 - *2024-11-18*
 
 Standardise files with files in sous-chefs/repo-management
