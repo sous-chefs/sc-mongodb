@@ -8,5 +8,6 @@ mongodb_sharding 'mongos' do
     }
   )
   auto_configure false
+  service_actions [:enable]
   action :create
 end

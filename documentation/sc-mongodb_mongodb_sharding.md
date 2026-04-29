@@ -28,6 +28,7 @@ Configures MongoDB config server, shard, or mongos roles.
 | `sharded_collections` | Hash          | `{}`                      | Collection-to-key sharding map.         |
 | `auto_configure`      | true, false   | `true`                    | Runs sharding commands for `mongos`.    |
 | `ruby_gems`           | Hash          | `{ 'mongo' => '~> 2.0' }` | Gems needed for sharding commands.      |
+| `service_actions`     | Array         | `[:enable, :start]`       | Service actions for the role instance.  |
 
 ## Example
 

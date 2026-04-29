@@ -22,9 +22,21 @@ action :create do
     source agent_package_url
   end
 
-  package "mongodb-mms-#{new_resource.type}-agent" do
-    source full_file_path
-    action :install
+  if platform_family?('debian')
+    dpkg_package agent_package_name do
+      source full_file_path
+      action :install
+    end
+  elsif platform_family?('rhel', 'fedora', 'amazon')
+    rpm_package agent_package_name do
+      source full_file_path
+      action :install
+    end
+  else
+    package agent_package_name do
+      source full_file_path
+      action :install
+    end
   end
 
   directory '/etc/mongodb-mms' do
@@ -40,21 +52,21 @@ action :create do
     mode '0600'
     sensitive true
     variables(config: agent_config)
-    notifies :restart, "service[mongodb-mms-#{new_resource.type}-agent]", :delayed
+    notifies :restart, "service[#{agent_package_name}]", :delayed
   end
 
-  service "mongodb-mms-#{new_resource.type}-agent" do
+  service agent_package_name do
     supports start: true, stop: true, restart: true, status: true
     action [:enable, :start]
   end
 end
 
 action :delete do
-  service "mongodb-mms-#{new_resource.type}-agent" do
+  service agent_package_name do
     action [:disable, :stop]
   end
 
-  package "mongodb-mms-#{new_resource.type}-agent" do
+  package agent_package_name do
     action :remove
   end
 
@@ -80,6 +92,10 @@ action_class do
 
   def agent_package_url
     new_resource.package_url || mongodb_agent_package_url(new_resource.type)
+  end
+
+  def agent_package_name
+    "mongodb-mms-#{new_resource.type}-agent"
   end
 
   def agent_config

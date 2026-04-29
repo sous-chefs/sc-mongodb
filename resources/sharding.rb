@@ -18,6 +18,7 @@ property :shards, Array, default: []
 property :sharded_collections, Hash, default: {}
 property :auto_configure, [true, false], default: true
 property :ruby_gems, Hash, default: { 'mongo' => '~> 2.0' }
+property :service_actions, Array, default: [:enable, :start]
 
 default_action :create
 
@@ -31,6 +32,9 @@ action :create do
       config new_resource.config
       port new_resource.port
       bind_ip new_resource.bind_ip
+      replicaset true
+      replicaset_name new_resource.replicaset_name || new_resource.cluster_name || 'configReplSet'
+      service_actions new_resource.service_actions
       action :create
     end
   when 'shard'
@@ -44,6 +48,7 @@ action :create do
       shard true
       replicaset !new_resource.replicaset_name.nil?
       replicaset_name new_resource.replicaset_name
+      service_actions new_resource.service_actions
       action :create
     end
   when 'mongos'
@@ -60,6 +65,7 @@ action :create do
       port new_resource.port
       bind_ip new_resource.bind_ip
       configservers new_resource.configservers
+      service_actions new_resource.service_actions
       action :create
     end
 

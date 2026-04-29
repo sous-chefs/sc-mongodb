@@ -10,9 +10,9 @@ property :install_build_packages, [true, false], default: true
 default_action :install
 
 action :install do
-  package 'gcc' do
+  package mongodb_gem_build_packages do
     action :install
-    only_if { platform_family?('rhel', 'fedora', 'amazon') && new_resource.install_build_packages }
+    only_if { new_resource.install_build_packages }
   end
 
   package mongodb_sasl_dev_package do

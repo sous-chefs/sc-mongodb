@@ -42,8 +42,8 @@ jobs:
           - "configserver"
           - "mongos"
           - "replicaset"
-          - "mms_agent"
-          - "user_management"
+          - "mms-agent"
+          - "user-management"
       fail-fast: false
 
     steps:

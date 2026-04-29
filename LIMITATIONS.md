@@ -60,3 +60,6 @@ out of scope for this cookbook migration.
 * MongoDB 6.0 reached end of life on July 31, 2025. Do not use MongoDB 6.0 as
   a baseline for this migration.
 * Debian 11 and RHEL 7 are not retained for MongoDB 8.0.
+* The default MongoDB Cloud Manager/Ops Manager agent package URLs are
+  `amd64`/`x86_64` packages. Use `package_url` for any alternate architecture;
+  local ARM64 Dokken runs cannot validate the default agent packages.

@@ -48,6 +48,10 @@ module ScMongoDB
         platform_family?('rhel', 'fedora', 'amazon') ? 'cyrus-sasl-devel' : 'libsasl2-dev'
       end
 
+      def mongodb_gem_build_packages
+        platform_family?('rhel', 'fedora', 'amazon') ? %w(gcc make) : ['build-essential']
+      end
+
       def mongodb_default_config(type, port, bind_ip)
         config = {
           'net' => {
