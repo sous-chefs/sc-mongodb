@@ -1,0 +1,7 @@
+---
+name: replicaset
+title: sc-mongodb replicaset
+maintainer: Sous Chefs
+license: Apache-2.0
+summary: MongoDB replicaset tests
+version: 1.0.0

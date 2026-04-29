@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 name              'sc-mongodb'
 maintainer        'Sous Chefs'
 maintainer_email  'help@sous-chefs.org'
 license           'Apache-2.0'
-description       'Installs and configures mongodb'
+description       'Provides custom resources for installing and configuring MongoDB'
 source_url        'https://github.com/sous-chefs/sc-mongodb'
 issues_url        'https://github.com/sous-chefs/sc-mongodb/issues'
-chef_version      '>= 16.0'
+chef_version      '>= 15.3'
 version           '5.1.26'
 
 supports 'almalinux', '>= 8.0'

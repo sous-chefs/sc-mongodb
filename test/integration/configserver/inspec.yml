@@ -1,0 +1,7 @@
+---
+name: configserver
+title: sc-mongodb config server
+maintainer: Sous Chefs
+license: Apache-2.0
+summary: MongoDB config server tests
+version: 1.0.0

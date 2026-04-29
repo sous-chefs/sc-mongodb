@@ -5,6 +5,7 @@ unified_mode true
 
 property :repository_name, String, name_property: true
 property :version, [String, Float], default: '8.0'
+property :enabled, [true, false], default: true
 
 default_action :create
 
@@ -16,6 +17,7 @@ action :create do
       distribution "#{node['lsb']['codename']}/mongodb-org/#{mongodb_major_version}"
       components platform?('ubuntu') ? ['multiverse'] : ['main']
       key "https://pgp.mongodb.com/server-#{mongodb_major_version}.asc"
+      action :add
     end
   when 'amazon', 'fedora', 'rhel'
     yum_repository new_resource.repository_name do
@@ -24,10 +26,24 @@ action :create do
       gpgkey "https://pgp.mongodb.com/server-#{mongodb_major_version}.asc"
       gpgcheck true
       sslverify true
-      enabled true
+      enabled new_resource.enabled
+      action :create
     end
   else
     Chef::Log.warn("Adding the #{node['platform_family']} mongodb-org repository is not supported by this cookbook")
+  end
+end
+
+action :remove do
+  case node['platform_family']
+  when 'debian'
+    apt_repository new_resource.repository_name do
+      action :remove
+    end
+  when 'amazon', 'fedora', 'rhel'
+    yum_repository new_resource.repository_name do
+      action :remove
+    end
   end
 end
 
@@ -44,7 +60,7 @@ action_class do
     case node['platform']
     when 'amazon'
       "https://repo.mongodb.org/yum/amazon/2023/mongodb-org/#{mongodb_major_version}/$basearch/"
-    when 'redhat', 'oracle', 'centos', 'rocky', 'almalinux'
+    when 'redhat', 'oracle', 'centos', 'centos_stream', 'rocky', 'almalinux'
       "https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/#{mongodb_major_version}/$basearch/"
     when 'fedora'
       "https://repo.mongodb.org/yum/redhat/9/mongodb-org/#{mongodb_major_version}/$basearch/"

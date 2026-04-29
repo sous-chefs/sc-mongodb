@@ -4,6 +4,8 @@
 
 This cookbook targets MongoDB Community Edition packages from MongoDB's official
 repositories. MongoDB 8.0 is the baseline for the custom-resource migration.
+The source for supported-platform data is the official MongoDB installation
+documentation: <https://www.mongodb.com/docs/manual/installation/>.
 
 ### APT (Debian/Ubuntu)
 
@@ -55,3 +57,6 @@ out of scope for this cookbook migration.
 * MongoDB 8.0 uses `mongosh`; tests must not rely on the legacy `mongo` shell.
 * Legacy sysvinit and upstart templates are migration blockers. New resources
   should use systemd-only service management.
+* MongoDB 6.0 reached end of life on July 31, 2025. Do not use MongoDB 6.0 as
+  a baseline for this migration.
+* Debian 11 and RHEL 7 are not retained for MongoDB 8.0.

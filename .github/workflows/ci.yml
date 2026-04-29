@@ -39,10 +39,11 @@ jobs:
           - "ubuntu-2404"
         suite:
           - "default"
-          # - 'replicaset'
           - "configserver"
-          # - 'mongos'
-          # - 'mms-agent'
+          - "mongos"
+          - "replicaset"
+          - "mms_agent"
+          - "user_management"
       fail-fast: false
 
     steps:
