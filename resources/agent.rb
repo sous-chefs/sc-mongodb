@@ -8,6 +8,7 @@ property :api_key, [String, nil], sensitive: true
 property :config, Hash, default: {}
 property :group, [String, nil]
 property :package_url, [String, nil]
+property :service_actions, Array, default: [:enable, :start]
 property :user, [String, nil]
 
 default_action :create
@@ -55,12 +56,12 @@ action :create do
     mode '0600'
     sensitive true
     variables(config: agent_config)
-    notifies :restart, "service[#{agent_package_name}]", :delayed
+    notifies :restart, "service[#{agent_package_name}]", :delayed if new_resource.service_actions.include?(:start)
   end
 
   service agent_package_name do
     supports start: true, stop: true, restart: true, status: true
-    action [:enable, :start]
+    action new_resource.service_actions
   end
 end
 
