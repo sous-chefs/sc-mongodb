@@ -47,6 +47,7 @@ action :create do
 
   template "/etc/mongodb-mms/#{new_resource.type}-agent.config" do
     source 'mms_agent_config.erb'
+    cookbook 'sc-mongodb'
     owner agent_user
     group agent_group
     mode '0600'
