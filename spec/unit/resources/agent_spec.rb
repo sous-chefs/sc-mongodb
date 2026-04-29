@@ -13,6 +13,7 @@ describe 'mongodb_agent' do
   end
 
   it { is_expected.to create_remote_file(%r{/mongodb-mms-monitoring-agent_latest_amd64\.ubuntu1604\.deb$}) }
+  it { is_expected.to install_package('logrotate') }
   it { is_expected.to install_dpkg_package('mongodb-mms-monitoring-agent') }
   it { is_expected.to create_directory('/etc/mongodb-mms') }
   it { is_expected.to create_template('/etc/mongodb-mms/monitoring-agent.config') }

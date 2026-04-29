@@ -22,6 +22,8 @@ action :create do
     source agent_package_url
   end
 
+  package 'logrotate'
+
   if platform_family?('debian')
     dpkg_package agent_package_name do
       source full_file_path
