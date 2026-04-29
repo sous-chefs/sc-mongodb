@@ -3,6 +3,8 @@ config:
   line-length: false # MD013
   no-duplicate-heading: false # MD024
   reference-links-images: false # MD052
+  ul-style:
+    style: asterisk
   no-multiple-blanks:
     maximum: 2
 ignores:
