@@ -1,0 +1,7 @@
+---
+name: mms_agent
+title: sc-mongodb agents
+maintainer: Sous Chefs
+license: Apache-2.0
+summary: MongoDB agent tests
+version: 1.0.0

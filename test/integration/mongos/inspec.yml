@@ -1,0 +1,7 @@
+---
+name: mongos
+title: sc-mongodb mongos
+maintainer: Sous Chefs
+license: Apache-2.0
+summary: MongoDB mongos tests
+version: 1.0.0

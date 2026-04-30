@@ -1,0 +1,7 @@
+---
+name: user_management
+title: sc-mongodb user management
+maintainer: Sous Chefs
+license: Apache-2.0
+summary: MongoDB user management tests
+version: 1.0.0

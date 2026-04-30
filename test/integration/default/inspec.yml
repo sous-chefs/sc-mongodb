@@ -1,0 +1,7 @@
+---
+name: default
+title: sc-mongodb default
+maintainer: Sous Chefs
+license: Apache-2.0
+summary: Default MongoDB instance tests
+version: 1.0.0

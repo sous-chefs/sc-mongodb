@@ -1,84 +1,171 @@
-#
-# Cookbook:: sc-mongodb
-# Resource:: agent
-#
-# Copyright:: 2017, Grant Ridder
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+# frozen_string_literal: true
 
 provides :mongodb_agent
 unified_mode true
 
 property :type, String, name_property: true, equal_to: %w(automation backup monitoring)
-property :config, Hash
-property :group, String
-property :package_url, String
-property :user, String
+property :api_key, [String, nil], sensitive: true
+property :config, Hash, default: {}
+property :group, [String, nil]
+property :package_url, [String, nil]
+property :service_actions, Array, default: [:enable, :start]
+property :user, [String, nil]
+
+default_action :create
 
 action :create do
-  filename = new_resource.package_url.split('/').last
-  full_file_path = "#{Chef::Config[:file_cache_path]}/#{filename}"
+  Chef::Log.warn 'Found empty MongoDB agent api_key property' if new_resource.api_key.nil?
+
+  filename = agent_package_url.split('/').last
+  full_file_path = ::File.join(Chef::Config[:file_cache_path], filename)
 
   remote_file full_file_path do
-    source new_resource.package_url
+    source agent_package_url
   end
 
-  if filename.split('.').last == 'deb'
-    dpkg_package "mongodb-mms-#{new_resource.type}-agent" do
+  package 'logrotate'
+
+  if platform_family?('debian')
+    dpkg_package agent_package_name do
       source full_file_path
+      action :install
+    end
+  elsif platform_family?('rhel', 'fedora', 'amazon')
+    rpm_package agent_package_name do
+      source full_file_path
+      action :install
     end
   else
-    package "mongodb-mms-#{new_resource.type}-agent" do
+    package agent_package_name do
       source full_file_path
+      action :install
     end
+  end
+
+  directory '/etc/mongodb-mms' do
+    owner 'root'
+    group 'root'
+    mode '0755'
+  end
+
+  directory '/var/log/mongodb-mms' do
+    owner agent_user
+    group agent_group
+    mode '0755'
+    only_if { agent_systemd_unit? }
+  end
+
+  systemd_unit "#{agent_package_name}.service" do
+    content agent_systemd_unit_content
+    action :create
+    only_if { agent_systemd_unit? }
+  end
+
+  file "/etc/init.d/#{agent_package_name}" do
+    action :delete
+    only_if { agent_systemd_unit? }
   end
 
   template "/etc/mongodb-mms/#{new_resource.type}-agent.config" do
     source 'mms_agent_config.erb'
-    owner new_resource.user
-    group new_resource.group
-    mode '600'
-    variables(
-      config: new_resource.config
-    )
-    action :create
-    notifies :restart, "service[mongodb-mms-#{new_resource.type}-agent]", :delayed
+    cookbook 'sc-mongodb'
+    owner agent_user
+    group agent_group
+    mode '0600'
+    sensitive true
+    variables(config: agent_config)
+    if new_resource.service_actions.include?(:start)
+      notifies :restart, "systemd_unit[#{agent_package_name}.service]", :delayed if agent_systemd_unit?
+      notifies :restart, "service[#{agent_package_name}]", :delayed unless agent_systemd_unit?
+    end
   end
 
-  service "mongodb-mms-#{new_resource.type}-agent" do
+  systemd_unit "#{agent_package_name}.service" do
+    action new_resource.service_actions
+    only_if { agent_systemd_unit? }
+  end
+
+  service agent_package_name do
     supports start: true, stop: true, restart: true, status: true
-    action [:enable, :start]
+    action new_resource.service_actions
+    not_if { agent_systemd_unit? }
   end
 end
 
 action :delete do
-  filename = new_resource.package_url.split('/').last
-  full_file_path = "#{Chef::Config[:file_cache_path]}/#{filename}"
-
-  file full_file_path do
-    action :delete
+  systemd_unit "#{agent_package_name}.service" do
+    action [:stop, :disable, :delete]
+    only_if { agent_systemd_unit? }
   end
 
-  service "mongodb-mms-#{new_resource.type}-agent" do
+  service agent_package_name do
     action [:disable, :stop]
+    not_if { agent_systemd_unit? }
   end
 
-  package "mongodb-mms-#{new_resource.type}-agent" do
+  package agent_package_name do
     action :remove
   end
 
   file "/etc/mongodb-mms/#{new_resource.type}-agent.config" do
     action :delete
+  end
+
+  file ::File.join(Chef::Config[:file_cache_path], agent_package_url.split('/').last) do
+    action :delete
+  end
+end
+
+action_class do
+  include ScMongoDB::Helpers::Defaults
+
+  def agent_user
+    new_resource.user || (new_resource.type == 'automation' ? mongodb_user : 'mongodb-mms-agent')
+  end
+
+  def agent_group
+    new_resource.group || agent_user
+  end
+
+  def agent_package_url
+    new_resource.package_url || mongodb_agent_package_url(new_resource.type)
+  end
+
+  def agent_package_name
+    "mongodb-mms-#{new_resource.type}-agent"
+  end
+
+  def agent_config
+    mongodb_agent_config(new_resource.type, new_resource.api_key).merge(new_resource.config)
+  end
+
+  def agent_systemd_unit?
+    platform?('amazon') && platform_version.to_i >= 2023 && %w(backup monitoring).include?(new_resource.type)
+  end
+
+  def agent_systemd_unit_content
+    {
+      Unit: {
+        Description: "MongoDB MMS #{new_resource.type.capitalize} Agent",
+        After: 'network-online.target',
+        Wants: 'network-online.target',
+      },
+      Service: {
+        Type: 'simple',
+        User: agent_user,
+        Group: agent_group,
+        ExecStart: agent_systemd_exec_start,
+        Restart: 'on-failure',
+        PIDFile: "/var/run/#{agent_package_name}.pid",
+      },
+      Install: {
+        WantedBy: 'multi-user.target',
+      },
+    }
+  end
+
+  def agent_systemd_exec_start
+    flag = new_resource.type == 'backup' ? '-c' : '-conf'
+    "/usr/bin/#{agent_package_name} #{flag} /etc/mongodb-mms/#{new_resource.type}-agent.config"
   end
 end
