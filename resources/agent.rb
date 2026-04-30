@@ -48,6 +48,19 @@ action :create do
     mode '0755'
   end
 
+  directory '/var/log/mongodb-mms' do
+    owner agent_user
+    group agent_group
+    mode '0755'
+    only_if { agent_systemd_unit? }
+  end
+
+  systemd_unit "#{agent_package_name}.service" do
+    content agent_systemd_unit_content
+    action :create
+    only_if { agent_systemd_unit? }
+  end
+
   template "/etc/mongodb-mms/#{new_resource.type}-agent.config" do
     source 'mms_agent_config.erb'
     cookbook 'sc-mongodb'
@@ -56,18 +69,33 @@ action :create do
     mode '0600'
     sensitive true
     variables(config: agent_config)
-    notifies :restart, "service[#{agent_package_name}]", :delayed if new_resource.service_actions.include?(:start)
+    if new_resource.service_actions.include?(:start)
+      notifies :restart, "systemd_unit[#{agent_package_name}.service]", :delayed if agent_systemd_unit?
+      notifies :restart, "service[#{agent_package_name}]", :delayed unless agent_systemd_unit?
+    end
+  end
+
+  systemd_unit "#{agent_package_name}.service" do
+    action new_resource.service_actions
+    only_if { agent_systemd_unit? }
   end
 
   service agent_package_name do
     supports start: true, stop: true, restart: true, status: true
     action new_resource.service_actions
+    not_if { agent_systemd_unit? }
   end
 end
 
 action :delete do
+  systemd_unit "#{agent_package_name}.service" do
+    action [:stop, :disable, :delete]
+    only_if { agent_systemd_unit? }
+  end
+
   service agent_package_name do
     action [:disable, :stop]
+    not_if { agent_systemd_unit? }
   end
 
   package agent_package_name do
@@ -104,5 +132,35 @@ action_class do
 
   def agent_config
     mongodb_agent_config(new_resource.type, new_resource.api_key).merge(new_resource.config)
+  end
+
+  def agent_systemd_unit?
+    platform?('amazon') && platform_version.to_i >= 2023 && %w(backup monitoring).include?(new_resource.type)
+  end
+
+  def agent_systemd_unit_content
+    {
+      Unit: {
+        Description: "MongoDB MMS #{new_resource.type.capitalize} Agent",
+        After: 'network-online.target',
+        Wants: 'network-online.target',
+      },
+      Service: {
+        Type: 'simple',
+        User: agent_user,
+        Group: agent_group,
+        ExecStart: agent_systemd_exec_start,
+        Restart: 'on-failure',
+        PIDFile: "/var/run/#{agent_package_name}.pid",
+      },
+      Install: {
+        WantedBy: 'multi-user.target',
+      },
+    }
+  end
+
+  def agent_systemd_exec_start
+    flag = new_resource.type == 'backup' ? '-c' : '-conf'
+    "/usr/bin/#{agent_package_name} #{flag} /etc/mongodb-mms/#{new_resource.type}-agent.config"
   end
 end
