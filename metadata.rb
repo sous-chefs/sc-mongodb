@@ -8,7 +8,7 @@ description       'Provides custom resources for installing and configuring Mong
 source_url        'https://github.com/sous-chefs/sc-mongodb'
 issues_url        'https://github.com/sous-chefs/sc-mongodb/issues'
 chef_version      '>= 15.3'
-version           '5.1.26'
+version           '6.0.0'
 
 supports 'almalinux', '>= 8.0'
 supports 'amazon', '>= 2023.0'
