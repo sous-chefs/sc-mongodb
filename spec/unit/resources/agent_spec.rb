@@ -36,6 +36,7 @@ describe 'mongodb_agent' do
     it { is_expected.to install_rpm_package('mongodb-mms-backup-agent') }
     it { is_expected.to create_directory('/var/log/mongodb-mms') }
     it { is_expected.to create_systemd_unit('mongodb-mms-backup-agent.service') }
+    it { is_expected.to delete_file('/etc/init.d/mongodb-mms-backup-agent') }
     it { is_expected.to enable_systemd_unit('mongodb-mms-backup-agent.service') }
     it { is_expected.not_to enable_service('mongodb-mms-backup-agent') }
   end

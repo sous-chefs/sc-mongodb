@@ -61,6 +61,11 @@ action :create do
     only_if { agent_systemd_unit? }
   end
 
+  file "/etc/init.d/#{agent_package_name}" do
+    action :delete
+    only_if { agent_systemd_unit? }
+  end
+
   template "/etc/mongodb-mms/#{new_resource.type}-agent.config" do
     source 'mms_agent_config.erb'
     cookbook 'sc-mongodb'
