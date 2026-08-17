@@ -66,25 +66,31 @@ x-verifiers:
 
 suites:
   - name: default
+    named_run_list: default
     run_list: *default_run_list
     verifier: *default_verifier
 
   - name: configserver
+    named_run_list: configserver
     run_list: *configserver_run_list
     verifier: *configserver_verifier
 
   - name: mongos
+    named_run_list: mongos
     run_list: *mongos_run_list
     verifier: *mongos_verifier
 
   - name: replicaset
+    named_run_list: replicaset
     run_list: *replicaset_run_list
     verifier: *replicaset_verifier
 
   - name: mms_agent
+    named_run_list: mms_agent
     run_list: *mms_agent_run_list
     verifier: *mms_agent_verifier
 
   - name: user_management
+    named_run_list: user_management
     run_list: *user_management_run_list
     verifier: *user_management_verifier
